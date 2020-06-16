@@ -124,6 +124,7 @@ const BasicLayout = props => {
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
       {...props}
+      {...defaultSettings}
       /**
        * 自定义
        */
