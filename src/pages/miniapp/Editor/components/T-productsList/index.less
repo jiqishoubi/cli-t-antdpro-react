@@ -1,0 +1,136 @@
+@import '~@/utils/utils.less';
+
+.wrap {
+  .panel_title {
+    .flexCenter;
+    .flexJCenter;
+    margin-bottom: 8px;
+  }
+}
+
+.products_wrap {
+  .flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  font-size: 12px;
+
+  .panel_title {
+    .flexCenter;
+    font-size: 12px;
+  }
+
+  // 普通的
+  .item_wrap {
+    box-sizing: border-box;
+    overflow: hidden;
+
+    .item {
+      .flexColumn;
+      overflow: hidden;
+
+      .img_box {
+        overflow: hidden;
+
+        .img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .content {
+        padding: 0 8px;
+
+        // 名称
+        .name {
+          font-size: 12px;
+
+          //行数 超出省略号
+          &.line1 {
+            // .limitLine(1);
+            .textOverflowMulti(1);
+          }
+
+          &.line2 {
+            // .limitLine(2);
+            .textOverflowMulti(2);
+          }
+        }
+
+        .price_wrap {
+          .flexCenter;
+
+          .price {
+            color: red;
+            font-weight: bold;
+            font-size: 12px;
+          }
+
+          .saledNum {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  // 一行显示
+  .item_wrap_1 {
+    box-sizing: border-box;
+    width: 100%;
+
+    .item {
+      .flex;
+
+      .img_box {
+        // width: 26%;
+        overflow: hidden;
+
+        .img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .content {
+        flex: 1 0 0;
+        .flexColumn;
+        .flexBetween;
+        padding: 0 8px;
+
+        // 名称
+        .name {
+          // width: 100%;
+
+          //行数 超出省略号
+          &.line1 {
+            // .limitLine(1);
+            .textOverflowMulti(1);
+          }
+
+          &.line2 {
+            // .limitLine(2);
+            .textOverflowMulti(2);
+          }
+        }
+
+        .price_wrap {
+          width: 100%;
+          .flexCenter;
+          .flexBetween;
+
+          .price {
+            color: red;
+            font-weight: bold;
+          }
+
+          .saledNum {
+          }
+        }
+      }
+    }
+  }
+}
+
+// 属性面板
+.panel {
+}

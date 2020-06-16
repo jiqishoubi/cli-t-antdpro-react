@@ -1,0 +1,154 @@
+.textOverflow() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.textOverflowMulti(@line: 3, @bg: #fff) {
+  position: relative;
+  max-height: @line * 1.5em;
+  margin-right: -1em;
+  padding-right: 1em;
+  overflow: hidden;
+  line-height: 1.5em;
+  text-align: justify;
+
+  &::before {
+    position: absolute;
+    right: 14px;
+    bottom: 0;
+    padding: 0 1px;
+    background: @bg;
+    content: '...';
+  }
+
+  &::after {
+    position: absolute;
+    right: 14px;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: white;
+    content: '';
+  }
+}
+
+// mixins for clearfix
+// ------------------------
+.clearfix() {
+  zoom: 1;
+
+  &::before,
+  &::after {
+    display: table;
+    content: ' ';
+  }
+
+  &::after {
+    clear: both;
+    height: 0;
+    font-size: 0;
+    visibility: hidden;
+  }
+}
+
+// ******************************************************************************************************************************
+
+/* 禁用元素点击事件 */
+
+.eventsDisabled {
+  cursor: pointer;
+  pointer-events: none;
+}
+
+/* common */
+
+.vh100 {
+  height: 100vh;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.img100 {
+  width: 100%;
+  height: 100%;
+}
+
+.overhidden {
+  overflow: hidden;
+}
+
+.margin0 {
+  margin: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexCenter {
+  &:extend(.flex);
+  align-items: center;
+}
+
+.flexBetween {
+  &:extend(.flex);
+  justify-content: space-between;
+}
+
+.flexAround {
+  &:extend(.flex);
+  justify-content: space-around;
+}
+
+.flexJCenter {
+  &:extend(.flex);
+  justify-content: center;
+}
+
+.flexCenterIL {
+  display: inline-flex;
+  align-items: center;
+}
+
+.flexColumn {
+  &:extend(.flex);
+  flex-direction: column;
+  align-items: center;
+}
+
+.posiRe {
+  position: relative;
+}
+
+.positionCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 省略三个点 */
+
+.textOmit {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.a {
+  text-decoration: none;
+
+  &:active,
+  &:focus,
+  &:visited {
+    text-decoration: none;
+  }
+}
