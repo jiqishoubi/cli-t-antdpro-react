@@ -56,23 +56,31 @@ class AvatarDropdown extends React.Component {
         </Menu.Item>
       </Menu>
     );
-    return currentUser && currentUser.name ? (
+    // return currentUser && currentUser.name ? (
+    //   <HeaderDropdown overlay={menuHeaderDropdown}>
+    //     <span className={`${styles.action} ${styles.account}`}>
+    //       <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
+    //       <span className={styles.name}>{currentUser.name}</span>
+    //     </span>
+    //   </HeaderDropdown>
+    // ) : (
+    //   <span className={`${styles.action} ${styles.account}`}>
+    //     <Spin
+    //       size="small"
+    //       style={{
+    //         marginLeft: 8,
+    //         marginRight: 8,
+    //       }}
+    //     />
+    //   </span>
+    // );
+    return (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-          <span className={styles.name}>{currentUser.name}</span>
+          <span className={styles.name}>{'test'}</span>
         </span>
       </HeaderDropdown>
-    ) : (
-      <span className={`${styles.action} ${styles.account}`}>
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      </span>
     );
   }
 }

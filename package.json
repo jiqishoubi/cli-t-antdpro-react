@@ -1,5 +1,5 @@
 {
-  "name": "ant-design-pro",
+  "name": "react-pro",
   "version": "4.0.0",
   "private": true,
   "description": "An out-of-box UI solution for enterprise applications",
@@ -115,19 +115,14 @@
   "create-umi": {
     "ignoreScript": [
       "functions*",
-      "site",
       "generateMock"
     ],
     "ignoreDependencies": [
-      "netlify*",
       "serverless"
     ],
     "ignore": [
       ".git",
-      ".github",
-      ".gitpod.yml",
       "lambda",
-      "netlify.toml",
       "README.*.md",
       "azure-pipelines.yml",
       "CNAME",

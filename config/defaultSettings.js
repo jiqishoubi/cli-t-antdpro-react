@@ -9,7 +9,7 @@ export default {
   fixSiderbar: true,
   colorWeak: false,
   menu: { locale: false },
-  title: 'Ant Design Pro',
+  title: 'BLD',
 
   // Your custom iconfont Symbol script Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js

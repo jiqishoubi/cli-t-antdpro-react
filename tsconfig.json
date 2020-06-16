@@ -26,10 +26,7 @@
     "build",
     "dist",
     "scripts",
-    "acceptance-tests",
     "webpack",
-    "jest",
-    "src/setupTests.ts",
     "tslint:latest",
     "tslint-config-prettier"
   ]
