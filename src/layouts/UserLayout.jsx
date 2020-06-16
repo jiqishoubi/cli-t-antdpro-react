@@ -6,6 +6,8 @@ import { connect } from 'dva';
 import logo from '../assets/logo.png';
 import styles from './UserLayout.less';
 
+export const defaultFooterDom = <DefaultFooter copyright="2020 便利电科技出品" links={[]} />;
+
 const UserLayout = props => {
   const {
     route = {
@@ -45,7 +47,7 @@ const UserLayout = props => {
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        {defaultFooterDom}
       </div>
     </>
   );

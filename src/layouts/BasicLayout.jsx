@@ -11,6 +11,7 @@ import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.png';
 import defaultSettings from '../../config/defaultSettings';
 import defaultTheme from '../../config/theme/defaultTheme';
+import { defaultFooterDom } from './UserLayout';
 
 const siderWidth = defaultTheme['t-siderMenu-width']
   ? Number(defaultTheme['t-siderMenu-width'].split('px')[0])
@@ -28,8 +29,6 @@ const noMatch = (
     }
   />
 );
-
-const defaultFooterDom = <DefaultFooter copyright="2020 便利电科技出品" links={[]} />;
 
 const BasicLayout = props => {
   const tabsLayout = useRef();
