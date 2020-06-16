@@ -1,6 +1,6 @@
 import { IConfig, IPlugin } from 'umi-types';
 import slash from 'slash2';
-import themePluginConfig from './themePluginConfig';
+import themePluginConfig from './theme/themePluginConfig';
 import proxy from './proxy';
 import webpackPlugin from './plugin.config';
 import routes from './router.config.js';

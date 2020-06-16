@@ -13,7 +13,7 @@ export default {
       pathRewrite: { '^': '' },
     },
   },
-  test: {
+  mock: {
     '/api/': {
       target: 'https://preview.pro.ant.design',
       changeOrigin: true,
