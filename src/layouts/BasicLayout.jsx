@@ -8,7 +8,7 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import TabsLayout from './TabsLayout';
 import { getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import defaultSettings from '../../config/defaultSettings';
 import defaultTheme from '../../config/theme/defaultTheme';
 
@@ -29,31 +29,7 @@ const noMatch = (
   />
 );
 
-const defaultFooterDom = (
-  <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
-    links={[
-      {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
-        blankTarget: true,
-      },
-      {
-        key: 'github',
-        title: <GithubOutlined />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
-        blankTarget: true,
-      },
-    ]}
-  />
-);
+const defaultFooterDom = <DefaultFooter copyright="2020 便利电科技出品" links={[]} />;
 
 const BasicLayout = props => {
   const tabsLayout = useRef();
