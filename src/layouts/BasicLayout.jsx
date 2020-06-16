@@ -10,6 +10,11 @@ import TabsLayout from './TabsLayout';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import defaultSettings from '../../config/defaultSettings';
+import defaultTheme from '../../config/theme/defaultTheme';
+
+const siderWidth = defaultTheme['t-siderMenu-width']
+  ? Number(defaultTheme['t-siderMenu-width'].split('px')[0])
+  : 0;
 
 const noMatch = (
   <Result
@@ -151,6 +156,10 @@ const BasicLayout = props => {
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}
+      /**
+       * 自定义
+       */
+      siderWidth={siderWidth}
     >
       <Authorized
         // authority={authorized!.authority}

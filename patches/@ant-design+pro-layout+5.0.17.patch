@@ -1,0 +1,130 @@
+diff --git a/node_modules/@ant-design/pro-layout/es/BasicLayout.js b/node_modules/@ant-design/pro-layout/es/BasicLayout.js
+index 20c1b1b..0d45f68 100644
+--- a/node_modules/@ant-design/pro-layout/es/BasicLayout.js
++++ b/node_modules/@ant-design/pro-layout/es/BasicLayout.js
+@@ -1,5 +1,6 @@
+ import "antd/es/layout/style";
+ import _Layout from "antd/es/layout";
++import defaultTheme from '../../../../config/theme/defaultTheme';
+ 
+ function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+ 
+@@ -122,7 +123,11 @@ var defaultPageTitleRender = function defaultPageTitleRender(pageProps, props) {
+ 
+ var getPaddingLeft = function getPaddingLeft(hasLeftPadding, collapsed, siderWidth) {
+   if (hasLeftPadding) {
+-    return collapsed ? 80 : siderWidth;
++    return collapsed ? (
++      defaultTheme['menu-collapsed-width']
++        ? Number(defaultTheme['menu-collapsed-width'].split('px')[0])
++        : 80
++    ) : siderWidth;
+   }
+ 
+   return undefined;
+diff --git a/node_modules/@ant-design/pro-layout/es/BasicLayout.less b/node_modules/@ant-design/pro-layout/es/BasicLayout.less
+index ae910f6..e3f4312 100644
+--- a/node_modules/@ant-design/pro-layout/es/BasicLayout.less
++++ b/node_modules/@ant-design/pro-layout/es/BasicLayout.less
+@@ -1,4 +1,5 @@
+ @import '~antd/es/style/themes/default.less';
++@import '../../../../config/theme//defaultTheme.less';
+ 
+ @basicLayout-prefix-cls: ~'@{ant-prefix}-pro-basicLayout';
+ 
+@@ -41,10 +42,10 @@
+ 
+   &-content {
+     position: relative;
+-    margin: 24px;
++    margin: @t-basicLayout-content-margin;
+     transition: all 0.2s;
+     .@{ant-prefix}-pro-page-header-wrap {
+-      margin: -24px -24px 0;
++      margin: -@t-basicLayout-content-margin -@t-basicLayout-content-margin 0;
+     }
+     &-disable-margin {
+       margin: 0;
+diff --git a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
+index f493e3f..e123640 100644
+--- a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
++++ b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
+@@ -41,7 +41,8 @@
+ 
+   &-trigger {
+     height: @layout-header-height;
+-    padding: 0 24px;
++    // padding: 0 24px;
++    padding: 0 14px;
+     font-size: 20px;
+     cursor: pointer;
+     transition: all 0.3s, padding 0s;
+diff --git a/node_modules/@ant-design/pro-layout/es/Header.js b/node_modules/@ant-design/pro-layout/es/Header.js
+index 9b0720c..e6e0b3b 100644
+--- a/node_modules/@ant-design/pro-layout/es/Header.js
++++ b/node_modules/@ant-design/pro-layout/es/Header.js
+@@ -1,5 +1,6 @@
+ import "antd/es/layout/style";
+ import _Layout from "antd/es/layout";
++import defaultTheme from '../../../../config/theme/defaultTheme';
+ 
+ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+ 
+@@ -100,7 +101,11 @@ var HeaderView = /*#__PURE__*/function (_Component) {
+       return React.createElement(React.Fragment, null, fixedHeader && React.createElement(Header, null), React.createElement(Header, {
+         style: Object.assign({
+           padding: 0,
+-          width: needSettingWidth ? "calc(100% - ".concat(collapsed ? 80 : siderWidth, "px)") : '100%',
++          width: needSettingWidth ? "calc(100% - ".concat(collapsed ? (
++            defaultTheme['menu-collapsed-width']
++              ? Number(defaultTheme['menu-collapsed-width'].split('px')[0])
++              : 80
++          ) : siderWidth, "px)") : '100%',
+           zIndex: 9,
+           right: fixedHeader ? 0 : undefined
+         }, style),
+diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
+index 58588f6..191a8fd 100644
+--- a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
++++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
+@@ -7,6 +7,7 @@ import classNames from 'classnames';
+ import './index.less';
+ import BaseMenu from './BaseMenu';
+ import MenuCounter from './Counter';
++import defaultTheme from '../../../../../config/theme/defaultTheme';
+ var Sider = _Layout.Sider;
+ export var defaultRenderLogo = function defaultRenderLogo(logo) {
+   if (typeof logo === 'string') {
+@@ -83,7 +84,12 @@ var SiderMenu = function SiderMenu(props) {
+     style: style,
+     width: siderWidth,
+     theme: theme,
+-    className: siderClassName
++    className: siderClassName,
++    collapsedWidth: (
++      defaultTheme['menu-collapsed-width']
++        ? Number(defaultTheme['menu-collapsed-width'].split('px')[0])
++        : null
++    ),
+   }, headerDom && React.createElement("div", {
+     className: "ant-pro-sider-menu-logo",
+     onClick: onMenuHeaderClick,
+diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
+index 8de251d..ddc1e17 100644
+--- a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
++++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
+@@ -1,4 +1,5 @@
+ @import '~antd/es/style/themes/default.less';
++@import '../../../../../config/theme/defaultTheme.less';
+ 
+ @pro-layout-sider-menu-prefix-cls: ~'@{ant-prefix}-pro-sider-menu';
+ 
+@@ -17,7 +18,7 @@
+     > a {
+       display: flex;
+       align-items: center;
+-      height: 64px;
++      height: @nav-header-height;
+     }
+ 
+     img {

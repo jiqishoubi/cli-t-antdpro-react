@@ -1,7 +1,7 @@
+import defaultTheme from './theme/defaultTheme';
+
 export default {
   navTheme: 'dark',
-  // 拂晓蓝
-  primaryColor: 'black',
   layout: 'sidemenu', //'sidemenu' | 'topmenu';
   contentWidth: 'Fluid', //'Fluid' | 'Fixed';
   fixedHeader: true,
@@ -20,5 +20,5 @@ export default {
   /**
    * 自定义
    */
-  isTabs: true,
+  isTabs: false,
 };
