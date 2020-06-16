@@ -20,5 +20,5 @@ export default {
   /**
    * 自定义
    */
-  isTabs: false,
+  isTabs: false, //是否多tab
 };
