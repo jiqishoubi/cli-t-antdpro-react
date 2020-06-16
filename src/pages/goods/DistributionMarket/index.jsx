@@ -14,7 +14,7 @@ import {
   Input,
   Tabs,
 } from 'antd';
-import { getUrlParam } from '@/utils/utils';
+import { getUrlParam, localDB } from '@/utils/utils';
 import './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
@@ -23,6 +23,7 @@ import ImageCarousel from '@/components/ImageCarousel';
 // import EditModal from '@/components/EditModal';
 import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
 import moment from 'moment';
+import SwitchContent from './SwitchContent';
 // import router from 'umi/router';
 const { TabPane } = Tabs;
 class SupplygoodsDetail extends React.Component {
@@ -30,12 +31,41 @@ class SupplygoodsDetail extends React.Component {
     super(props);
     this.state = {
       mode: 'top',
+      TabsList: [],
     };
     // this.modifydata = this.modifydata.bind(this);
   }
   componentDidMount() {
     // this.getData();
+    console.log(localDB.getItem('teamId'));
+    this.getTabsList();
+    // this.child.getData()
   }
+  getTabsList = async () => {
+    let res = await requestw({
+      url: api_goods.querySupplyGoodsTypeList,
+      data: { queryType: '1' },
+    });
+    console.log(res);
+
+    if (res && res.data.status == 0) {
+      let TabsList = res.data.data;
+      TabsList.unshift({
+        teamId: 2,
+        typeGct: '2020-06-11 16:10:15',
+        typeId: '',
+        typeName: '全部',
+        typeSortValue: 1,
+        typeVisible: 0,
+        supplyType: '',
+      });
+      console.log(TabsList);
+
+      this.setState({
+        TabsList,
+      });
+    }
+  };
   setGoodDetail = () => {
     console.log('编辑');
   };
@@ -55,16 +85,27 @@ class SupplygoodsDetail extends React.Component {
   };
   tabclick = e => {
     console.log(e);
+    this.setState(
+      {
+        supplyType: e,
+      },
+      () => {
+        this.child.getData();
+      },
+    );
+  };
+  onRef = ref => {
+    this.child = ref;
   };
   render() {
-    const {} = this.state;
+    const { TabsList, code, supplyType } = this.state;
     const { mode } = this.state;
     const formItemLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 15 },
     };
     return (
-      <div style={{ height: '1000px' }}>
+      <div style={{ height: '600px' }}>
         <Breadcrumb>
           <Breadcrumb.Item>产品管理</Breadcrumb.Item>
           <Breadcrumb.Item>分销市场</Breadcrumb.Item>
@@ -112,14 +153,15 @@ class SupplygoodsDetail extends React.Component {
             <Radio.Button value="left">Vertical</Radio.Button>
           </Radio.Group> */}
           <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey="0"
             onTabClick={this.tabclick}
             tabPosition={mode}
-            style={{ height: 220 }}
+            style={{ height: 520 }}
           >
-            {[...Array(30).keys()].map(i => (
-              <TabPane tab={`Tab-${i}`} key={i} disabled={i === 28}>
-                Content of tab {i}
+            {TabsList.map((i, ind) => (
+              <TabPane forceRender={false} tab={i.typeName} key={i.typeId}>
+                {/* Content of tab {i.typeName} */}
+                <SwitchContent onRef={this.onRef} supplyType={supplyType} />
               </TabPane>
             ))}
           </Tabs>
