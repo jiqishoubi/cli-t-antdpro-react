@@ -1,7 +1,7 @@
 import defaultTheme from './theme/defaultTheme';
 
 export default {
-  navTheme: 'dark',
+  navTheme: 'dark', //'light' | 'dark';
   layout: 'sidemenu', //'sidemenu' | 'topmenu';
   contentWidth: 'Fluid', //'Fluid' | 'Fixed';
   fixedHeader: true,

@@ -1,5 +1,3 @@
-import { stringify } from 'querystring';
-import { history, Reducer, Effect } from 'umi';
 import { setAuthority } from '@/utils/authority';
 import { localDB } from '@/utils/utils';
 import { getGoodsTypeAjax } from '@/services/goods';

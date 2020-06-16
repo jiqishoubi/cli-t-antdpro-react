@@ -36,7 +36,6 @@ const BasicLayout = props => {
   const {
     dispatch,
     children,
-    settings,
     location = {
       pathname: '/',
     },
@@ -47,12 +46,6 @@ const BasicLayout = props => {
    */
 
   useEffect(() => {
-    // if (dispatch) {
-    //   dispatch({
-    //     type: 'user/fetchCurrent',
-    //   });
-    // }
-
     //监听路由
     if (defaultSettings.isTabs) {
       if (!window.UNLISTEN) {
@@ -131,7 +124,6 @@ const BasicLayout = props => {
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
       {...props}
-      {...settings}
       /**
        * 自定义
        */
@@ -156,8 +148,7 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, login }) => ({
+export default connect(({ global, login }) => ({
   collapsed: global.collapsed,
-  settings,
   login,
 }))(BasicLayout);

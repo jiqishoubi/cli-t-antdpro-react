@@ -1,8 +1,7 @@
-import { Tooltip, Tag } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
 import React from 'react';
-import { connect } from 'dva';
 import AvatarDropdown from './AvatarDropdown';
+import defaulTheme from '../../../config/theme/defaultTheme';
 import styles from './index.less';
 
 const ENVTagColor = {
@@ -12,25 +11,14 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight = props => {
-  const { theme, layout } = props;
   let className = styles.right;
 
-  if (theme === 'dark' && layout === 'topmenu') {
+  if (defaulTheme.navTheme === 'dark' && defaulThemelayout === 'topmenu') {
     className = `${styles.right}  ${styles.dark}`;
   }
 
   return (
     <div className={className}>
-      <Tooltip title="使用文档">
-        <a
-          target="_blank"
-          href="https://pro.ant.design/docs/getting-started"
-          rel="noopener noreferrer"
-          className={styles.action}
-        >
-          <QuestionCircleOutlined />
-        </a>
-      </Tooltip>
       <AvatarDropdown />
       {REACT_APP_ENV && (
         <span>
@@ -41,7 +29,4 @@ const GlobalHeaderRight = props => {
   );
 };
 
-export default connect(({ settings }) => ({
-  theme: settings.navTheme,
-  layout: settings.layout,
-}))(GlobalHeaderRight);
+export default GlobalHeaderRight;

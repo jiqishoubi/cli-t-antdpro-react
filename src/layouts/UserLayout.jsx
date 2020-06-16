@@ -1,7 +1,7 @@
+import React from 'react';
 import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
 import { Link } from 'umi';
-import React from 'react';
 import { connect } from 'dva';
 import logo from '../assets/logo.png';
 import styles from './UserLayout.less';
@@ -51,4 +51,4 @@ const UserLayout = props => {
   );
 };
 
-export default connect(({ settings }) => ({ ...settings }))(UserLayout);
+export default UserLayout;
