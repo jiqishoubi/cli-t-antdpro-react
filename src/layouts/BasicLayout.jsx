@@ -97,7 +97,7 @@ const BasicLayout = props => {
 
   return (
     <ProLayout
-      logo={() => <img style={{ width: 50, height: 'auto' }} src={logo} />}
+      logo={() => <img style={{ width: 50, height: 'auto', marginLeft: 10 }} src={logo} />}
       menuHeaderRender={(logoDom, titleDom) => (
         <Link to="/">
           {logoDom}
