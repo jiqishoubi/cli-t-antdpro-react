@@ -24,16 +24,15 @@ const Model = {
 
   effects: {
     *getAuth({ payload }, { call, put }) {
-      const response = yield call(getAuthAjax, payload);
-      console.log(response);
-      if (response.code !== 200) {
-        message.warning(response.message || '网络异常');
+      const res = yield call(getAuthAjax, payload);
+      if (res.code !== 200) {
+        message.warning(res.message || '网络异常');
         return;
       }
       yield put({
         type: 'saveDB',
         payload: {
-          appid: response.data.authorizationInfo.authorizerAppid,
+          appid: res.data.authorizationInfo.authorizerAppid,
         },
       });
       yield put({ type: 'getMiniappInfo' });
@@ -43,17 +42,16 @@ const Model = {
     *getMiniappInfo({ payload }, { call, put, select }) {
       const miniappState = yield select(state => state.miniapp);
       const appid = miniappState.appid;
-      const response = yield call(getMiniappInfoAjax, appid);
-      console.log(response);
-      if (!response || response.code !== 200) {
-        message.warning(response.message || '网络异常');
+      const res = yield call(getMiniappInfoAjax, appid);
+      if (!res || res.code !== 200) {
+        message.warning(res.message || '网络异常');
         return;
       }
       yield put({
         type: 'saveDB',
         payload: {
-          miniappInfo: response.data.authorizerInfo,
-          miniappStatus: response.data.auditStatus,
+          miniappInfo: res.data.authorizerInfo,
+          miniappStatus: res.data.auditStatus,
         },
       });
     },
@@ -63,7 +61,6 @@ const Model = {
       const miniappState = yield select(state => state.miniapp);
       const { appid, verifyList } = miniappState;
       const res = yield call(submitCodeAjax, appid);
-      console.log(res);
       if (res && res.code == 200 && res.data && res.data.status == 0) {
         message.success((res.data && res.data.message) || res.message);
       } else {
@@ -80,7 +77,6 @@ const Model = {
       const miniappState = yield select(state => state.miniapp);
       const { appid, verifyList } = miniappState;
       const res = yield call(cancelSubmitAjax, appid);
-      console.log(res);
       if (res && res.code == 200 && res.data && res.data.status == 0) {
         message.success((res.data && res.data.data) || res.message);
         yield put({ type: 'getVerifyList' });
@@ -96,7 +92,6 @@ const Model = {
       const miniappState = yield select(state => state.miniapp);
       const { appid, verifyList } = miniappState;
       const res = yield call(publishAppAjax, appid);
-      console.log(res);
       // if (res && res.code == 200 && res.data && res.data.status == 0) {
       //   message.success((res.data && res.data.message) || res.message);
       // } else {
@@ -113,7 +108,6 @@ const Model = {
       const miniappState = yield select(state => state.miniapp);
       const { appid, verifyList } = miniappState;
       const res = yield call(verifyListAjax, appid);
-      console.log(res);
       if (res && res.code == 200 && res.data) {
         yield put({
           type: 'save',
