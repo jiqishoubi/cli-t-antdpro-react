@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { router } from 'umi';
 import { Tabs } from 'antd';
 import defaultTheme from '../../config/theme/defaultTheme';
+import defaultSettings from '../../config/defaultSettings';
 import styles from './TabsLayout.less';
 
 const { TabPane } = Tabs;
@@ -116,9 +117,16 @@ class index extends Component {
     const operations = null;
 
     //tabBar 样式
+    let left;
+    if (defaultSettings.layout == 'topmenu') {
+      left = 0;
+    } else {
+      left = collapsed ? defaultTheme['menu-collapsed-width'] : defaultTheme['t-siderMenu-width'];
+    }
     let tabBarListStyle2 = {
       ...tabBarListStyle,
-      left: collapsed ? defaultTheme['menu-collapsed-width'] : defaultTheme['t-siderMenu-width'],
+      left,
+      display: panes.length == 0 ? 'none' : null,
     };
 
     return (
