@@ -78,6 +78,7 @@ class SwitchContent extends React.Component {
       pathname: '/DistributionDetail',
       query: {
         productId: toDetail.productId,
+        productExist: toDetail.productExist,
       },
     });
   };
@@ -98,6 +99,10 @@ class SwitchContent extends React.Component {
                   this.toDetail(item);
                 }}
               >
+                {item.productExist ? (
+                  <div className={styles.goodsimgmin}>该商品已在本店上架</div>
+                ) : null}
+
                 <div className={styles.goodstopimg}>
                   <img
                     style={{ width: '100%', height: '200px' }}

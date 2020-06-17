@@ -35,6 +35,7 @@ class SupplygoodsDetail extends React.Component {
       PriceList: [],
       Allstock: null,
       namedata: [],
+      productExist: getUrlParam('productExist'),
     };
     // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
@@ -44,6 +45,7 @@ class SupplygoodsDetail extends React.Component {
   }
   getData = async () => {
     let productId = getUrlParam('productId');
+    let productExist = getUrlParam('productExist');
     console.log(productId);
     let teamId = localDB.getItem('teamId');
     console.log(teamId);
@@ -87,6 +89,7 @@ class SupplygoodsDetail extends React.Component {
         MinSupplyPrice,
         MaxSupplyPrice,
         Allstock,
+        productExist,
         detailData: res.data[0],
       });
     }
@@ -353,9 +356,11 @@ class SupplygoodsDetail extends React.Component {
       AllsupplyPrice,
       Allprice,
       itemstock,
+      productExist,
     } = this.state;
     console.log('render重新执行');
-    console.log(SupplyPriceList.length > 1);
+    console.log(productExist);
+    console.log(productExist === 'ture');
 
     return (
       <div style={{ height: '1000px' }}>
@@ -388,61 +393,93 @@ class SupplygoodsDetail extends React.Component {
               height: '270px',
             }}
           >
-            <p>
-              {AllsupplyPrice ? (
-                <span style={{ fontSize: '16px' }}>
-                  供货价:<b>{AllsupplyPrice}￥</b>
-                </span>
-              ) : (
-                <>
-                  <span style={{ fontSize: '16px' }}>
-                    供货价:
-                    <b>
-                      {MinSupplyPrice}￥-{MaxSupplyPrice}￥
-                    </b>
-                  </span>
-                </>
-              )}
-
-              {itemstock ? (
-                <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                  库存:<b>{itemstock}</b>
-                </span>
-              ) : (
-                <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                  库存:<b>{Allstock}</b>
-                </span>
-              )}
-
-              <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                运费:<b>{detailData.transportAmount}</b>
-              </span>
-            </p>
-            <p>
-              {/* <span style={{ fontSize: '16px' }}>
-                建议售价:<b>16￥</b>
-              </span> */}
-              {Allprice ? (
-                <span style={{ fontSize: '16px' }}>
-                  建议售价:<b>{Allprice}￥</b>
-                </span>
-              ) : (
-                <>
-                  {PriceList.length > 1 ? (
+            {detailData.specsType == 1 ? (
+              <>
+                <p>
+                  {AllsupplyPrice ? (
                     <span style={{ fontSize: '16px' }}>
-                      建议售价:
-                      <b>
-                        {(MinPrice * 0.01).toFixed(0)}￥-{(MaxPrice * 0.01).toFixed(0)}￥
-                      </b>
+                      供货价:<b>{AllsupplyPrice}￥</b>
                     </span>
                   ) : (
-                    <span style={{ fontSize: '16px' }}>
-                      建议售价:<b>0￥</b>
+                    <>
+                      <span style={{ fontSize: '16px' }}>
+                        供货价:
+                        <b>
+                          {MinSupplyPrice}￥-{MaxSupplyPrice}￥
+                        </b>
+                      </span>
+                    </>
+                  )}
+
+                  {itemstock ? (
+                    <span style={{ fontSize: '16px', marginLeft: '30px' }}>
+                      库存:<b>{itemstock}</b>
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '16px', marginLeft: '30px' }}>
+                      库存:<b>{Allstock}</b>
                     </span>
                   )}
-                </>
-              )}
-            </p>
+
+                  <span style={{ fontSize: '16px', marginLeft: '30px' }}>
+                    运费:<b>{detailData.transportAmount}</b>
+                  </span>
+                </p>
+                <p>
+                  {/* <span style={{ fontSize: '16px' }}>
+                建议售价:<b>16￥</b>
+              </span> */}
+                  {Allprice ? (
+                    <span style={{ fontSize: '16px' }}>
+                      建议售价:<b>{Allprice}￥</b>
+                    </span>
+                  ) : (
+                    <>
+                      {PriceList.length > 1 ? (
+                        <span style={{ fontSize: '16px' }}>
+                          建议售价:
+                          <b>
+                            {(MinPrice * 0.01).toFixed(0)}￥-{(MaxPrice * 0.01).toFixed(0)}￥
+                          </b>
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '16px' }}>
+                          建议售价:<b>0￥</b>
+                        </span>
+                      )}
+                    </>
+                  )}
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  <span style={{ fontSize: '16px' }}>
+                    供货价:
+                    <b>{detailData.priceRange ? detailData.priceRange.maxSupplyPrice : '0'}￥</b>
+                  </span>
+                  <span style={{ fontSize: '16px', marginLeft: '30px' }}>
+                    库存:
+                    <b>{detailData.skuPropertyList ? detailData.skuPropertyList[0].stock : 0}</b>
+                  </span>
+                  <span style={{ fontSize: '16px', marginLeft: '30px' }}>
+                    运费:<b>{detailData.transportAmount}</b>
+                  </span>
+                </p>
+                <p>
+                  <span style={{ fontSize: '16px' }}>
+                    建议售价:
+                    <b>
+                      {detailData.priceRange
+                        ? (detailData.priceRange.maxPrice * 0.01).toFixed(0)
+                        : '0'}
+                      ￥
+                    </b>
+                  </span>
+                </p>
+              </>
+            )}
+
             {/* 待定部位 */}
 
             <div>
@@ -555,33 +592,16 @@ class SupplygoodsDetail extends React.Component {
                 </>
               ) : null}
             </div>
-            <div style={{ width: '50%', height: '30px', float: 'left' }}>
-              <Button onClick={this.goMyshop}>上架到本店</Button>
-            </div>
+            {productExist === 'true' ? (
+              ''
+            ) : (
+              <div style={{ width: '50%', height: '30px', float: 'left' }}>
+                <Button onClick={this.goMyshop}>上架到本店</Button>
+              </div>
+            )}
           </div>
         </div>
-        <div
-          style={{
-            position: 'fixed',
-            bottom: '0',
-            right: '0',
-            width: '90%',
-            height: '50px',
-            float: 'left',
-          }}
-        >
-          <div style={{ margin: '0 auto', width: '300px', height: '100%', lineHeight: '50px' }}>
-            <Button style={{ margin: '0 5px' }} onClick={this.setGoodDetail}>
-              编辑
-            </Button>
-            <Button style={{ margin: '0 5px' }} onClick={this.setGoodState}>
-              下架
-            </Button>
-            <Button style={{ margin: '0 5px' }} onClick={this.deleteGood}>
-              删除
-            </Button>
-          </div>
-        </div>
+
         <GoodsDrawer
           onRef={e => {
             this.goodsDrawer.current = e;
