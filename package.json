@@ -15,9 +15,9 @@
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
     "prettier": "prettier -c --write \"**/*\"",
     "dev": "npm run start:dev",
-    "start": "cross-env REACT_APP_ENV=dev MOCK=none UMI_UI=none umi dev --port 8018",
-    "start:mock": "cross-env REACT_APP_ENV=mock UMI_UI=none umi dev --port 8018",
-    "start:pre": "cross-env REACT_APP_ENV=pre MOCK=none UMI_UI=none umi dev --port 8018",
+    "start": "cross-env REACT_APP_ENV=dev MOCK=none UMI_UI=none umi dev --port 8020",
+    "start:mock": "cross-env REACT_APP_ENV=mock UMI_UI=none umi dev --port 8020",
+    "start:pre": "cross-env REACT_APP_ENV=pre MOCK=none UMI_UI=none umi dev --port 8020",
     "tsc": "tsc",
     "ui": "umi ui",
     "postinstall": "patch-package"

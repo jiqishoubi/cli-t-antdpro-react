@@ -3,6 +3,7 @@ const routes = [
     path: '/user',
     component: '../layouts/UserLayout',
     routes: [
+      { path: '/', redirect: '/user/login' },
       {
         name: 'login',
         path: '/user/login',
@@ -21,15 +22,11 @@ const routes = [
     path: '/',
     component: '../layouts/SecurityLayout',
     routes: [
+      { path: '/', redirect: '/user/login' },
       {
         path: '/',
         component: '../layouts/BasicLayout',
-        authority: ['admin', 'user'],
         routes: [
-          {
-            path: '/',
-            redirect: '/welcome',
-          },
           {
             path: '/miniapp/auth',
             name: '授权',
