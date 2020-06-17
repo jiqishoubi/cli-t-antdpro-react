@@ -24,6 +24,8 @@ const api = {
   createSupplyProduct: '/supplyProduct/createSupplyProduct', //创建商品
   SupplyupdateProduct: '/skuProduct/updateProduct', //修改商品
   queySupplyProduct: '/supplyProduct/queySupplyProduct', //获取供货商品
+
+  createRetailProduct: '/retailProduct/createRetailProduct', //上架到本店
 };
 
 export default api;

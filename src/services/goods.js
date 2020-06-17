@@ -50,3 +50,20 @@ export async function addProductAjaxs(params) {
     data: params,
   });
 }
+
+// 获取市场商品
+export async function getMarketGoodsAjax(params) {
+  return requestw({
+    type: 'get',
+    url: api_goods.getProductsApi,
+    data: params,
+  });
+}
+
+//添加商品到本店
+export async function addGoodsProductAjax(params) {
+  return requestw({
+    url: api_goods.createRetailProduct,
+    data: params,
+  });
+}

@@ -76,6 +76,12 @@ const routes = [
             icon: 'smile',
             component: './goods/DistributionMarket',
           },
+          {
+            path: '/DistributionDetail',
+            name: '分销市场',
+            icon: 'smile',
+            component: './goods/DistributionMarket/Detail',
+          },
           { component: './404' },
         ],
       },

@@ -24,7 +24,7 @@ import ImageCarousel from '@/components/ImageCarousel';
 // import EditModal from '@/components/EditModal';
 import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
 import moment from 'moment';
-// import router from 'umi/router';
+import router from 'umi/router';
 const { TabPane } = Tabs;
 class SwitchContent extends React.Component {
   constructor(props) {
@@ -72,6 +72,15 @@ class SwitchContent extends React.Component {
       },
     );
   };
+  toDetail = toDetail => {
+    console.log(toDetail);
+    router.push({
+      pathname: '/DistributionDetail',
+      query: {
+        productId: toDetail.productId,
+      },
+    });
+  };
   render() {
     const { goodsList, total } = this.state;
     const formItemLayout = {
@@ -83,7 +92,12 @@ class SwitchContent extends React.Component {
         <div style={{ width: '100%', minHeight: '314px' }}>
           {goodsList.map((item, ind) => {
             return (
-              <div className={styles.goodsbox}>
+              <div
+                className={styles.goodsbox}
+                onClick={() => {
+                  this.toDetail(item);
+                }}
+              >
                 <div className={styles.goodstopimg}>
                   <img
                     style={{ width: '100%', height: '200px' }}
