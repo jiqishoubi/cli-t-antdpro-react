@@ -1,4 +1,4 @@
-import { router } from 'umi/router';
+import router from 'umi/router';
 import template1 from '../TemplateList/template/template1';
 import template2 from '../TemplateList/template/template2';
 

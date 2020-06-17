@@ -10,6 +10,13 @@ const routes = [
       },
     ],
   },
+  //编辑器
+  {
+    path: '/diy/editor',
+    name: '编辑器',
+    icon: 'smile',
+    component: './miniapp/Editor',
+  },
   {
     path: '/',
     component: '../layouts/SecurityLayout',
