@@ -16,7 +16,7 @@ import {
   Pagination,
 } from 'antd';
 import { getUrlParam, localDB } from '@/utils/utils';
-import './index.less';
+import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
@@ -63,9 +63,14 @@ class SwitchContent extends React.Component {
     }
   };
   onChange = pageNum => {
-    this.setState({
-      pageNum,
-    });
+    this.setState(
+      {
+        pageNum,
+      },
+      () => {
+        this.getData();
+      },
+    );
   };
   render() {
     const { goodsList, total } = this.state;
@@ -74,32 +79,41 @@ class SwitchContent extends React.Component {
       wrapperCol: { span: 15 },
     };
     return (
-      <div>
-        {goodsList.map((item, ind) => {
-          return (
-            <div className="goodsbox">
-              <div className="goodstopimg">
-                <img
-                  style={{ width: '100%', height: '200px' }}
-                  src={item.productPic}
-                  alt="路径错误"
-                />
+      <>
+        <div style={{ width: '100%', minHeight: '314px' }}>
+          {goodsList.map((item, ind) => {
+            return (
+              <div className={styles.goodsbox}>
+                <div className={styles.goodstopimg}>
+                  <img
+                    style={{ width: '100%', height: '200px' }}
+                    src={item.productPic}
+                    alt="路径错误"
+                  />
+                </div>
+                <div className={styles.goodstitle}>
+                  <div className={styles.goodsname}>{item.productName}</div>
+                  <p>
+                    供货价：￥{item.priceRange.minSupplyPrice}-￥{item.priceRange.maxSupplyPrice}{' '}
+                  </p>
+                  <p>
+                    建议售价：￥{item.priceRange.minPrice}-￥{item.priceRange.maxPrice}{' '}
+                  </p>
+                  <p>月销量：{item.priceRange.monthSale} </p>
+                </div>
               </div>
-              <div className="goodstitle">
-                <div className="goodsname">{item.productName}</div>
-                <p>
-                  供货价：￥{item.priceRange.minSupplyPrice}-￥{item.priceRange.maxSupplyPrice}{' '}
-                </p>
-                <p>
-                  建议售价：￥{item.priceRange.minPrice}-￥{item.priceRange.maxPrice}{' '}
-                </p>
-                <p>月销量：{item.priceRange.monthSale} </p>
-              </div>
-            </div>
-          );
-        })}
-        <Pagination defaultCurrent={6} onChange={this.onChange} total={total} />
-      </div>
+            );
+          })}
+        </div>
+        <div style={{ width: '100%', height: '30px' }}>
+          <Pagination
+            style={{ float: 'right' }}
+            defaultCurrent={6}
+            onChange={this.onChange}
+            total={total}
+          />
+        </div>
+      </>
     );
   }
 }

@@ -1,7 +1,7 @@
 // 请求域名
 export const allHostObj = {
-  // devHost: { text: '测试', host: 'http://1.2.4.160:9018' },
-  devHost: { text: '测试', host: 'https://greecardcrmt.bld365.com' },
+  devHost: { text: '测试', host: 'http://1.2.4.160:9018' },
+  // devHost: { text: '测试', host: 'https://greecardcrmt.bld365.com' },
   proHost: { text: '生产', host: 'https://xk.coc.10086.cn/express' },
 };
 

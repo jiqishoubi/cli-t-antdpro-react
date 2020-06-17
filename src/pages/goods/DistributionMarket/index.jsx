@@ -15,7 +15,7 @@ import {
   Tabs,
 } from 'antd';
 import { getUrlParam, localDB } from '@/utils/utils';
-import './index.less';
+import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
@@ -110,12 +110,12 @@ class SupplygoodsDetail extends React.Component {
           <Breadcrumb.Item>产品管理</Breadcrumb.Item>
           <Breadcrumb.Item>分销市场</Breadcrumb.Item>
         </Breadcrumb>
-        <div className="header">
-          <div className="headerleft">
-            <div className="logo">1</div>
-            <div className="teamname">便利电云商城分销市场</div>
+        <div className={styles.header}>
+          <div className={styles.headerleft}>
+            <div className={styles.logo}>1</div>
+            <div className={styles.teamname}>便利电云商城分销市场</div>
           </div>
-          <div className="headerright">
+          <div className={styles.headerright}>
             <Form
               {...formItemLayout}
               ref={this.formRef}
@@ -147,7 +147,7 @@ class SupplygoodsDetail extends React.Component {
           </div>
         </div>
 
-        <div className="tab">
+        <div className={styles.tab}>
           {/* <Radio.Group onChange={this.handleModeChange} value={mode} style={{ marginBottom: 8 }}>
             <Radio.Button value="top">Horizontal</Radio.Button>
             <Radio.Button value="left">Vertical</Radio.Button>
