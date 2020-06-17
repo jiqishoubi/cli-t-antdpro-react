@@ -1,7 +1,7 @@
+import defaultTheme from './theme/defaultTheme';
+
 export default {
-  navTheme: 'dark',
-  // 拂晓蓝
-  primaryColor: 'black',
+  navTheme: 'dark', //'light' | 'dark';
   layout: 'sidemenu', //'sidemenu' | 'topmenu';
   contentWidth: 'Fluid', //'Fluid' | 'Fixed';
   fixedHeader: true,
@@ -9,7 +9,7 @@ export default {
   fixSiderbar: true,
   colorWeak: false,
   menu: { locale: false },
-  title: 'Ant Design Pro',
+  title: 'BLD',
 
   // Your custom iconfont Symbol script Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js
@@ -20,5 +20,5 @@ export default {
   /**
    * 自定义
    */
-  isTabs: true,
+  isTabs: false, //是否多tab
 };

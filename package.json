@@ -1,5 +1,5 @@
 {
-  "name": "ant-design-pro",
+  "name": "react-pro",
   "version": "4.0.0",
   "private": true,
   "description": "An out-of-box UI solution for enterprise applications",
@@ -19,7 +19,8 @@
     "start:mock": "cross-env REACT_APP_ENV=mock UMI_UI=none umi dev --port 8018",
     "start:pre": "cross-env REACT_APP_ENV=pre MOCK=none UMI_UI=none umi dev --port 8018",
     "tsc": "tsc",
-    "ui": "umi ui"
+    "ui": "umi ui",
+    "postinstall": "patch-package"
   },
   "husky": {
     "hooks": {
@@ -51,6 +52,7 @@
     "md5": "^2.2.1",
     "moment": "^2.24.0",
     "omit.js": "^1.0.2",
+    "patch-package": "^6.2.2",
     "path-to-regexp": "2.4.0",
     "qs": "^6.9.0",
     "react": "^16.8.6",
@@ -113,19 +115,14 @@
   "create-umi": {
     "ignoreScript": [
       "functions*",
-      "site",
       "generateMock"
     ],
     "ignoreDependencies": [
-      "netlify*",
       "serverless"
     ],
     "ignore": [
       ".git",
-      ".github",
-      ".gitpod.yml",
       "lambda",
-      "netlify.toml",
       "README.*.md",
       "azure-pipelines.yml",
       "CNAME",

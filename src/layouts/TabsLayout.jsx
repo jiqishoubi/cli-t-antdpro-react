@@ -1,8 +1,27 @@
 import React, { Component } from 'react';
+import { connect } from 'dva';
 import { router } from 'umi';
 import { Tabs } from 'antd';
+import defaultTheme from '../../config/theme/defaultTheme';
+import styles from './TabsLayout.less';
 
 const { TabPane } = Tabs;
+
+//tabBar 样式
+const tabBarListStyle = {
+  boxSizing: 'border-box',
+  height: defaultTheme['t-istabs-tabbar-height'],
+  backgroundColor: '#fff',
+  userSelect: 'none',
+  boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
+  padding: '0 4px',
+  transition: 'all 0.3s',
+
+  position: 'fixed',
+  top: defaultTheme['layout-header-height'],
+  right: 0,
+  zIndex: 1,
+};
 
 class index extends Component {
   constructor(props) {
@@ -13,7 +32,6 @@ class index extends Component {
     };
   }
   componentDidMount() {
-    console.log('tabsLayout didMount');
     this.props.onRef(this);
   }
 
@@ -87,17 +105,30 @@ class index extends Component {
     router.replace(activeKey);
   };
 
+  /**
+   * 渲染
+   */
   render() {
     const { panes, activeKey } = this.state;
+    const { collapsed } = this.props;
 
-    console.log(panes);
-    console.log(activeKey);
+    //关闭按钮
+    const operations = null;
+
+    //tabBar 样式
+    let tabBarListStyle2 = {
+      ...tabBarListStyle,
+      left: collapsed ? defaultTheme['menu-collapsed-width'] : defaultTheme['t-siderMenu-width'],
+    };
 
     return (
       <Tabs
+        className={styles.tabs_wrap}
+        id="istabs_tabs_wrap"
         hideAdd
         type="editable-card"
-        tabBarStyle={{ userSelect: 'none' }}
+        size="small"
+        tabBarStyle={tabBarListStyle2}
         // tabBarExtraContent={operations}
 
         activeKey={activeKey}
@@ -105,10 +136,14 @@ class index extends Component {
         onEdit={this.onEdit}
       >
         {panes.map((obj, index) => {
-          console.log(obj);
           return (
-            <TabPane tab={obj.name} key={obj.path}>
-              <div>
+            <TabPane key={obj.path} tab={obj.name} closable={panes.length > 1}>
+              <div
+                className={styles.paneCard}
+                style={{
+                  marginTop: Number(defaultTheme['t-istabs-tabbar-height'].split('px')[0]),
+                }}
+              >
                 <obj.component {...this.props} />
               </div>
             </TabPane>

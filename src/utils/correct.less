@@ -1,0 +1,25 @@
+// 修正 样式 less
+
+//多tab
+#istabs_tabs_wrap {
+  & > .ant-tabs-nav {
+    &::before {
+      border-bottom: none !important;
+    }
+
+    // button
+    button.ant-tabs-tab {
+      font-weight: normal;
+      padding-left: 13px;
+      padding-right: 13px;
+
+      //关闭符号
+      .ant-tabs-tab-remove {
+        .anticon.anticon-close {
+          position: relative;
+          top: 2px;
+        }
+      }
+    }
+  }
+}

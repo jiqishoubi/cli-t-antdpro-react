@@ -8,8 +8,14 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import TabsLayout from './TabsLayout';
 import { getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import defaultSettings from '../../config/defaultSettings';
+import defaultTheme from '../../config/theme/defaultTheme';
+import { defaultFooterDom } from './UserLayout';
+
+const siderWidth = defaultTheme['t-siderMenu-width']
+  ? Number(defaultTheme['t-siderMenu-width'].split('px')[0])
+  : 0;
 
 const noMatch = (
   <Result
@@ -24,38 +30,11 @@ const noMatch = (
   />
 );
 
-const defaultFooterDom = (
-  <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
-    links={[
-      {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
-        blankTarget: true,
-      },
-      {
-        key: 'github',
-        title: <GithubOutlined />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
-        blankTarget: true,
-      },
-    ]}
-  />
-);
-
 const BasicLayout = props => {
   const tabsLayout = useRef();
   const {
     dispatch,
     children,
-    settings,
     location = {
       pathname: '/',
     },
@@ -66,12 +45,6 @@ const BasicLayout = props => {
    */
 
   useEffect(() => {
-    // if (dispatch) {
-    //   dispatch({
-    //     type: 'user/fetchCurrent',
-    //   });
-    // }
-
     //监听路由
     if (defaultSettings.isTabs) {
       if (!window.UNLISTEN) {
@@ -116,7 +89,7 @@ const BasicLayout = props => {
 
   return (
     <ProLayout
-      logo={logo}
+      logo={() => <img style={{ width: 50, height: 'auto', marginLeft: 10 }} src={logo} />}
       menuHeaderRender={(logoDom, titleDom) => (
         <Link to="/">
           {logoDom}
@@ -150,7 +123,11 @@ const BasicLayout = props => {
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
       {...props}
-      {...settings}
+      {...defaultSettings}
+      /**
+       * 自定义
+       */
+      siderWidth={siderWidth}
     >
       <Authorized
         // authority={authorized!.authority}
@@ -171,8 +148,7 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings, login }) => ({
+export default connect(({ global, login }) => ({
   collapsed: global.collapsed,
-  settings,
   login,
 }))(BasicLayout);

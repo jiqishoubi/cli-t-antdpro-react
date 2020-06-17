@@ -6,34 +6,29 @@ import { connect } from 'dva';
 import { router } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import defaultTheme from '../../../config/theme/defaultTheme';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {
     const { key } = event;
-
     if (key === 'logout') {
       const { dispatch } = this.props;
-
       if (dispatch) {
         dispatch({
           type: 'login/logout',
         });
       }
-
       return;
     }
-
     router.push(`/account/${key}`);
   };
 
+  /**
+   * 渲染
+   */
   render() {
-    const {
-      currentUser = {
-        avatar: '',
-        name: '',
-      },
-      menu,
-    } = this.props;
+    const { menu, login } = this.props;
+
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
         {menu && (
@@ -56,27 +51,24 @@ class AvatarDropdown extends React.Component {
         </Menu.Item>
       </Menu>
     );
-    return currentUser && currentUser.name ? (
+
+    return (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-          <span className={styles.name}>{currentUser.name}</span>
+          <Avatar
+            className={styles.avatar}
+            size="small"
+            src={''}
+            alt="avatar"
+            style={{ backgroundColor: defaultTheme['primary-color'] }}
+          />
+          <span className={styles.name}>{'test'}</span>
         </span>
       </HeaderDropdown>
-    ) : (
-      <span className={`${styles.action} ${styles.account}`}>
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      </span>
     );
   }
 }
 
-export default connect(({ user }) => ({
-  currentUser: user.currentUser,
+export default connect(({ login }) => ({
+  login,
 }))(AvatarDropdown);
