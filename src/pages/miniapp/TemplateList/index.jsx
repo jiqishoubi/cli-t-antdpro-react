@@ -39,7 +39,7 @@ const Index = props => {
       },
     });
   };
-  console.log('template');
+
   return (
     <div className={styles.sass_right_card}>
       <div style={{ padding: 10, backgroundColor: '#fff' }}>

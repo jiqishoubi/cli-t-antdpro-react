@@ -3,6 +3,7 @@ const routes = [
     path: '/user',
     component: '../layouts/UserLayout',
     routes: [
+      { path: '/', redirect: '/user/login' },
       {
         name: 'login',
         path: '/user/login',
@@ -10,19 +11,22 @@ const routes = [
       },
     ],
   },
+  //编辑器
+  {
+    path: '/diy/editor',
+    name: '编辑器',
+    icon: 'smile',
+    component: './miniapp/Editor',
+  },
   {
     path: '/',
     component: '../layouts/SecurityLayout',
     routes: [
+      { path: '/', redirect: '/user/login' },
       {
         path: '/',
         component: '../layouts/BasicLayout',
-        authority: ['admin', 'user'],
         routes: [
-          {
-            path: '/',
-            redirect: '/welcome',
-          },
           {
             path: '/miniapp/auth',
             name: '授权',

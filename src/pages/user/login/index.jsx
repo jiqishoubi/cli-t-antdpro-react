@@ -5,7 +5,6 @@ import { UserOutlined, LockOutlined, CodeSandboxCircleFilled } from '@ant-design
 import styles from './index.less';
 
 const index = props => {
-  console.log(props);
   const { dispatch, loadingBtn } = props;
   const onFinish = values => {
     dispatch({

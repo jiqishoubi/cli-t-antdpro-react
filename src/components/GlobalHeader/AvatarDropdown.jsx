@@ -1,26 +1,27 @@
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import { ClickParam } from 'antd/es/menu';
 import React from 'react';
 import { connect } from 'dva';
 import { router } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import defaultTheme from '../../../config/theme/defaultTheme';
+import { mConfirm } from '@/utils/utils';
 
 class AvatarDropdown extends React.Component {
   onMenuClick = event => {
     const { key } = event;
-    if (key === 'logout') {
-      const { dispatch } = this.props;
-      if (dispatch) {
-        dispatch({
-          type: 'login/logout',
+    const { dispatch } = this.props;
+
+    switch (key) {
+      case 'logout':
+        mConfirm('确认注销？', () => {
+          return dispatch({
+            type: 'login/logout',
+          });
         });
-      }
-      return;
+        break;
     }
-    router.push(`/account/${key}`);
   };
 
   /**
