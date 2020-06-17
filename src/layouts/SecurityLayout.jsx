@@ -24,18 +24,13 @@ class SecurityLayout extends React.Component {
   render() {
     const { isReady } = this.state;
     const { children, login } = this.props;
+    console.log(login);
 
     // You can replace it to your authentication rule (such as check token exists)
     // 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）
     let isLogin = true;
     let loginState = localDB.getItem(loginStateKey);
-    if (
-      !login.loginInfo ||
-      !login.loginInfo.userId ||
-      !loginState ||
-      !loginState.loginInfo ||
-      !loginState.loginInfo.userId
-    ) {
+    if (!loginState || !loginState.loginInfo || !loginState.loginInfo.userId) {
       isLogin = false;
     }
 
@@ -51,7 +46,6 @@ class SecurityLayout extends React.Component {
   }
 }
 
-export default connect(({ login, loading }) => ({
-  login,
+export default connect(({ loading }) => ({
   // loading: loading.models.user,
 }))(SecurityLayout);
