@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
-import { Button, Card, Row, Col, Modal } from 'antd';
+import { Card, Row, Col } from 'antd';
 import { QrcodeOutlined } from '@ant-design/icons';
-import { getUrlParam } from '@/utils/utils';
 import HelpDetails from './components/HelpDetails';
 import MiniappInfo from './components/MiniappInfo';
 import VerifyList from './components/VerifyList';
@@ -11,8 +10,6 @@ import useExperienceCodeModal from './components/ExperienceCodeModal';
 import ExAccountModal from './components/ExAccountModal';
 import helpList from './helpList';
 import styles from './index.less';
-
-import GoodsDrawer from '@/components/goods/GoodsDrawer';
 
 const ExperienceCode = props => {
   const { miniapp } = props;
@@ -39,7 +36,6 @@ class Index extends React.Component {
     super(props);
     this.state = {};
   }
-  async componentDidMount() {}
 
   openHelpDetails = dom => {
     this.helpDetails.toggle(dom);
@@ -48,6 +44,7 @@ class Index extends React.Component {
   openBindModal = () => {
     this.exAccountModal.open();
   };
+
   closeBindModal = () => {
     this.exAccountModal.close();
   };
@@ -61,7 +58,7 @@ class Index extends React.Component {
               <MiniappInfo {...this.props} />
             </Card>
             <Row gutter={10}>
-              <Col flex={'0 0 50%'}>
+              <Col flex="0 0 50%">
                 <Card
                   title="审核记录"
                   bodyStyle={{ minHeight: 250 }}
@@ -70,7 +67,7 @@ class Index extends React.Component {
                   <VerifyList {...this.props} />
                 </Card>
               </Col>
-              <Col flex={'0 0 50%'}>
+              <Col flex="0 0 50%">
                 <Card
                   title="体验账号"
                   bodyStyle={{ minHeight: 250 }}
@@ -111,8 +108,6 @@ class Index extends React.Component {
           }}
           {...this.props}
         />
-
-        <GoodsDrawer />
       </div>
     );
   }
