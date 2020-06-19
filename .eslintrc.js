@@ -21,5 +21,6 @@ module.exports = {
     'prefer-template': 0, // 必须使用模板字符串
     'spaced-comment': 0, // 注释//后面必须是空格
     'no-console': 'error', //不能console
+    'prefer-const': 0,
   },
 };

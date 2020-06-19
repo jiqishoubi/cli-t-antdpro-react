@@ -195,6 +195,7 @@ class Index extends Component {
     const postData = {
       productId: record.productId,
       teamId: record.teamId,
+      productType: 'SELF_SUPPORT_GOODS',
     };
     const res = await getProductsAjax(postData);
     if (res && res.status == 0 && res.data && res.data[0]) {
