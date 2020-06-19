@@ -28,7 +28,6 @@ class productManager extends React.Component {
   }
 
   modifydata = e => {
-    console.log(e);
     const newObj = {};
     newObj.data = e.list;
     newObj.rowTop = e.total;
@@ -40,7 +39,6 @@ class productManager extends React.Component {
   };
 
   onRadioChange = e => {
-    console.log(e);
     const getCode = e.target.value;
     this.setState(
       {
@@ -86,7 +84,6 @@ class productManager extends React.Component {
       url: api_goods.upOrDown,
       data: postdata,
     });
-    console.log(res);
     this.setState({
       upOrDown: false,
     });
@@ -129,7 +126,6 @@ class productManager extends React.Component {
       type: 'get',
     });
     this.setState({ delGoods: false }); // haode
-    console.log(res);
     if (res.status == 0) {
       message.success('删除商品成功');
       this.Tablew.getData();
@@ -141,7 +137,6 @@ class productManager extends React.Component {
   render() {
     const { goodsStatus, productStatusValue, upOrDown, delGoods } = this.state;
 
-    console.log(pathimgHeader);
     const pageTiaojian = (
       <>
         <Radio.Group onChange={this.onRadioChange} defaultValue="a">

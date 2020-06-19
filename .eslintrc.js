@@ -20,6 +20,6 @@ module.exports = {
     'jsx-a11y/alt-text': 0, // img必须有alt
     'prefer-template': 0, // 必须使用模板字符串
     'spaced-comment': 0, // 注释//后面必须是空格
-    'no-console': 'error',
+    'no-console': 'error', //不能console
   },
 };
