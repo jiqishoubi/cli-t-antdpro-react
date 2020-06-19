@@ -16,6 +16,8 @@ module.exports = {
     ],
     eqeqeq: 0, // ===
     'operator-assignment': 0, // 运算符赋值 +=
-    'no-param-reassign': 0, //函数参数的属性赋值
+    'no-param-reassign': 0, // 函数参数的属性赋值
+    'jsx-a11y/alt-text': 0, // img必须有alt
+    'prefer-template': 0, // 必须使用模板字符串
   },
 };

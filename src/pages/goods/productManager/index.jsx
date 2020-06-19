@@ -2,9 +2,8 @@ import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import SublimeVideo from 'react-sublime-video';
-import { Button, Card, Row, Col, Breadcrumb, Radio, Modal, message } from 'antd';
-import { getUrlParam, pathimgHeader, pathVideoHeader } from '@/utils/utils';
-import styles from './index.less';
+import { Button, Breadcrumb, Radio, Modal, message } from 'antd';
+import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
@@ -14,39 +13,35 @@ class productManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageSize: 10,
-      pageNo: 1,
-      tableDate: [],
       productStatusValue: '',
       upType: '',
       upOrDown: false,
       productId: '',
       delGoods: false,
-      productStatus: '',
     };
     // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
   }
-  componentDidMount() {
-    // this.getData();
-  }
 
-  modifydata(e) {
-    console.log(e);
-    let newObj = {};
-    newObj.data = e.list;
-    newObj.rowTop = e.total;
-    return newObj;
-  }
   recordEdit(record) {
     this.goodsDrawer.current.open(record);
   }
+
+  modifydata = e => {
+    console.log(e);
+    const newObj = {};
+    newObj.data = e.list;
+    newObj.rowTop = e.total;
+    return newObj;
+  };
+
   addGoods = () => {
     this.goodsDrawer.current.open();
   };
+
   onRadioChange = e => {
     console.log(e);
-    let getCode = e.target.value;
+    const getCode = e.target.value;
     this.setState(
       {
         goodsStatus: getCode,
@@ -57,7 +52,8 @@ class productManager extends React.Component {
       },
     );
   };
-  //上架下架
+
+  // 上架下架
   upOrDownMethod = e => {
     if (e.productStatus == 0) {
       this.setState({
@@ -70,20 +66,22 @@ class productManager extends React.Component {
         upType: '0',
       });
     }
-    this.setState({ upOrDown: true, productStatus: e.productStatus, productId: e.productId });
+    this.setState({ upOrDown: true, productId: e.productId });
   };
+
   closeAddressModals = () => {
     this.setState({
       upOrDown: false,
     });
   };
+
   addressModalsOk = async () => {
     const { productId, upType } = this.state;
-    let postdata = {
+    const postdata = {
       productId,
       type: upType,
     };
-    let res = await requestw({
+    const res = await requestw({
       type: 'get',
       url: api_goods.upOrDown,
       data: postdata,
@@ -104,30 +102,33 @@ class productManager extends React.Component {
       message.warning('操作商品失败');
     }
   };
-  ///删除 商品
+
+  // 删除 商品
   deleteGoods(e) {
     this.setState({
       delGoods: true,
       delProductId: e.productId,
     });
   }
-  //关闭删除商品弹框
+
+  // 关闭删除商品弹框
   closedeleteGoodsModals = () => {
     this.setState({
       delGoods: false,
     });
   };
-  //删除商品接口
+
+  // 删除商品接口
   deleteGoodsModalsOk = async () => {
-    let postdata = {
+    const postdata = {
       productId: this.state.delProductId,
     };
-    let res = await requestw({
+    const res = await requestw({
       url: api_goods.deleteGoods,
       data: postdata,
       type: 'get',
     });
-    this.setState({ delGoods: false });
+    this.setState({ delGoods: false }); // haode
     console.log(res);
     if (res.status == 0) {
       message.success('删除商品成功');
@@ -136,20 +137,12 @@ class productManager extends React.Component {
       message.warning('删除商品失败');
     }
   };
+
   render() {
-    const {
-      tableDate,
-      goodsStatus,
-      productStatusValue,
-      upType,
-      upOrDown,
-      productId,
-      productStatus,
-      delGoods,
-    } = this.state;
+    const { goodsStatus, productStatusValue, upOrDown, delGoods } = this.state;
 
     console.log(pathimgHeader);
-    let pageTiaojian = (
+    const pageTiaojian = (
       <>
         <Radio.Group onChange={this.onRadioChange} defaultValue="a">
           <Radio.Button value="3">全部</Radio.Button>
@@ -170,11 +163,13 @@ class productManager extends React.Component {
         </Breadcrumb>
 
         <Tablew
-          onRef={c => (this.Tablew = c)}
-          //外部添加查询条件
+          onRef={c => {
+            this.Tablew = c;
+          }}
+          // 外部添加查询条件
           Externalplacement={pageTiaojian}
           modifydata={this.modifydata}
-          //查询条件
+          // 查询条件
           querystyle={{ float: 'right' }}
           queryItems={[
             {
@@ -189,7 +184,7 @@ class productManager extends React.Component {
           }}
           restype={goodsStatus}
           retType="get"
-          //表格
+          // 表格
           queryApi={api_goods.getGoodsList}
           columns={[
             {
@@ -198,8 +193,6 @@ class productManager extends React.Component {
               alent: 'left',
               width: 300,
               render: v => {
-                // console.log();
-
                 return (
                   <>
                     <dl>
@@ -263,9 +256,9 @@ class productManager extends React.Component {
               title: '上架时间',
               key: 'upperTime',
               render: upperTime => {
-                let time = moment(upperTime).format();
-                let d = new Date(time);
-                let batchTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                const time = moment(upperTime).format();
+                const d = new Date(time);
+                const batchTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
                 return <span>{batchTime}</span>;
               },
             },
