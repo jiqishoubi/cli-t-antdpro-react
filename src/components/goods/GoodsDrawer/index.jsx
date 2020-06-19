@@ -26,7 +26,7 @@ const formLayoutTail = {
   wrapperCol: { offset: label, span: total - label },
 };
 
-class index extends Component {
+class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ class index extends Component {
       productObj: {},
       lookingRecord: null,
 
-      //form
+      // form
       typeId: '',
       specsType: 0,
     };
@@ -64,11 +64,12 @@ class index extends Component {
       visible: true,
       lookingRecord: record || null,
     });
-    //获取详情
+    // 获取详情
     if (record) {
       this.getInfo(record);
     }
   };
+
   close = () => {
     this.setState({
       visible: false,
@@ -76,28 +77,27 @@ class index extends Component {
       lookingRecord: null,
     });
   };
+
   /**
    * form change
    */
-  onValuesChange = (changedValues, allValues) => {
-    console.log(changedValues);
-  };
   typeIdChange = typeId => {
     this.setState({ typeId });
     this.formRef.current.resetFields(['subTypeId']);
   };
+
   specsTypeChange = e => {
-    let value = e.target.value;
+    const value = e.target.value;
     this.setState({ specsType: value });
   };
 
-  //select
+  // select
   getSelect2List = typeId => {
     const { goods } = this.props;
     const { goodsTypeList } = goods;
     let goodsTypeList2 = [];
     if (typeId !== undefined) {
-      let filterArr = goodsTypeList.filter(obj => obj.typeId == typeId);
+      const filterArr = goodsTypeList.filter(obj => obj.typeId == typeId);
       if (filterArr[0]) {
         goodsTypeList2 = filterArr[0].subTypeList;
       }
@@ -105,8 +105,8 @@ class index extends Component {
     return goodsTypeList2;
   };
 
-  //type 1 old=>form
-  //type 2 form=>old
+  // type 1 old=>form
+  // type 2 form=>old
   dealInfoData = (type, values) => {
     const { productObj, lookingRecord } = this.state;
     let data = '';
@@ -115,9 +115,9 @@ class index extends Component {
        * 改成放进form的
        */
       data = JSON.parse(JSON.stringify(values));
-      //图片
-      let fileList = data.productPic.split(',').map((str, index) => {
-        let url = str.indexOf('http') > -1 ? str : pathimgHeader + str;
+      // 图片
+      const fileList = data.productPic.split(',').map((str, index) => {
+        const url = str.indexOf('http') > -1 ? str : pathimgHeader + str;
         return {
           uid: -(index + 1),
           name: url,
@@ -125,13 +125,13 @@ class index extends Component {
           url,
         };
       });
-      //价格
+      // 价格
       data.productPrice = data.productPrice / 100;
       data.price = data.price / 100;
       data.transportAmount = data.transportAmount / 100;
-      //图片
+      // 图片
       data.fileList = fileList;
-      //多规格
+      // 多规格
       if (data.specsType == 1) {
         data.skuPropertyList.forEach(obj => {
           obj.price = obj.price / 100;
@@ -146,9 +146,9 @@ class index extends Component {
        * 转成提交
        */
       if (lookingRecord) {
-        //编辑
+        // 编辑
         data = JSON.parse(JSON.stringify(productObj));
-        let deleteKeyArr = [
+        const deleteKeyArr = [
           'createTime',
           'modifyTime',
           'upperTime',
@@ -160,12 +160,12 @@ class index extends Component {
           delete data[key];
         });
       } else {
-        //新增
+        // 新增
         data = JSON.parse(JSON.stringify(values));
       }
-      //图片
-      let productPic = values.fileList
-        .map((item, index) => {
+      // 图片
+      const productPic = values.fileList
+        .map(item => {
           return item.url;
         })
         .join(',');
@@ -173,12 +173,12 @@ class index extends Component {
         ...data,
         ...values,
         productPic,
-        //价格
+        // 价格
         price: values.price ? values.price * 100 : null,
         productPrice: values.productPrice * 100,
         transportAmount: values.transportAmount * 100,
       };
-      //多规格
+      // 多规格
       if (data.specsType == 1) {
         data.sku.skuJson.forEach(obj => {
           obj.price = obj.price * 100;
@@ -190,28 +190,28 @@ class index extends Component {
     return data;
   };
 
-  //获取详情
+  // 获取详情
   getInfo = async record => {
-    let postData = {
+    const postData = {
       productId: record.productId,
       teamId: record.teamId,
     };
-    let res = await getProductsAjax(postData);
+    const res = await getProductsAjax(postData);
     if (res && res.status == 0 && res.data && res.data[0]) {
-      console.log('详情', res.data[0]);
-      let productObj = res.data[0];
+      const productObj = res.data[0];
 
       this.setState({
         productObj,
-        //form
+        // form
         typeId: productObj.typeId,
         specsType: productObj.specsType,
       });
-      //回显
-      let formData = this.dealInfoData(1, productObj);
+      // 回显
+      const formData = this.dealInfoData(1, productObj);
       this.formRef.current.setFieldsValue(formData);
     }
   };
+
   /**
    * 提交
    */
@@ -220,21 +220,26 @@ class index extends Component {
     if (this.tSku && this.tSku.current) {
       await this.tSku.current.validate();
     }
-    let values = await this.formRef.current.validateFields();
+    const values = await this.formRef.current.validateFields();
 
-    let confirmStr = lookingRecord ? '确认修改？' : '确认新增？';
+    const confirmStr = lookingRecord ? '确认修改？' : '确认新增？';
     mConfirm(confirmStr, async () => {
-      return lookingRecord ? await this.edit(values) : await this.add(values);
+      if (lookingRecord) {
+        await this.edit(values);
+      } else {
+        await this.add(values);
+      }
     });
   };
+
   /**
    * 编辑
    */
   edit = values => {
     return new Promise(async resolve => {
-      let postData = this.dealInfoData(0, values);
+      const postData = this.dealInfoData(0, values);
       postData.productType = 'SELF_SUPPORT_GOODS';
-      let res = await updateProductAjax(postData);
+      const res = await updateProductAjax(postData);
       if (res && res.status == 0) {
         message.success(res.message || '修改成功');
         this.close();
@@ -247,14 +252,15 @@ class index extends Component {
       resolve();
     });
   };
+
   /**
    * 新增
    */
   add = values => {
     return new Promise(async resolve => {
-      let postData = this.dealInfoData(0, values);
+      const postData = this.dealInfoData(0, values);
       postData.productType = 'SELF_SUPPORT_GOODS';
-      let res = await addProductAjax(postData);
+      const res = await addProductAjax(postData);
       if (res && res.status == 0) {
         message.success(res.message || '新增成功');
         this.close();
@@ -274,15 +280,14 @@ class index extends Component {
   render() {
     const {
       visible,
-      productObj,
-      //form
+      // form
       typeId,
       specsType,
     } = this.state;
     const { goods } = this.props;
     const { goodsTypeList } = goods;
 
-    let goodsTypeList2 = this.getSelect2List(typeId);
+    const goodsTypeList2 = this.getSelect2List(typeId);
 
     return (
       <Drawer
@@ -293,7 +298,7 @@ class index extends Component {
         width={820}
         onClose={this.close}
       >
-        <Form ref={this.formRef} {...formLayout} onValuesChange={this.onValuesChange}>
+        <Form ref={this.formRef} {...formLayout}>
           {/* 基本信息 */}
           <Form.Item className={styles.item_title}>基本信息</Form.Item>
           <Form.Item
@@ -316,8 +321,8 @@ class index extends Component {
             rules={[{ required: true, message: '请选择商品分类' }]}
           >
             <Select placeholder="请选择商品分类" onChange={this.typeIdChange}>
-              {goodsTypeList.map((obj, index) => (
-                <Select.Option key={index} value={obj.typeId}>
+              {goodsTypeList.map(obj => (
+                <Select.Option key={obj.typeId} value={obj.typeId}>
                   {obj.typeName}
                 </Select.Option>
               ))}
@@ -329,8 +334,8 @@ class index extends Component {
             rules={[{ required: true, message: '请选择商品分类' }]}
           >
             <Select placeholder="请选择商品分类">
-              {goodsTypeList2.map((obj, index) => (
-                <Select.Option key={index} value={obj.subTypeId}>
+              {goodsTypeList2.map(obj => (
+                <Select.Option key={obj.subTypeId} value={obj.subTypeId}>
                   {obj.subTypeName}
                 </Select.Option>
               ))}
@@ -437,4 +442,4 @@ class index extends Component {
 
 export default connect(({ goods }) => ({
   goods,
-}))(index);
+}))(Index);
