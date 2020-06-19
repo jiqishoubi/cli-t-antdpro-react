@@ -12,14 +12,16 @@ import { Drawer, Form, Input, Radio, Select, Button, message } from 'antd';
 import TUpload2 from '@/components/T-Upload2';
 import TSku from '@/components/DistributionMarket/T-Sku';
 import TEditDetails from '@/components/DistributionMarket/T-EditDetails';
-import { mConfirm, pathimgHeader } from '@/utils/utils';
+import { mConfirm, pathimgHeader, localDB } from '@/utils/utils';
 import {
   getProductsAjax,
   updateProductAjax,
   addProductAjax,
   addGoodsProductAjax,
+  updateRetailProductsAjax,
 } from '@/services/goods';
 import styles from './index.less';
+import router from 'umi/router';
 
 const label = 4;
 const total = 23;
@@ -141,10 +143,17 @@ class index extends Component {
         data.skuPropertyList.forEach(obj => {
           obj.price = obj.price / 100;
         });
-        data.sku = {
-          skuJson: data.skuPropertyList,
-          skuList: data.skuPropertys,
-        };
+        if (this.props.type == 'fenxiao') {
+          data.sku = {
+            skuJson: data.retailProductSkuPropertyList,
+            skuList: data.retailProductSkuPropertys,
+          };
+        } else {
+          data.sku = {
+            skuJson: data.skuPropertyList,
+            skuList: data.skuPropertys,
+          };
+        }
       }
     } else {
       /**
@@ -204,6 +213,7 @@ class index extends Component {
     let postData = {
       productId: record.productId,
       teamId: record.teamId,
+      productType: record.productType,
     };
     let res = await getProductsAjax(postData);
     if (res && res.status == 0 && res.data && res.data[0]) {
@@ -218,8 +228,9 @@ class index extends Component {
         specsType: productObj.specsType,
       });
       //回显
-      let formData = this.dealInfoData(1, supplyGoodsList);
+      let formData = this.dealInfoData(1, productObj);
       console.log(formData);
+      formData.retailPrice = formData.supplyPrice;
 
       this.formRef.current.setFieldsValue(formData);
     }
@@ -232,6 +243,7 @@ class index extends Component {
     if (this.tSku && this.tSku.current) {
       await this.tSku.current.validate();
     }
+
     let values = await this.formRef.current.validateFields();
 
     let confirmStr = lookingRecord ? '确认修改？' : '确认新增？';
@@ -245,21 +257,52 @@ class index extends Component {
   edit = values => {
     return new Promise(async resolve => {
       let postData = this.dealInfoData(0, values);
-      postData.product_type = 'RETAIL_GOODS';
+      postData.productType = 'RETAIL_GOODS';
+      postData.teamId = localDB.getItem('teamId');
       console.log(this.state.productId);
 
       postData.supplyProductId = this.state.productId;
-      let res = await addGoodsProductAjax(postData);
-      if (res && res.status == 0) {
-        message.success(res.message || '修改成功');
-        this.close();
-        if (this.props.callback) {
-          this.props.callback();
+      let res;
+      console.log(this.props.type);
+
+      if (this.props.type == 'fenxiao') {
+        res = await updateRetailProductsAjax(postData);
+        if (res && res.data.status == 0) {
+          message.success(res.message || '修改成功');
+          this.close();
+          if (this.props.callback) {
+            this.props.callback();
+          }
+        } else {
+          message.warning(res.message || '网络异常');
         }
+        resolve();
       } else {
-        message.warning(res.message || '网络异常');
+        res = await addGoodsProductAjax(postData);
+        if (res && res.data.status == 0) {
+          message.success('商品添加成功');
+          this.close();
+          router.push({
+            pathname: '/DistributionMarket',
+          });
+          if (this.props.callback) {
+            this.props.callback();
+          }
+        } else {
+          message.warning(res.message || '网络异常');
+        }
+        resolve();
       }
-      resolve();
+      // if (res && res.data.status == 0) {
+      //   message.success(res.message || '修改成功');
+      //   this.close();
+      //   if (this.props.callback) {
+      //     this.props.callback();
+      //   }
+      // } else {
+      //   message.warning(res.message || '网络异常');
+      // }
+      // resolve();
     });
   };
   /**
@@ -268,6 +311,8 @@ class index extends Component {
   add = values => {
     return new Promise(async resolve => {
       let postData = this.dealInfoData(0, values);
+      postData.productType = 'RETAIL_GOODS';
+      postData.teamId = localDB.getItem('teamId');
       let res = await addProductAjax(postData);
       if (res && res.status == 0) {
         message.success(res.message || '新增成功');
@@ -373,22 +418,22 @@ class index extends Component {
             label="热销商品"
             name="ifHotSale"
             rules={[{ required: true, message: '是否热销商品' }]}
-            initialValue={0}
+            initialValue="0"
           >
             <Radio.Group>
-              <Radio value={1}>热销商品</Radio>
-              <Radio value={0}>普通商品</Radio>
+              <Radio value="1">热销商品</Radio>
+              <Radio value="0">普通商品</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
             label="首页推荐"
             name="ifRecommend"
             rules={[{ required: true, message: '是否首页推荐' }]}
-            initialValue={0}
+            initialValue="0"
           >
             <Radio.Group>
-              <Radio value={1}>首页推荐</Radio>
-              <Radio value={0}>不推荐</Radio>
+              <Radio value="1">首页推荐</Radio>
+              <Radio value="0">不推荐</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -404,15 +449,15 @@ class index extends Component {
           </Form.Item>
 
           {/* 商品详情 */}
-          <Form.Item className={styles.item_title}>商品详情</Form.Item>
-          <Form.Item label="详情设置" name="productDetails">
+          {/* <Form.Item className={styles.item_title}>商品详情</Form.Item>
+          <Form.Item label="详情设置" name="productDetail">
             <TEditDetails />
-          </Form.Item>
+          </Form.Item> */}
 
           {/* 价格库存 */}
           <Form.Item className={styles.item_title}>价格库存</Form.Item>
           <Form.Item label="规格设置" name="specsType" required initialValue={0}>
-            <Radio.Group onChange={this.specsTypeChange}>
+            <Radio.Group disabled onChange={this.specsTypeChange}>
               <Radio value={0}>单规格</Radio>
               <Radio value={1}>多规格</Radio>
             </Radio.Group>
@@ -422,7 +467,7 @@ class index extends Component {
             name="productCompany"
             rules={[{ required: true, message: '请输入销售单位' }]}
           >
-            <Input placeholder="请输入销售单位" />
+            <Input disabled placeholder="请输入销售单位" />
           </Form.Item>
           {/* <Form.Item
             label="商品原价"
@@ -434,30 +479,44 @@ class index extends Component {
           {specsType == 0 ? (
             <Fragment>
               <Form.Item
-                label="商品售价"
+                label="供货价"
                 name="price"
-                rules={[{ required: true, message: '请输入商品原价' }]}
+                rules={[{ required: true, message: '请输入供货价' }]}
               >
-                <Input placeholder="请输入商品原价" prefix="￥" />
+                <Input disabled placeholder="请输入供货价" prefix="￥" />
+              </Form.Item>
+              <Form.Item
+                label="建议售价"
+                name="supplyPrice"
+                rules={[{ required: true, message: '请输入建议售价' }]}
+              >
+                <Input disabled placeholder="请输入建议售价" prefix="￥" />
+              </Form.Item>
+              <Form.Item
+                label="本店售价"
+                name="retailPrice"
+                rules={[{ required: true, message: '请输入本店售价' }]}
+              >
+                <Input placeholder="请输入本店售价" prefix="￥" />
               </Form.Item>
               <Form.Item
                 label="库存"
                 name="productStock"
                 rules={[{ required: true, message: '请输入库存' }]}
               >
-                <Input placeholder="请输入库存" />
+                <Input disabled placeholder="请输入库存" />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="物料编号"
                 name="productStockNumber"
                 rules={[{ required: true, message: '请输入物料编号' }]}
               >
                 <Input placeholder="请输入物料编号" />
-              </Form.Item>
+              </Form.Item> */}
             </Fragment>
           ) : (
             <Form.Item name="sku" wrapperCol={{ span: 24 }}>
-              <TSku ref={this.tSku} {...formLayout} />
+              <TSku type={this.props.type ? this.props.type : ''} ref={this.tSku} {...formLayout} />
             </Form.Item>
           )}
 

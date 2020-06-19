@@ -12,6 +12,7 @@ import ImageCarousel from '@/components/ImageCarousel';
 import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
 import moment from 'moment';
 import GoodsDrawer from '@/components/DistributionMarket/GoodsDrawer';
+import router from 'umi/router';
 
 import { getMarketGoodsAjax } from '@/services/goods';
 function sum(arr) {
@@ -35,8 +36,14 @@ class SupplygoodsDetail extends React.Component {
       PriceList: [],
       Allstock: null,
       namedata: [],
-      productExist: getUrlParam('productExist'),
+      // productExist: getUrlParam('productExist'),
       teamId: localDB.getItem('teamId'),
+      isfenxiao: '',
+      upOrDown: false,
+      productStatus: '',
+      productId: '',
+      delGoods: false,
+      delProductId: '',
     };
     // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
@@ -46,23 +53,24 @@ class SupplygoodsDetail extends React.Component {
   }
   getData = async () => {
     let productId = getUrlParam('productId');
-    let productExist = getUrlParam('productExist');
-    console.log(productId);
+    let productType = getUrlParam('productType');
     let teamId = localDB.getItem('teamId');
-    console.log(teamId);
 
     // getMarketGoodsAjax
     let postData = {
       productId,
       teamId: teamId,
+      productType,
     };
     let res = await getMarketGoodsAjax(postData);
-    console.log(res);
     let SupplyPriceList = [];
     let PriceList = [];
     let num = [];
     if (res.status == 0) {
-      res.data[0].skuPropertyList.map((item, ind) => {
+      // if (res.data[0].specsType == 0) {
+
+      // }
+      res.data[0].retailProductSkuPropertyList.map((item, ind) => {
         SupplyPriceList.push(item.supplyPrice);
         PriceList.push(item.price);
         num.push(item.stock);
@@ -80,30 +88,115 @@ class SupplygoodsDetail extends React.Component {
         MaxPrice = Math.max.apply(null, PriceList);
       }
       let Allstock = sum(num);
-      console.log(Allstock);
 
-      console.log(MinPrice, MaxPrice, MinSupplyPrice, MaxSupplyPrice);
+      let imglist = res.data[0].productPic.split(',');
 
+      // productPic
       this.setState({
         MinPrice,
         MaxPrice,
         MinSupplyPrice,
         MaxSupplyPrice,
         Allstock,
-        productExist,
+        // productExist,
         productDetail: JSON.parse(res.data[0].productDetail),
         detailData: res.data[0],
+        imglist,
       });
     }
   };
-  setGoodDetail = () => {
+  setGoodDetail = record => {
     console.log('编辑');
+    this.setState(
+      {
+        isfenxiao: 'fenxiao',
+      },
+      () => {
+        this.goodsDrawer.current.open(record);
+      },
+    );
   };
-  setGoodState = () => {
+  setGoodState = e => {
     console.log('上架下架');
+    if (e.productStatus == 0) {
+      this.setState({
+        productStatusValue: '上架',
+        upType: '1',
+      });
+    } else {
+      this.setState({
+        productStatusValue: '下架',
+        upType: '0',
+      });
+    }
+    this.setState({ upOrDown: true, productStatus: e.productStatus, productId: e.productId });
   };
-  deleteGood = () => {
+  closeAddressModals = () => {
+    this.setState({
+      upOrDown: false,
+    });
+  };
+  addressModalsOk = async () => {
+    const { productId, upType } = this.state;
+    let postdata = {
+      productId,
+      type: upType,
+    };
+    let res = await requestw({
+      type: 'get',
+      url: api_goods.retailProductupperOrDownProduct,
+      data: postdata,
+    });
+    console.log(res);
+    this.setState({
+      upOrDown: false,
+    });
+    if (res.data.status == 0) {
+      if (upType == '1') {
+        message.success('上架成功');
+        // this.Tablew.getData();
+        router.push('/DistributionGoods');
+      } else {
+        message.success('下架成功');
+        // this.Tablew.getData();
+        router.push('/DistributionGoods');
+      }
+    } else {
+      message.warning(res.data.message);
+    }
+  };
+  deleteGood = e => {
     console.log('删除');
+    this.setState({
+      delGoods: true,
+      delProductId: e.productId,
+    });
+  };
+  //关闭删除商品弹框
+  closedeleteGoodsModals = () => {
+    this.setState({
+      delGoods: false,
+    });
+  };
+  //删除商品接口
+  deleteGoodsModalsOk = async () => {
+    let postdata = {
+      productId: this.state.delProductId,
+    };
+    let res = await requestw({
+      url: api_goods.retailProductDelete,
+      data: postdata,
+      type: 'get',
+    });
+    this.setState({ delGoods: false });
+    console.log(res);
+    if (res.data.status == 0) {
+      message.success('删除商品成功');
+      router.push('/DistributionGoods');
+      // this.Tablew.getData();
+    } else {
+      message.warning('删除商品失败');
+    }
   };
   skuClick = (titlename, name, e) => {
     let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
@@ -111,11 +204,9 @@ class SupplygoodsDetail extends React.Component {
     namelist[0] = name;
     let SupplyPrice = SupplyPriceList;
     let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      console.log(JSON.parse(item.skuJson)[titlename]);
+    detailData.retailProductSkuPropertyList.map((item, ind) => {
       let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
-        console.log(1);
         SupplyPriceList[0] = item.supplyPrice;
         // moneryList.Price.push(item.price)
         PriceList[0] = item.price;
@@ -139,10 +230,9 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.retailProductSkuPropertyList.map((item, ind) => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
+          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -169,11 +259,9 @@ class SupplygoodsDetail extends React.Component {
     namelist[1] = name;
     let SupplyPrice = SupplyPriceList;
     let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
+    detailData.retailProductSkuPropertyList.map((item, ind) => {
       let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
-        console.log('第二条可以了');
-
         SupplyPriceList[1] = item.supplyPrice;
         // moneryList.Price.push(item.price)
         PriceList[1] = item.price;
@@ -192,17 +280,15 @@ class SupplygoodsDetail extends React.Component {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
     }
-    console.log(SupplyPriceList, PriceList);
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
       namedata.map(item => {
         namestr += item + '、';
       });
 
-      console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.retailProductSkuPropertyList.map((item, ind) => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
+          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -230,8 +316,8 @@ class SupplygoodsDetail extends React.Component {
     namelist[2] = name;
     let SupplyPrice = SupplyPriceList;
     let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      console.log(JSON.parse(item.skuJson)[titlename]);
+    detailData.retailProductSkuPropertyList.map((item, ind) => {
+      // console.log(JSON.parse(item.skuJson)[titlename]);
       let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[2] = item.supplyPrice;
@@ -251,16 +337,16 @@ class SupplygoodsDetail extends React.Component {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
     }
-    console.log(SupplyPriceList, PriceList);
+    // console.log(SupplyPriceList, PriceList);
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
       namedata.map(item => {
         namestr += item + '、';
       });
 
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.retailProductSkuPropertyList.map((item, ind) => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
+          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -286,8 +372,8 @@ class SupplygoodsDetail extends React.Component {
     namelist[3] = name;
     let SupplyPrice = SupplyPriceList;
     let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      console.log(JSON.parse(item.skuJson)[titlename]);
+    detailData.retailProductSkuPropertyList.map((item, ind) => {
+      // console.log(JSON.parse(item.skuJson)[titlename]);
       let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[3] = item.supplyPrice;
@@ -313,10 +399,10 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      // console.log(namestr.substr(0, namestr.length - 1));
+      detailData.retailProductSkuPropertyList.map((item, ind) => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
+          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -337,7 +423,7 @@ class SupplygoodsDetail extends React.Component {
     });
   };
   goMyshop = () => {
-    console.log('上架到本店');
+    // console.log('上架到本店');
     let { detailData } = this.state;
     this.goodsDrawer.current.open(detailData);
   };
@@ -358,13 +444,20 @@ class SupplygoodsDetail extends React.Component {
       AllsupplyPrice,
       Allprice,
       itemstock,
-      productExist,
+      // productExist,
       productDetail,
       teamId,
+      imglist,
+      upOrDown,
+      productStatus,
+      productId,
+      productStatusValue,
+      delGoods,
     } = this.state;
-    console.log('render重新执行');
-    console.log(productExist);
-    console.log(productExist === 'ture');
+    // console.log('render重新执行');
+    // console.log(productExist);
+    // console.log(productExist === 'ture');
+    console.log(Allprice);
 
     return (
       <div style={{ height: '1000px' }}>
@@ -374,7 +467,7 @@ class SupplygoodsDetail extends React.Component {
         </Breadcrumb>
 
         <div style={{ width: '100%', height: '360px' }}>
-          <ImageCarousel />
+          <ImageCarousel imglist={imglist} />
 
           <p
             style={{
@@ -460,11 +553,20 @@ class SupplygoodsDetail extends React.Component {
                 <p>
                   <span style={{ fontSize: '16px' }}>
                     供货价:
-                    <b>{detailData.priceRange ? detailData.priceRange.maxSupplyPrice : '0'}￥</b>
+                    <b>
+                      {detailData.retailProductSkuPropertyList
+                        ? detailData.retailProductSkuPropertyList[0].supplyPrice
+                        : '0'}
+                      ￥
+                    </b>
                   </span>
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
                     库存:
-                    <b>{detailData.skuPropertyList ? detailData.skuPropertyList[0].stock : 0}</b>
+                    <b>
+                      {detailData.retailProductSkuPropertyList
+                        ? detailData.retailProductSkuPropertyList[0].stock
+                        : 0}
+                    </b>
                   </span>
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
                     运费:<b>{detailData.transportAmount}</b>
@@ -474,8 +576,8 @@ class SupplygoodsDetail extends React.Component {
                   <span style={{ fontSize: '16px' }}>
                     建议售价:
                     <b>
-                      {detailData.priceRange
-                        ? (detailData.priceRange.maxPrice * 0.01).toFixed(0)
+                      {detailData.retailProductSkuPropertyList
+                        ? (detailData.retailProductSkuPropertyList[0].price * 0.01).toFixed(0)
                         : '0'}
                       ￥
                     </b>
@@ -596,17 +698,18 @@ class SupplygoodsDetail extends React.Component {
                 </>
               ) : null}
             </div>
-            {productExist === 'true' ? (
+            {/* {productExist === 'true' ? (
               ''
             ) : (
-              <>
-                {detailData && detailData.teamId == this.state.teamId ? null : (
-                  <div style={{ width: '50%', height: '30px', float: 'left' }}>
-                    <Button onClick={this.goMyshop}>上架到本店</Button>
-                  </div>
-                )}
-              </>
-            )}
+                <>
+                  {
+                    detailData && detailData.teamId == this.state.teamId ? null :
+                      <div style={{ width: '50%', height: '30px', float: 'left' }}>
+                        <Button onClick={this.goMyshop}>上架到本店</Button>
+                      </div>
+                  }
+                </>
+              )} */}
           </div>
         </div>
         <p
@@ -616,6 +719,7 @@ class SupplygoodsDetail extends React.Component {
             background: '#ccc',
             textAlign: 'center',
             borderRadius: '5px',
+            marginBottom: '40px',
           }}
         >
           <div style={{ margin: '0 auto', width: '100px', fontSize: '16px', height: '30px' }}>
@@ -624,37 +728,104 @@ class SupplygoodsDetail extends React.Component {
           </div>
         </p>
         <div style={{ width: '100%', minHeight: '200px', marginTop: '-20px' }}>
-          {/*  */}
-          {productDetail &&
-            productDetail.map((item, ind) => {
-              if (item.type == '1') {
-                return (
-                  <p
-                    style={{ width: '100%', height: '30px', marginTop: '5px', textAlign: 'center' }}
-                  >
-                    {item.value}
-                  </p>
-                );
-              } else {
-                return (
-                  <div style={{ width: '300px', height: '200px', margin: '0 auto' }}>
-                    <img
-                      style={{ width: '100%', height: '100%' }}
-                      src={item.value}
-                      alt="图片路径错误"
-                    />
-                  </div>
-                );
-              }
-            })}
+          <>
+            {productDetail ? (
+              <>
+                {productDetail &&
+                  productDetail.map((item, ind) => {
+                    if (item.type == '1') {
+                      return (
+                        <p
+                          style={{
+                            width: '100%',
+                            height: '30px',
+                            marginTop: '5px',
+                            textAlign: 'center',
+                            fontSize: '22px',
+                            marginBottom: '10px',
+                          }}
+                        >
+                          {item.value}
+                        </p>
+                      );
+                    } else {
+                      return (
+                        <div style={{ width: '300px', height: '200px', margin: '0 auto' }}>
+                          <img
+                            style={{ width: '100%', height: '100%' }}
+                            src={item.value}
+                            alt="图片路径错误"
+                          />
+                        </div>
+                      );
+                    }
+                  })}
+              </>
+            ) : (
+              <p
+                style={{
+                  width: '100%',
+                  height: '35px',
+                  textAlign: 'center',
+                  borderRadius: '5px',
+                  marginBottom: '40px',
+                }}
+              >
+                <div style={{ margin: '0 auto', width: '100px', fontSize: '16px', height: '30px' }}>
+                  {' '}
+                  暂无详情
+                </div>
+              </p>
+            )}
+          </>
         </div>
-
+        <div className={styles.footer}>
+          <div className={styles.btnbox}>
+            <Button onClick={() => this.setGoodDetail(detailData)} style={{ marginRight: '5px' }}>
+              编辑
+            </Button>
+            {detailData.productStatus == 0 ? (
+              <Button onClick={() => this.setGoodState(detailData)} style={{ marginRight: '5px' }}>
+                上架
+              </Button>
+            ) : (
+              ''
+            )}
+            {detailData.productStatus == 1 ? (
+              <Button onClick={() => this.setGoodState(detailData)} style={{ marginRight: '5px' }}>
+                下架
+              </Button>
+            ) : (
+              ''
+            )}
+            <Button onClick={() => this.deleteGood(detailData)}>删除</Button>
+          </div>
+        </div>
         <GoodsDrawer
+          type={this.state.isfenxiao}
           onRef={e => {
             this.goodsDrawer.current = e;
           }}
-          supplyGoodsList={detailData}
+          supplyGoodsList={[detailData]}
         />
+        <Modal
+          title="商品操作"
+          visible={upOrDown}
+          closable={false}
+          onCancel={this.closeAddressModals}
+          onOk={this.addressModalsOk}
+        >
+          <div>是否{productStatusValue}该商品？</div>
+        </Modal>
+        <Modal
+          title="删除商品"
+          visible={delGoods}
+          closable={false}
+          onCancel={this.closedeleteGoodsModals}
+          onOk={this.deleteGoodsModalsOk}
+        >
+          <div>确定要删除该商品么？</div>
+        </Modal>
       </div>
     );
   }

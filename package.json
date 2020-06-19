@@ -54,7 +54,7 @@
     "omit.js": "^1.0.2",
     "patch-package": "^6.2.2",
     "path-to-regexp": "2.4.0",
-    "qs": "^6.9.0",
+    "qs": "^6.9.4",
     "react": "^16.8.6",
     "react-color": "^2.18.1",
     "react-copy-to-clipboard": "^5.0.1",

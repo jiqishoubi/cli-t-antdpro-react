@@ -73,6 +73,19 @@ const routes = [
             icon: 'smile',
             component: './Supplygoods/SupplygoodsDetail',
           },
+          {
+            path: '/DistributionGoods',
+            name: '分销商品管理',
+            icon: 'smile',
+            component: './DistributionGoods/DistriGoods',
+          },
+          {
+            path: '/DistriGoodsDetail',
+            name: '分销商品管理详情',
+            icon: 'smile',
+            component: './DistributionGoods/DistriGoodsDetail',
+          },
+          //
           /////////分销市场 fxsc
           {
             path: '/DistributionMarket',

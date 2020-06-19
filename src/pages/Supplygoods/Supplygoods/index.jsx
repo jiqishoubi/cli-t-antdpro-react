@@ -10,7 +10,7 @@ import GoodsDrawer from '@/components/SupplyGoods/GoodsDrawer';
 import SublimeVideo from 'react-sublime-video';
 
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
+import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
 import moment from 'moment';
 // import router from 'umi/router';
 class productManager extends React.Component {
@@ -27,6 +27,7 @@ class productManager extends React.Component {
       delGoods: false,
       productStatus: '',
       supplyGoodsList: [],
+      teamId: localDB.getItem('teamId'),
     };
     this.goodsDrawer = React.createRef();
     // this.modifydata = this.modifydata.bind(this);
@@ -39,7 +40,6 @@ class productManager extends React.Component {
     let res = await requestw({
       url: api_goods.querySupplyGoodsTypeList,
     });
-    console.log(res);
     if (res.code == 200) {
       this.setState({
         supplyGoodsList: res.data.data,
@@ -47,8 +47,6 @@ class productManager extends React.Component {
     }
   };
   modifydata(e) {
-    console.log(e);
-    console.log(1);
     let newObj = {};
     newObj.data = e.data.list;
     newObj.rowTop = e.total;
@@ -59,7 +57,6 @@ class productManager extends React.Component {
     this.goodsDrawer.current.open(record);
   }
   onRadioChange = e => {
-    console.log(e);
     let getCode = e.target.value;
     this.setState(
       {
@@ -99,14 +96,13 @@ class productManager extends React.Component {
     };
     let res = await requestw({
       type: 'get',
-      url: api_goods.upOrDown,
+      url: api_goods.supplyProductupperOrDownProduct,
       data: postdata,
     });
-    console.log(res);
     this.setState({
       upOrDown: false,
     });
-    if (res.status == 0) {
+    if (res.data.status == 0) {
       if (upType == '1') {
         message.success('上架成功');
         this.Tablew.getData();
@@ -137,13 +133,12 @@ class productManager extends React.Component {
       productId: this.state.delProductId,
     };
     let res = await requestw({
-      url: api_goods.deleteGoods,
+      url: api_goods.supplyProductDelete,
       data: postdata,
       type: 'get',
     });
     this.setState({ delGoods: false });
-    console.log(res);
-    if (res.status == 0) {
+    if (res.data.status == 0) {
       message.success('删除商品成功');
       this.Tablew.getData();
     } else {
@@ -166,7 +161,6 @@ class productManager extends React.Component {
       supplyGoodsList,
     } = this.state;
 
-    console.log(pathimgHeader);
     let pageTiaojian = (
       <>
         <Radio.Group onChange={this.onRadioChange} defaultValue="a">
@@ -194,6 +188,7 @@ class productManager extends React.Component {
           modifydata={this.modifydata}
           //查询条件
           querystyle={{ float: 'right' }}
+          routerUrl="/supplyGoodsDetail"
           queryItems={[
             {
               title: '商品名称',
@@ -203,7 +198,8 @@ class productManager extends React.Component {
             },
           ]}
           postdates={{
-            teamId: 2,
+            teamId: this.state.teamId,
+            queryType: 'SUPPLY',
           }}
           restype={goodsStatus}
           retType="post"
@@ -216,8 +212,6 @@ class productManager extends React.Component {
               alent: 'left',
               width: 300,
               render: v => {
-                // console.log();
-
                 return (
                   <>
                     <dl>
@@ -294,6 +288,7 @@ class productManager extends React.Component {
               render: record => (
                 <>
                   <a
+                    data-value="编辑"
                     style={{ marginRight: '5px' }}
                     onClick={() => {
                       this.recordEdit(record);
@@ -303,6 +298,7 @@ class productManager extends React.Component {
                   </a>
                   {record.productStatus == 1 ? (
                     <a
+                      data-value="下架"
                       style={{ marginRight: '5px' }}
                       onClick={() => {
                         this.upOrDownMethod(record);
@@ -313,6 +309,7 @@ class productManager extends React.Component {
                   ) : null}
                   {record.productStatus == 0 ? (
                     <a
+                      data-value="上架"
                       style={{ marginRight: '5px' }}
                       onClick={() => {
                         this.upOrDownMethod(record);
@@ -323,6 +320,7 @@ class productManager extends React.Component {
                   ) : null}
                   {record.productStatus == 0 ? (
                     <a
+                      data-value="删除"
                       onClick={() => {
                         this.deleteGoods(record);
                       }}
@@ -345,7 +343,7 @@ class productManager extends React.Component {
           <div>是否{productStatusValue}该商品？</div>
         </Modal>
         <Modal
-          title="退单"
+          title="删除商品"
           visible={delGoods}
           closable={false}
           onCancel={this.closedeleteGoodsModals}

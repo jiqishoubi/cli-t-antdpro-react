@@ -24,8 +24,18 @@ const api = {
   createSupplyProduct: '/supplyProduct/createSupplyProduct', //创建商品
   SupplyupdateProduct: '/skuProduct/updateProduct', //修改商品
   queySupplyProduct: '/supplyProduct/queySupplyProduct', //获取供货商品
-
+  supplyProductupperOrDownProduct: '/supplyProduct/upperOrDownProduct', //上下架供货商品
   createRetailProduct: '/retailProduct/createRetailProduct', //上架到本店
+  supplyProductDelete: '/supplyProduct/deleteProduct', //删除
+
+  ////分销商品
+  queyRetailProduct: '/retailProduct/queyRetailProduct', //获取本店分销商品
+  updateRetailProduct: '/retailProduct/updateRetailProduct', //编辑分销商品
+  retailProductupperOrDownProduct: '/retailProduct/upperOrDownProduct', //上下架
+  retailProductDelete: '/retailProduct/deleteProduct', //删除
+
+  ////////////////////////////商品分润
+  goodsLevelCreateOrUpdate: '/web/goodsLevel/createOrUpdate',
 };
 
 export default api;

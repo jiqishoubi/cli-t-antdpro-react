@@ -67,3 +67,10 @@ export async function addGoodsProductAjax(params) {
     data: params,
   });
 }
+// updateRetailProduct
+export async function updateRetailProductsAjax(params) {
+  return requestw({
+    url: api_goods.updateRetailProduct,
+    data: params,
+  });
+}

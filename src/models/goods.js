@@ -12,7 +12,7 @@ const Model = {
 
   effects: {
     *getGoodsType({ payload }, { call, put }) {
-      const teamId = 2;
+      const teamId = localDB.getItem('teamId');
       const res = yield call(getGoodsTypeAjax, teamId);
       if (res && res.code == 200 && res.data) {
         yield put({

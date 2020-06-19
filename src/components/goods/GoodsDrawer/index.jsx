@@ -233,6 +233,7 @@ class index extends Component {
   edit = values => {
     return new Promise(async resolve => {
       let postData = this.dealInfoData(0, values);
+      postData.productType = 'SELF_SUPPORT_GOODS';
       let res = await updateProductAjax(postData);
       if (res && res.status == 0) {
         message.success(res.message || '修改成功');
@@ -252,6 +253,7 @@ class index extends Component {
   add = values => {
     return new Promise(async resolve => {
       let postData = this.dealInfoData(0, values);
+      postData.productType = 'SELF_SUPPORT_GOODS';
       let res = await addProductAjax(postData);
       if (res && res.status == 0) {
         message.success(res.message || '新增成功');
@@ -355,7 +357,7 @@ class index extends Component {
 
           {/* 商品详情 */}
           <Form.Item className={styles.item_title}>商品详情</Form.Item>
-          <Form.Item label="详情设置" name="productDetails">
+          <Form.Item label="详情设置" name="productDetail">
             <TEditDetails />
           </Form.Item>
 

@@ -12,7 +12,7 @@ import { Drawer, Form, Input, Radio, Select, Button, message } from 'antd';
 import TUpload2 from '@/components/T-Upload2';
 import TSku from '@/components/SupplyGoods/T-Sku';
 import TEditDetails from '@/components/SupplyGoods/T-EditDetails';
-import { mConfirm, pathimgHeader } from '@/utils/utils';
+import { mConfirm, pathimgHeader, localDB } from '@/utils/utils';
 import { getProductsAjax, updateProductAjaxs, addProductAjaxs } from '@/services/goods';
 import styles from './index.less';
 
@@ -65,6 +65,8 @@ class index extends Component {
       lookingRecord: record || null,
     });
     //获取详情
+    console.log(record);
+
     if (record) {
       this.getInfo(record);
     }
@@ -192,9 +194,12 @@ class index extends Component {
 
   //获取详情
   getInfo = async record => {
+    console.log(record);
+
     let postData = {
       productId: record.productId,
       teamId: record.teamId,
+      productType: record.productType,
     };
     let res = await getProductsAjax(postData);
     if (res && res.status == 0 && res.data && res.data[0]) {
@@ -235,6 +240,7 @@ class index extends Component {
     return new Promise(async resolve => {
       let postData = this.dealInfoData(0, values);
       postData.productType = 'SUPPLY_GOODS';
+      postData.teamId = localDB.getItem('teamId');
       let res = await updateProductAjaxs(postData);
       if (res && res.status == 0) {
         message.success('修改成功');
@@ -256,7 +262,7 @@ class index extends Component {
       let postData = this.dealInfoData(0, values);
       postData.productType = 'SUPPLY_GOODS';
       console.log(postData);
-
+      postData.teamId = localDB.getItem('teamId');
       let res = await addProductAjaxs(postData);
       if (res && res.data.status == 0) {
         message.success(res.message || '新增成功');
@@ -374,7 +380,7 @@ class index extends Component {
 
           {/* 商品详情 */}
           <Form.Item className={styles.item_title}>商品详情</Form.Item>
-          <Form.Item label="详情设置" name="productDetails">
+          <Form.Item label="详情设置" name="productDetail">
             <TEditDetails />
           </Form.Item>
 

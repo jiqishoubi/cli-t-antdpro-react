@@ -24,6 +24,8 @@ import moment from 'moment';
 import { Table, Form, Row, Col, Input, Select, Button, Tooltip, DatePicker, message } from 'antd';
 import requestw from '@/utils/requestw';
 import { RedoOutlined } from '@ant-design/icons';
+import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
+import router from 'umi/router';
 const { Option } = Select;
 
 // @connect(({ common }) => ({
@@ -56,6 +58,7 @@ class index extends React.Component {
       tableInfo: null,
       // loading
       loading_table: false,
+      teamId: localDB.getItem('teamId'),
     };
     if (props.onRef) {
       //如果父组件传来该方法 则调用方法将子组件this指针传过去
@@ -262,7 +265,7 @@ class index extends React.Component {
       // 表格
       tableInfo,
       loading_table,
-
+      teamId,
       // loading
     } = this.state;
     const {
@@ -526,7 +529,22 @@ class index extends React.Component {
           onRow={record => {
             return {
               onClick: event => {
-                console.log(record);
+                console.log(event.target.dataset.value);
+                if (event.target.dataset && event.target.dataset.value) {
+                  console.log('是要return的');
+                  return;
+                }
+                console.log(this.props.routerUrl);
+
+                if (this.props.routerUrl) {
+                  router.push({
+                    pathname: this.props.routerUrl,
+                    query: {
+                      productId: record.productId,
+                      productType: record.productType,
+                    },
+                  });
+                }
               }, // 点击行
             };
           }}

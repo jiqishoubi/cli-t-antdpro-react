@@ -17,36 +17,39 @@ class ImageCarousel extends Component {
     const lunboSetting = {
       dots: true,
     };
+    const { imglist } = this.props;
     return (
       <div style={{ float: 'left' }}>
-        <Carousel
-          autoplay
-          arrows={true}
-          style={{ width: '300px', height: '350px' }}
-          {...lunboSetting}
-          ref={el => (this.slider = el)}
-        >
-          <img
-            src={
-              'https://greecardcrmt.bld365.com/static/img/729b90b9-1f58-4ef5-9e0f-007e5f6733f2.jpg'
-            }
-          />
-          <img
-            src={
-              'https://greecardcrmt.bld365.com/static/img/9a4055cc-e16b-4fe4-b733-9d6205bd6072.jpg'
-            }
-          />
-          <img
-            src={
-              'https://greecardcrmt.bld365.com/static/img/4754b8c9-ed76-4a70-b415-3f1b8e99b323.jpg'
-            }
-          />
-          <img
-            src={
-              'https://greecardcrmt.bld365.com/static/img/e0093113-120a-40a3-a353-961515fe3181.jpg'
-            }
-          />
-        </Carousel>
+        {imglist && imglist.length > 1 ? (
+          <Carousel
+            autoplay
+            arrows={true}
+            style={{ width: '300px', height: '350px' }}
+            {...lunboSetting}
+            ref={el => (this.slider = el)}
+          >
+            {imglist &&
+              imglist.map((item, ind) => {
+                return <img key={ind} style={{ width: '300px', height: '350px' }} src={item} />;
+              })}
+          </Carousel>
+        ) : (
+          <Carousel
+            autoplay
+            arrows={true}
+            style={{ width: '300px', height: '350px' }}
+            {...lunboSetting}
+            ref={el => (this.slider = el)}
+          >
+            <div style={{ width: '300px', height: '350px' }}>
+              <img
+                style={{ width: '300px', height: '350px' }}
+                src={imglist ? imglist[0] : ''}
+                alt="暂无"
+              />
+            </div>
+          </Carousel>
+        )}
         {/* <LeftOutlined onClick={this.prev} /> */}
         <Icon type="LeftOutlined" onClick={this.prev} />
         {/* <RightOutlined onClick={this.next} /> */}

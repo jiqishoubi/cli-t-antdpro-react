@@ -22,7 +22,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import TUpload2 from '@/components/T-Upload2';
 
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
+import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
 import moment from 'moment';
 const { confirm } = Modal;
 
@@ -54,13 +54,14 @@ class typeManager extends React.Component {
       previewTitle: '',
       fileList: [],
       setModalData: null,
+      teamId: localDB.getItem('teamId'),
     };
     // this.modifydata = this.modifydata.bind(this);
     this.formRef = React.createRef();
   }
   componentDidMount() {
     // this.getData();
-    this.Tablew.getData({ teamId: 2 });
+    this.Tablew.getData({ teamId: this.state.teamId });
   }
 
   modifydata(e) {
@@ -111,13 +112,13 @@ class typeManager extends React.Component {
     });
   };
   addressModalsOk = async () => {
-    const { productId, upType } = this.state;
+    const { productId, upType, teamId } = this.state;
     this.formRef.current.validateFields().then(async values => {
       console.log(values);
 
       let postdata = {
         ...values,
-        teamId: 2,
+        teamId: teamId,
         typeImg: values.fileList[0].url,
       };
       let res = await requestw({
@@ -163,7 +164,7 @@ class typeManager extends React.Component {
         // ...values,
         typeName: values.typeName,
         typeSortValue: values.typeSortValue,
-        teamId: 2,
+        teamId: this.state.teamId,
         // typeImg: values.fileList[0].url,
       };
       // console.log();
@@ -343,7 +344,7 @@ class typeManager extends React.Component {
           querystyle={{ float: 'right' }}
           queryItems={[]}
           postdates={{
-            teamId: 2,
+            teamId: this.state.teamId,
           }}
           pageOjb={true}
           restype={goodsStatus}

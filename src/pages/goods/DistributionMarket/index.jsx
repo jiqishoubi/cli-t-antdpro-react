@@ -51,7 +51,7 @@ class SupplygoodsDetail extends React.Component {
     if (res && res.data.status == 0) {
       let TabsList = res.data.data;
       TabsList.unshift({
-        teamId: 2,
+        // teamId: 2,
         typeGct: '2020-06-11 16:10:15',
         typeId: '',
         typeName: '全部',
@@ -105,7 +105,7 @@ class SupplygoodsDetail extends React.Component {
       wrapperCol: { span: 15 },
     };
     return (
-      <div style={{ height: '600px' }}>
+      <div style={{ height: '800px' }}>
         <Breadcrumb>
           <Breadcrumb.Item>产品管理</Breadcrumb.Item>
           <Breadcrumb.Item>分销市场</Breadcrumb.Item>
@@ -156,7 +156,7 @@ class SupplygoodsDetail extends React.Component {
             defaultActiveKey="0"
             onTabClick={this.tabclick}
             tabPosition={mode}
-            style={{ height: 520 }}
+            style={{ height: 780 }}
           >
             {TabsList.map((i, ind) => (
               <TabPane forceRender={false} tab={i.typeName} key={i.typeId}>

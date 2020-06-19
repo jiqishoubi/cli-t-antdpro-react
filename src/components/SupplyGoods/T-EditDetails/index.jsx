@@ -18,7 +18,15 @@ export default class index extends Component {
    */
   componentWillReceiveProps(nextProps) {
     if (nextProps.value) {
-      let list = nextProps.value;
+      console.log(typeof nextProps.value);
+      let list;
+      if (typeof nextProps.value == 'string') {
+        list = JSON.parse(nextProps.value);
+      } else {
+        list = nextProps.value;
+        console.log(list);
+      }
+
       if (list.length > 0) {
         this.setState({
           visible: true,
@@ -73,6 +81,8 @@ export default class index extends Component {
   };
   deleteItem = index => {
     const { groupList } = this.state;
+    console.log(groupList);
+
     groupList.splice(index, 1);
     this.setState({ groupList }, () => {
       if (this.props.onChange) {
@@ -83,8 +93,11 @@ export default class index extends Component {
   //处理当前的list
   dealList = () => {
     const { groupList } = this.state;
+    console.log(groupList);
     let list = [];
     groupList.forEach(obj => {
+      console.log(obj);
+
       if (obj.value) {
         list.push(obj);
       }

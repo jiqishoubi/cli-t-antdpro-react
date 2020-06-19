@@ -34,6 +34,7 @@ class SwitchContent extends React.Component {
       pageSize: 10,
       goodsList: [],
       total: 0,
+      teamId: localDB.getItem('teamId'),
     };
     //this.modifydata = this.modifydata.bind(this);
   }
@@ -49,13 +50,14 @@ class SwitchContent extends React.Component {
       url: api_goods.queySupplyProduct,
       data: {
         supplyType,
-        pageNum,
+        pageNo: pageNum,
         pageSize,
         teamId,
+        queryType: 'RETAIL',
       },
     });
     console.log(res);
-    if (res && res.data.status == 0) {
+    if (res.data && res.data.status == 0) {
       this.setState({
         goodsList: res.data.data.list,
         total: res.data.data.total,
@@ -83,14 +85,14 @@ class SwitchContent extends React.Component {
     });
   };
   render() {
-    const { goodsList, total } = this.state;
+    const { goodsList, total, teamId } = this.state;
     const formItemLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 15 },
     };
     return (
       <>
-        <div style={{ width: '100%', minHeight: '314px' }}>
+        <div style={{ width: '100%', minHeight: '640px' }}>
           {goodsList.map((item, ind) => {
             return (
               <div
@@ -102,7 +104,9 @@ class SwitchContent extends React.Component {
                 {item.productExist ? (
                   <div className={styles.goodsimgmin}>该商品已在本店上架</div>
                 ) : null}
-
+                {item.teamId == this.state.teamId ? (
+                  <div className={styles.goodsimgmin}>该商品为本店上架商品</div>
+                ) : null}
                 <div className={styles.goodstopimg}>
                   <img
                     style={{ width: '100%', height: '200px' }}

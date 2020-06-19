@@ -18,7 +18,7 @@ export default class index extends Component {
    */
   componentWillReceiveProps(nextProps) {
     if (nextProps.value) {
-      let list = nextProps.value;
+      let list = JSON.parse(nextProps.value);
       if (list.length > 0) {
         this.setState({
           visible: true,

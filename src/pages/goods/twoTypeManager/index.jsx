@@ -14,7 +14,7 @@ import {
   Input,
   Select,
 } from 'antd';
-import { getUrlParam } from '@/utils/utils';
+import { getUrlParam, localDB } from '@/utils/utils';
 import './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
@@ -59,6 +59,7 @@ class typeManager extends React.Component {
       selectList: [],
       formList: [],
       subTypeId: '',
+      teamId: localDB.getItem('teamId'),
     };
     // this.modifydata = this.modifydata.bind(this);
     this.formRef = React.createRef();
@@ -66,8 +67,8 @@ class typeManager extends React.Component {
   }
   componentDidMount() {
     // this.getData();
-
-    this.Tablew.getData({ teamId: 2 });
+    let { teamId } = this.state;
+    this.Tablew.getData({ teamId });
     this.getoneGoodstypeAll();
   }
 
@@ -120,13 +121,13 @@ class typeManager extends React.Component {
     });
   };
   addressModalsOk = async () => {
-    const { productId, upType } = this.state;
+    const { productId, upType, teamId } = this.state;
     this.formRef.current.validateFields().then(async values => {
       console.log(values);
 
       let postdata = {
         ...values,
-        teamId: 2,
+        teamId: teamId,
         // typeImg: values.fileList[0].url,
       };
       let res = await requestw({
@@ -172,13 +173,13 @@ class typeManager extends React.Component {
   closeGoodsModalsOk = () => {
     this.formRef.current.validateFields().then(async values => {
       console.log(values);
-
+      let { teamId } = this.state;
       let postdata = {
         typeId: this.state.setModalData.typeId,
         // ...values,
         typeName: values.typeName,
         typeSortValue: values.typeSortValue,
-        teamId: 2,
+        teamId: teamId,
         // typeImg: values.fileList[0].url,
       };
       // console.log();
@@ -367,10 +368,11 @@ class typeManager extends React.Component {
     });
   };
   getoneGoodstypeAll = async () => {
+    let { teamId } = this.state;
     let res = await requestw({
       url: api_goods.getGoodstypeAll,
       data: {
-        teamId: 2,
+        teamId: teamId,
         pageSize: 9999,
         pageNum: 1,
       },
@@ -399,7 +401,7 @@ class typeManager extends React.Component {
         addModal: false,
       });
 
-      this.Tablew.getData({ teamId: 2 });
+      this.Tablew.getData({ teamId: this.state.teamId });
     } else {
       message.success('添加分类失败');
       return;
@@ -418,7 +420,7 @@ class typeManager extends React.Component {
         setModal: false,
       });
       message.success('修改分类成功');
-      this.Tablew.getData({ teamId: 2 });
+      this.Tablew.getData({ teamId: this.state.teamId });
     } else {
       message.success('修改分类失败');
       return;
@@ -495,7 +497,7 @@ class typeManager extends React.Component {
           querystyle={{ float: 'right' }}
           queryItems={[]}
           postdates={{
-            teamId: 2,
+            teamId: this.state.teamId,
           }}
           pageOjb={true}
           restype={goodsStatus}

@@ -55,6 +55,7 @@ export default class index extends Component {
     if (nextProps.value) {
       const { skuJson, skuList } = nextProps.value;
       //skuList
+
       skuList.forEach((obj, index) => {
         if (typeof obj.skuValue == 'object') {
           return;
@@ -81,6 +82,8 @@ export default class index extends Component {
         skuJsonStateObj[keyStr + '_supplyPrice'] = obj.supplyPrice;
         skuJsonStateObj[keyStr + '_price'] = obj.price;
         skuJsonStateObj[keyStr + '_stock'] = obj.stock;
+        skuJsonStateObj[keyStr + '_retailPrice'] = obj.retailPrice;
+
         // skuJsonStateObj[keyStr + '_stockNumber'] = obj.stockNumber;
       });
       console.log(skuJsonStateObj);
