@@ -5,4 +5,17 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    // 解构赋值
+    'prefer-destructuring': [
+      'error',
+      {
+        array: false,
+        object: false,
+      },
+    ],
+    eqeqeq: 0, // ===
+    'operator-assignment': 0, // 运算符赋值 +=
+    'no-param-reassign': 0, //函数参数的属性赋值
+  },
 };
