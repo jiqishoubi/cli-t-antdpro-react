@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Card, Row, Col, Breadcrumb, Radio, Modal, message } from 'antd';
-import { getUrlParam } from '@/utils/utils';
-import styles from './index.less';
+import { Button, Breadcrumb, Radio, Modal, message } from 'antd';
+// import { getUrlParam } from '@/utils/utils';
+// import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
@@ -10,32 +10,31 @@ import GoodsDrawer from '@/components/SupplyGoods/GoodsDrawer';
 import SublimeVideo from 'react-sublime-video';
 
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
+import { localDB } from '@/utils/utils';
 import moment from 'moment';
+
 // import router from 'umi/router';
 class productManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageSize: 10,
-      pageNo: 1,
-      tableDate: [],
       productStatusValue: '',
       upType: '',
       upOrDown: false,
       productId: '',
       delGoods: false,
-      productStatus: '',
       supplyGoodsList: [],
       teamId: localDB.getItem('teamId'),
     };
     this.goodsDrawer = React.createRef();
     // this.modifydata = this.modifydata.bind(this);
   }
+
   componentDidMount() {
     // this.getData();
     this.getgoodstypeList();
   }
+
   getgoodstypeList = async () => {
     let res = await requestw({
       url: api_goods.querySupplyGoodsTypeList,
@@ -46,16 +45,19 @@ class productManager extends React.Component {
       });
     }
   };
+
   modifydata(e) {
     let newObj = {};
     newObj.data = e.data.list;
     newObj.rowTop = e.total;
     return newObj;
   }
+
   recordEdit(record) {
     // history.push('/goodsAdd?id=' + record.productId);
     this.goodsDrawer.current.open(record);
   }
+
   onRadioChange = e => {
     let getCode = e.target.value;
     this.setState(
@@ -68,6 +70,7 @@ class productManager extends React.Component {
       },
     );
   };
+
   //上架下架
   upOrDownMethod = e => {
     if (e.productStatus == 0) {
@@ -81,13 +84,15 @@ class productManager extends React.Component {
         upType: '0',
       });
     }
-    this.setState({ upOrDown: true, productStatus: e.productStatus, productId: e.productId });
+    this.setState({ upOrDown: true, productId: e.productId });
   };
+
   closeAddressModals = () => {
     this.setState({
       upOrDown: false,
     });
   };
+
   addressModalsOk = async () => {
     const { productId, upType } = this.state;
     let postdata = {
@@ -114,6 +119,7 @@ class productManager extends React.Component {
       message.warning('操作商品失败');
     }
   };
+
   ///删除 商品
   deleteGoods(e) {
     this.setState({
@@ -121,12 +127,14 @@ class productManager extends React.Component {
       delProductId: e.productId,
     });
   }
+
   //关闭删除商品弹框
   closedeleteGoodsModals = () => {
     this.setState({
       delGoods: false,
     });
   };
+
   //删除商品接口
   deleteGoodsModalsOk = async () => {
     let postdata = {
@@ -145,21 +153,13 @@ class productManager extends React.Component {
       message.warning('删除商品失败');
     }
   };
+
   addGoods = () => {
     this.goodsDrawer.current.open();
   };
+
   render() {
-    const {
-      tableDate,
-      goodsStatus,
-      productStatusValue,
-      upType,
-      upOrDown,
-      productId,
-      productStatus,
-      delGoods,
-      supplyGoodsList,
-    } = this.state;
+    const { goodsStatus, productStatusValue, upOrDown, delGoods, supplyGoodsList } = this.state;
 
     let pageTiaojian = (
       <>
@@ -229,12 +229,12 @@ class productManager extends React.Component {
                           <SublimeVideo
                             loop
                             style={{ width: '80px', height: '80px' }}
-                            src={pathVideoHeader + v.productPic.split(',')[0]}
+                            src={v.productPic.split(',')[0]}
                           />
                         ) : (
                           <img
                             style={{ width: '80px', height: '80px', marginRight: '10px' }}
-                            src={pathimgHeader + v.productPic.split(',')[0]}
+                            src={v.productPic.split(',')[0]}
                           />
                         )}
                       </dt>

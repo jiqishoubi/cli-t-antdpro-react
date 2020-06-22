@@ -1,70 +1,67 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Card, Row, Col, Breadcrumb, Radio, Modal, message, Input, Switch } from 'antd';
-import { getUrlParam } from '@/utils/utils';
+import { Button, Breadcrumb, Radio, Modal, message, Input, Switch } from 'antd';
 import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
 import GoodsDrawer from '@/components/DistributionMarket/GoodsDrawer';
 import SublimeVideo from 'react-sublime-video';
-import Qs from 'qs';
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
+import { localDB } from '@/utils/utils'; ///备用  pathVideoHeader  pathimgHeader
 import moment from 'moment';
 import router from 'umi/router';
+
 class productManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageSize: 10,
-      pageNo: 1,
-      tableDate: [],
       productStatusValue: '',
       upType: '',
       upOrDown: false,
       productId: '',
       delGoods: false,
-      productStatus: '',
       supplyGoodsList: [],
       teamId: localDB.getItem('teamId'),
       isSwitch: false,
       FenModals: false,
       account: '',
       account1: '',
+      fenproductId: '',
     };
     this.goodsDrawer = React.createRef();
     // this.modifydata = this.modifydata.bind(this);
   }
+
   componentDidMount() {
     // this.getData();
     this.getgoodstypeList();
   }
+
   getgoodstypeList = async () => {
     let res = await requestw({
       url: api_goods.querySupplyGoodsTypeList,
     });
-    console.log(res);
     if (res.code == 200) {
       this.setState({
         supplyGoodsList: res.data.data,
       });
     }
   };
-  modifydata(e) {
-    console.log(e);
-    console.log(1);
+
+  modifydata = e => {
     let newObj = {};
     newObj.data = e.data.list;
     newObj.rowTop = e.total;
     return newObj;
-  }
+  };
+
   recordEdit(record) {
     // history.push('/goodsAdd?id=' + record.productId);
     this.goodsDrawer.current.open(record);
   }
+
   onRadioChange = e => {
-    console.log(e);
     let getCode = e.target.value;
     this.setState(
       {
@@ -76,6 +73,7 @@ class productManager extends React.Component {
       },
     );
   };
+
   //上架下架
   upOrDownMethod = e => {
     if (e.productStatus == 0) {
@@ -89,13 +87,15 @@ class productManager extends React.Component {
         upType: '0',
       });
     }
-    this.setState({ upOrDown: true, productStatus: e.productStatus, productId: e.productId });
+    this.setState({ upOrDown: true, productId: e.productId });
   };
+
   closeAddressModals = () => {
     this.setState({
       upOrDown: false,
     });
   };
+
   addressModalsOk = async () => {
     const { productId, upType } = this.state;
     let postdata = {
@@ -107,7 +107,6 @@ class productManager extends React.Component {
       url: api_goods.retailProductupperOrDownProduct,
       data: postdata,
     });
-    console.log(res);
     this.setState({
       upOrDown: false,
     });
@@ -123,6 +122,7 @@ class productManager extends React.Component {
       message.warning(res.data.message);
     }
   };
+
   ///删除 商品
   deleteGoods(e) {
     this.setState({
@@ -130,12 +130,14 @@ class productManager extends React.Component {
       delProductId: e.productId,
     });
   }
+
   //关闭删除商品弹框
   closedeleteGoodsModals = () => {
     this.setState({
       delGoods: false,
     });
   };
+
   //删除商品接口
   deleteGoodsModalsOk = async () => {
     let postdata = {
@@ -147,7 +149,6 @@ class productManager extends React.Component {
       type: 'get',
     });
     this.setState({ delGoods: false });
-    console.log(res);
     if (res.data.status == 0) {
       message.success('删除商品成功');
       this.Tablew.getData();
@@ -155,6 +156,7 @@ class productManager extends React.Component {
       message.warning('删除商品失败');
     }
   };
+
   addGoods = () => {
     // this.goodsDrawer.current.open();
     router.push({
@@ -164,13 +166,12 @@ class productManager extends React.Component {
 
   onSwitchChange = () => {
     let { isSwitch } = this.state;
-    console.log('切换');
     this.setState({
       isSwitch: !isSwitch,
     });
   };
+
   setFenModals = async e => {
-    console.log(e);
     let res = await requestw({
       url: '/web/goodsLevel/queryDatas',
       data: {
@@ -178,11 +179,7 @@ class productManager extends React.Component {
         teamId: this.state.teamId,
       },
     });
-    console.log(res);
     if (res.code == 200) {
-      console.log(res.data.length);
-      console.log(res.data.length != 0);
-
       if (res.data.length != 0) {
         if (res.data[0].useType == 0) {
           this.setState({
@@ -194,39 +191,42 @@ class productManager extends React.Component {
           });
         }
       }
-      this.setState({
-        fenList: res.data,
-        account: res.data[0].account,
-        account1: res.data[1].account,
-      });
+      if (res.data.length > 1) {
+        this.setState({
+          account: res.data[0].account,
+          account1: res.data[1].account,
+          fenList: res.data,
+        });
+      }
     }
 
     this.setState({
       FenModals: true,
-      fenGoodsId: e.productId,
+      fenproductId: e.productId,
     });
   };
+
   closeFenModals = () => {
     this.setState({
       FenModals: false,
     });
   };
+
   openFenModalsOk = async () => {
-    let { fenGoodsId, teamId, isSwitch, fenList } = this.state;
-    console.log(this.refs);
-    let account1 = this.refs.account1.state.value;
-    let account2 = this.refs.account2.state.value;
+    let { teamId, isSwitch, fenList } = this.state;
+    let account1 = this.state.account;
+    let account2 = this.state.account1;
     let postdata = [
       {
         account: account1,
-        goodsId: fenGoodsId,
+        goodsId: this.state.fenproductId,
         level: 1,
         teamId: teamId,
         useType: isSwitch ? 0 : 1,
       },
       {
         account: account2,
-        goodsId: fenGoodsId,
+        goodsId: this.state.fenproductId,
         level: 2,
         teamId: teamId,
         useType: isSwitch ? 0 : 1,
@@ -236,7 +236,6 @@ class productManager extends React.Component {
       postdata[0].id = fenList[0].id;
       postdata[1].id = fenList[1].id;
     }
-    console.log(postdata);
 
     // account1 = ''
     // account1 = ''
@@ -245,7 +244,6 @@ class productManager extends React.Component {
       type: 'formdata',
       data: postdata,
     });
-    console.log(res);
     if (res.code == 200) {
       message.success('修改商品分润成功');
       this.setState({
@@ -255,8 +253,8 @@ class productManager extends React.Component {
       message.success(res.message);
     }
   };
+
   keyupEvent = (e, ipt) => {
-    console.log(e, ipt);
     e.target.value = e.target.value.replace(/[^\d.]/g, '');
     e.target.value = e.target.value.replace(/\.{2,}/g, '.');
     e.target.value = e.target.value.replace(/^\./g, '0.');
@@ -267,7 +265,6 @@ class productManager extends React.Component {
     e.target.value = e.target.value.replace(/^0[^\.]+/g, '0');
     e.target.value = e.target.value.replace(/^(\d+)\.(\d\d).*$/, '$1.$2');
     // this.input = e.target.value
-    // console.log(this.input)
     if (ipt == '1') {
       this.setState({
         account: e.target.value,
@@ -278,23 +275,18 @@ class productManager extends React.Component {
       });
     }
   };
+
   render() {
     const {
-      tableDate,
       goodsStatus,
       productStatusValue,
-      upType,
       upOrDown,
-      productId,
-      productStatus,
       delGoods,
       supplyGoodsList,
       isSwitch,
       FenModals,
-      fenList,
     } = this.state;
 
-    console.log(pathimgHeader);
     let pageTiaojian = (
       <>
         <Radio.Group onChange={this.onRadioChange} defaultValue="a">
@@ -316,7 +308,9 @@ class productManager extends React.Component {
         </Breadcrumb>
 
         <Tablew
-          onRef={c => (this.Tablew = c)}
+          onRef={c => {
+            this.Tablew = c;
+          }}
           //外部添加查询条件
           Externalplacement={pageTiaojian}
           modifydata={this.modifydata}
@@ -345,8 +339,6 @@ class productManager extends React.Component {
               alent: 'left',
               width: 300,
               render: v => {
-                // console.log();
-
                 return (
                   <>
                     <dl>
@@ -364,12 +356,14 @@ class productManager extends React.Component {
                           <SublimeVideo
                             loop
                             style={{ width: '80px', height: '80px' }}
-                            src={pathVideoHeader + v.productPic.split(',')[0]}
+                            // src={pathVideoHeader + v.productPic.split(',')[0]}
+                            src={v.productPic.split(',')[0]}
                           />
                         ) : (
                           <img
                             style={{ width: '80px', height: '80px', marginRight: '10px' }}
-                            src={pathimgHeader + v.productPic.split(',')[0]}
+                            // src={pathimgHeader + v.productPic.split(',')[0]}
+                            src={v.productPic.split(',')[0]}
                           />
                         )}
                       </dt>
@@ -412,16 +406,22 @@ class productManager extends React.Component {
               title: '状态',
               key: 'productStatus',
               render: productStatus => {
-                // return <>{productStatus == '0' ? <span>下架</span> : <span>上架</span>}</>;
-                if (productStatus == '0') {
-                  return <span>下架</span>;
-                }
-                if (productStatus == '1') {
-                  return <span>上架</span>;
-                }
-                if (productStatus == '2') {
-                  return <span>失效</span>;
-                }
+                return (
+                  <>
+                    {productStatus == '0' ? (
+                      <span>下架</span>
+                    ) : (
+                      <>{productStatus == '1' ? <span>上架</span> : <span>失效</span>}</>
+                    )}
+                  </>
+                );
+                // if (productStatus == '0') {
+                //   return (<span>下架</span>)
+                // } else if (productStatus == '1') {
+                //   return (<span>上架</span>)
+                // } else {
+                //   <span>失效</span>
+                // }
               },
             },
             // { title: '完成时间', key: 'FINISH_DATE_STR' },
@@ -468,6 +468,7 @@ class productManager extends React.Component {
                   {record.productStatus == 0 ? (
                     <a
                       data-value="删除"
+                      style={{ marginRight: '5px' }}
                       onClick={() => {
                         this.deleteGoods(record);
                       }}
@@ -533,8 +534,6 @@ class productManager extends React.Component {
                     this.keyupEvent(e, '1');
                   }}
                   value={this.state.account}
-                  // defaultValue={fenList && fenList.length > 0 ? fenList[0].account : null}
-                  ref="account1"
                   style={{ width: '150px' }}
                 />{' '}
                 {isSwitch ? <span>元</span> : <span>%</span>}
@@ -546,8 +545,6 @@ class productManager extends React.Component {
                     this.keyupEvent(e, '2');
                   }}
                   value={this.state.account1}
-                  // defaultValue={fenList && fenList.length > 0 ? fenList[1].account : null}
-                  ref="account2"
                   style={{ width: '150px' }}
                 />{' '}
                 {isSwitch ? <span style={{ marginRight: '3px' }}>元</span> : <span>%</span>}

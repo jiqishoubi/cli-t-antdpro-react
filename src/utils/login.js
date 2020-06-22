@@ -1,5 +1,3 @@
-import { MenuOutlined } from '@ant-design/icons';
-
 /**
  * 处理菜单
  */
@@ -49,6 +47,9 @@ export const dealMenu2 = menuTree => {
       let item = arr[i];
       if (item.menuUrl && item.menuUrl.indexOf('_') > -1) {
         //权限
+        if (item.menuLevel == 3) {
+          return;
+        }
         rightsArr.push(item);
       } else {
         //菜单
@@ -97,7 +98,6 @@ export const findFirstMenuUrl2 = ({ arr, childrenkey = 'children', urlKey = 'url
   let url = '';
   const getFirst = arr => {
     let item = arr[0];
-    console.log(item);
     if (arr && item && item[urlKey].indexOf('_') == -1) {
       //是菜单
       if (

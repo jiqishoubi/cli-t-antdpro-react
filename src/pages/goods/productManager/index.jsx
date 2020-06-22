@@ -3,11 +3,12 @@ import { connect } from 'dva';
 import moment from 'moment';
 import SublimeVideo from 'react-sublime-video';
 import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
-import { Button, Breadcrumb, Radio, Modal, message } from 'antd';
+import { Button, Breadcrumb, Radio, Modal, message, Input, Switch } from 'antd';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
 import GoodsDrawer from '@/components/goods/GoodsDrawer';
+import styles from './index.less';
 
 class productManager extends React.Component {
   constructor(props) {
@@ -19,6 +20,10 @@ class productManager extends React.Component {
       productId: '',
       delGoods: false,
       teamId: localDB.getItem('teamId'),
+      isSwitch: false,
+      FenModals: false,
+      account: '',
+      account1: '',
     };
     // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
@@ -137,8 +142,121 @@ class productManager extends React.Component {
     }
   };
 
+  onSwitchChange = () => {
+    let { isSwitch } = this.state;
+    this.setState({
+      isSwitch: !isSwitch,
+    });
+  };
+
+  setFenModals = async e => {
+    let res = await requestw({
+      url: '/web/goodsLevel/queryDatas',
+      data: {
+        goodsId: e.productId,
+        teamId: this.state.teamId,
+      },
+    });
+    if (res.code == 200) {
+      if (res.data.length != 0) {
+        if (res.data[0].useType == 0) {
+          this.setState({
+            isSwitch: true,
+          });
+        } else {
+          this.setState({
+            isSwitch: false,
+          });
+        }
+      }
+      if (res.data.length > 1) {
+        this.setState({
+          account: res.data[0].account,
+          account1: res.data[1].account,
+          fenList: res.data,
+        });
+      }
+    }
+
+    this.setState({
+      FenModals: true,
+      fenGoodsId: e.productId,
+    });
+  };
+
+  closeFenModals = () => {
+    this.setState({
+      FenModals: false,
+      account: '',
+      account1: '',
+    });
+  };
+
+  openFenModalsOk = async () => {
+    let { fenGoodsId, teamId, isSwitch, fenList } = this.state;
+    let account1 = this.state.account;
+    let account2 = this.state.account1;
+    let postdata = [
+      {
+        account: account1,
+        goodsId: fenGoodsId,
+        level: 1,
+        teamId: teamId,
+        useType: isSwitch ? 0 : 1,
+      },
+      {
+        account: account2,
+        goodsId: fenGoodsId,
+        level: 2,
+        teamId: teamId,
+        useType: isSwitch ? 0 : 1,
+      },
+    ];
+    if (fenList) {
+      postdata[0].id = fenList[0].id;
+      postdata[1].id = fenList[1].id;
+    }
+
+    // account1 = ''
+    // account1 = ''
+    let res = await requestw({
+      url: api_goods.goodsLevelCreateOrUpdate,
+      type: 'formdata',
+      data: postdata,
+    });
+    if (res.code == 200) {
+      message.success('修改商品分润成功');
+      this.setState({
+        FenModals: false,
+      });
+    } else {
+      message.warning(res.message);
+    }
+  };
+
+  keyupEvent = (e, ipt) => {
+    e.target.value = e.target.value.replace(/[^\d.]/g, '');
+    e.target.value = e.target.value.replace(/\.{2,}/g, '.');
+    e.target.value = e.target.value.replace(/^\./g, '0.');
+    e.target.value = e.target.value.replace(
+      /^\d*\.\d*\./g,
+      e.target.value.substring(0, e.target.value.length - 1),
+    );
+    e.target.value = e.target.value.replace(/^0[^\.]+/g, '0');
+    e.target.value = e.target.value.replace(/^(\d+)\.(\d\d).*$/, '$1.$2');
+    if (ipt == '1') {
+      this.setState({
+        account: e.target.value,
+      });
+    } else {
+      this.setState({
+        account1: e.target.value,
+      });
+    }
+  };
+
   render() {
-    const { goodsStatus, productStatusValue, upOrDown, delGoods } = this.state;
+    const { goodsStatus, productStatusValue, upOrDown, delGoods, isSwitch, FenModals } = this.state;
 
     const pageTiaojian = (
       <>
@@ -157,7 +275,7 @@ class productManager extends React.Component {
       <div>
         <Breadcrumb>
           <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>商品管理1</Breadcrumb.Item>
+          <Breadcrumb.Item>自营商品管理</Breadcrumb.Item>
         </Breadcrumb>
 
         <Tablew
@@ -305,6 +423,7 @@ class productManager extends React.Component {
                   ) : null}
                   {record.productStatus == 0 ? (
                     <a
+                      style={{ marginRight: '5px' }}
                       onClick={() => {
                         this.deleteGoods(record);
                       }}
@@ -312,6 +431,14 @@ class productManager extends React.Component {
                       删除
                     </a>
                   ) : null}
+                  <a
+                    data-value="商品分润"
+                    onClick={() => {
+                      this.setFenModals(record);
+                    }}
+                  >
+                    商品分润
+                  </a>
                 </>
               ),
             },
@@ -344,6 +471,49 @@ class productManager extends React.Component {
             this.Tablew.getData();
           }}
         />
+        <Modal
+          destroyOnClose={true}
+          title="分润比例"
+          visible={FenModals}
+          closable={false}
+          onCancel={this.closeFenModals}
+          onOk={this.openFenModalsOk}
+        >
+          <div style={{ width: '100%', height: '150px' }}>
+            <div className={styles.Fenleft}>
+              <div style={{ width: '100%' }}>
+                一级销售：{' '}
+                <Input
+                  onChange={e => {
+                    this.keyupEvent(e, '1');
+                  }}
+                  value={this.state.account}
+                  // defaultValue={fenList && fenList.length > 0 ? fenList[0].account : null}
+                  style={{ width: '150px' }}
+                />{' '}
+                {isSwitch ? <span>元</span> : <span>%</span>}
+              </div>
+              <div style={{ width: '100%', marginTop: '20px' }}>
+                二级销售：{' '}
+                <Input
+                  onChange={e => {
+                    this.keyupEvent(e, '2');
+                  }}
+                  value={this.state.account1}
+                  // defaultValue={fenList && fenList.length > 0 ? fenList[1].account : null}
+                  style={{ width: '150px' }}
+                />{' '}
+                {isSwitch ? <span style={{ marginRight: '3px' }}>元</span> : <span>%</span>}
+              </div>
+            </div>
+            <div className={styles.Fenright}>
+              <p style={{ marginBottom: '20px' }}>请选择分润方法</p>
+              <span style={{ marginRight: '5px' }}>百分比</span>
+              <Switch defaultChecked={isSwitch} onChange={this.onSwitchChange} />
+              <span style={{ margingLeft: '5px' }}>金额</span>
+            </div>
+          </div>
+        </Modal>
       </div>
     );
   }
