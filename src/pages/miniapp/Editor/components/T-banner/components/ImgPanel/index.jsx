@@ -20,16 +20,12 @@ const formItemLayoutTail = {
   wrapperCol: { span: 15, offset: 4 },
 };
 
-const index = props => {
+const Index = props => {
   const [formRef] = Form.useForm();
-  const { imgItem, tIndex, tLength, form, h5Editor, dispatch } = props;
+  const { imgItem, tIndex, tLength, h5Editor, dispatch } = props;
   const { itemList, activeItem } = h5Editor;
 
   let item = itemList.find(obj => obj.id == activeItem.id);
-
-  useEffect(() => {
-    init();
-  }, [itemList]);
 
   const init = () => {
     let list = itemList;
@@ -39,11 +35,6 @@ const index = props => {
         let imgList = item.list;
         //找到它当前的index
         let curIndex = imgList.findIndex(obj => obj.id == imgItem.id);
-        //改变相关属性
-        console.log({
-          ...item.list[curIndex],
-          imgUrl: item.list[curIndex].imgUrl ? [item.list[curIndex].imgUrl] : [],
-        });
         formRef.setFieldsValue({
           ...item.list[curIndex],
           imgUrl: item.list[curIndex].imgUrl ? [item.list[curIndex].imgUrl] : [],
@@ -52,6 +43,10 @@ const index = props => {
       }
     }
   };
+
+  useEffect(() => {
+    init();
+  }, [itemList]);
 
   //排序
   const changeOrder = type => {
@@ -64,18 +59,15 @@ const index = props => {
         let curIndex = imgList.findIndex(obj => obj.id == imgItem.id);
         //上移
         if (type < 0) {
-          console.log('上移');
           imgList.splice(curIndex, 1);
           imgList.splice(curIndex - 1, 0, imgItem);
         }
         //下移
         if (type > 0) {
-          console.log('下移');
           let nextItem = imgList[curIndex + 1];
           imgList.splice(curIndex + 1, 1);
           imgList.splice(curIndex, 0, nextItem);
         }
-        console.log(list);
         //移动完成
         dispatch({
           type: 'h5Editor/save',
@@ -109,7 +101,7 @@ const index = props => {
   };
 
   //改变
-  const onValuesChange = (changedValues, allValues) => {
+  const onValuesChange = changedValues => {
     let list = itemList;
     for (let i = 0; i < list.length; i++) {
       let item = list[i];
@@ -125,7 +117,6 @@ const index = props => {
         if (changedValues.imgUrl) {
           item.list[curIndex].imgUrl = changedValues.imgUrl[0] ? changedValues.imgUrl[0].url : '';
         }
-        console.log(list);
         //移动完成
         dispatch({
           type: 'h5Editor/save',
@@ -156,7 +147,7 @@ const index = props => {
         {/* 图片 */}
         <div>
           <div>
-            第 <span style={{ fontWeight: 'bold', color: '#000' }}>{tIndex + 1}</span> 张图片
+            第<span style={{ fontWeight: 'bold', color: '#000' }}>{tIndex + 1}</span>张图片
           </div>
           <Form.Item label="图片" name="imgUrl" rules={[{ required: true, message: '请上传图片' }]}>
             <TUpload2 length={1} />
@@ -211,4 +202,4 @@ const index = props => {
 
 export default connect(({ h5Editor }) => ({
   h5Editor,
-}))(index);
+}))(Index);
