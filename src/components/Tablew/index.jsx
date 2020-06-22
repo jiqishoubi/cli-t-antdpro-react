@@ -17,15 +17,16 @@
  *    可以写width  fixed属性
  *    type如果是 caozuo的话，可以写render属性
  */
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'dva';
+// import { connect } from 'dva';
 import moment from 'moment';
 import { Table, Form, Row, Col, Input, Select, Button, Tooltip, DatePicker, message } from 'antd';
 import requestw from '@/utils/requestw';
 import { RedoOutlined } from '@ant-design/icons';
-import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
+// import { localDB } from '@/utils/utils';
 import router from 'umi/router';
+
 const { Option } = Select;
 
 // @connect(({ common }) => ({
@@ -58,7 +59,7 @@ class index extends React.Component {
       tableInfo: null,
       // loading
       loading_table: false,
-      teamId: localDB.getItem('teamId'),
+      // teamId: localDB.getItem('teamId'),
     };
     if (props.onRef) {
       //如果父组件传来该方法 则调用方法将子组件this指针传过去
@@ -148,12 +149,9 @@ class index extends React.Component {
   // 表格相关
 
   getData = code => {
-    const { startDateKey, endDateKey, page, pageSize } = this.state;
+    const { startDateKey, endDateKey } = this.state;
     const { queryApi, modifydata, retType, postdates, restype, pageOjb } = this.props;
-    console.log(this);
     this.refs.formRef.validateFields().then(async values => {
-      console.log(values);
-      console.log(modifydata);
       // form.validateFields().then((values) => {
       //   // success
       //   console.log(values);
@@ -193,7 +191,6 @@ class index extends React.Component {
         postData.type = restype;
       }
       this.setState({ loading_table: true });
-      console.log(postData);
       let resDtat;
       let res = await requestw({
         type: retType ? retType : 'post',
@@ -201,10 +198,7 @@ class index extends React.Component {
         data: postData,
       });
       if (res || res.status || res.status == '0') {
-        console.log('走到这');
-
         if (modifydata) {
-          console.log('我只醒了');
           resDtat = this.props.modifydata(res.data);
         }
       } else if (!res || res.code !== '0') {
@@ -217,7 +211,6 @@ class index extends React.Component {
       // res.data.data.forEach((obj, index) => {
       //   obj.idw = index;
       // });
-      console.log(resDtat);
 
       this.setState({
         tableInfo: resDtat,
@@ -226,9 +219,9 @@ class index extends React.Component {
       });
     });
   };
-  onFinish = values => {
-    console.log('Received values of form: ', values);
-  };
+
+  onFinish = () => {};
+
   changePage = current => {
     this.setState(
       {
@@ -240,19 +233,19 @@ class index extends React.Component {
       },
     );
   };
-  tableOnChange = current => {
-    console.log(current);
 
+  tableOnChange = current => {
     this.setState(
       {
         page: current.current,
-        pageSize: this.state.pageSize,
+        pageSize: current.pageSize,
       },
       () => {
         this.getData();
       },
     );
   };
+
   // 表格相关 end
   /**
    * 渲染
@@ -260,21 +253,21 @@ class index extends React.Component {
   render() {
     const {
       // 查询
-      startDateKey,
-      endDateKey,
+      // startDateKey,
+      // endDateKey,
       // 表格
       tableInfo,
       loading_table,
-      teamId,
+      // teamId,
       // loading
     } = this.state;
     const {
       form,
-      common,
+      // common,
       // props
       queryItems,
       columns,
-      loading,
+      // loading,
       querystyle,
       Externalplacement,
     } = this.props;
@@ -283,7 +276,6 @@ class index extends React.Component {
       labelCol: { span: 4 },
       wrapperCol: { span: 15 },
     };
-    console.log(queryItems);
     // const NormalLoginForm = () => {
     //   const onFinish = (values) => {
     //     //提交表单且数据验证成功后回调事件
@@ -477,9 +469,7 @@ class index extends React.Component {
             return obj.render(record);
           },
         };
-        console.log(columnObj);
       } else {
-        console.log(obj);
         if (obj.render) {
           columnObj = {
             align: obj.align ? obj.align : 'center',
@@ -529,13 +519,9 @@ class index extends React.Component {
           onRow={record => {
             return {
               onClick: event => {
-                console.log(event.target.dataset.value);
                 if (event.target.dataset && event.target.dataset.value) {
-                  console.log('是要return的');
                   return;
                 }
-                console.log(this.props.routerUrl);
-
                 if (this.props.routerUrl) {
                   router.push({
                     pathname: this.props.routerUrl,

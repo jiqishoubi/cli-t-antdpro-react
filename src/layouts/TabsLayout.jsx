@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'dva';
+// import { connect } from 'dva';
 import { router } from 'umi';
 import { Tabs } from 'antd';
 import defaultTheme from '../../config/theme/defaultTheme';
@@ -32,13 +32,14 @@ class index extends Component {
       panes: [],
     };
   }
+
   componentDidMount() {
     this.props.onRef(this);
   }
 
   addCutTab = url => {
-    const { panes, activeKey } = this.state;
-    const { login, route } = this.props;
+    const { panes } = this.state;
+    const { route } = this.props;
     const { routes } = route;
 
     let flag = false;
@@ -50,11 +51,9 @@ class index extends Component {
     }
     if (flag) {
       //已经有这个tab
-      console.log('已经有这个tab');
       this.setState({ activeKey: url });
     } else {
       //还没有
-      console.log('还没有');
       let routeFilter = routes.filter(obj => {
         return obj.path == url;
       });
@@ -114,7 +113,7 @@ class index extends Component {
     const { collapsed } = this.props;
 
     //关闭按钮
-    const operations = null;
+    // const operations = null;
 
     //tabBar 样式
     let left;
@@ -143,7 +142,7 @@ class index extends Component {
         onChange={this.onChangeTab}
         onEdit={this.onEdit}
       >
-        {panes.map((obj, index) => {
+        {panes.map(obj => {
           return (
             <TabPane key={obj.path} tab={obj.name} closable={panes.length > 1}>
               <div

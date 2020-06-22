@@ -1,22 +1,16 @@
 import React from 'react';
-import { connect } from 'dva';
-import { Button, Card, Row, Col, Breadcrumb, Radio, Modal, message } from 'antd';
-import { getUrlParam } from '@/utils/utils';
+// import { connect } from 'dva';
+import { Button, Breadcrumb } from 'antd';
 import styles from './index.less';
-import requestw from '@/utils/requestw';
-import api_goods from '@/services/api/goods';
-import Tablew from '@/components/Tablew';
-import SublimeVideo from 'react-sublime-video';
 import ImageCarousel from '@/components/ImageCarousel';
-// import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
-import moment from 'moment';
+import { localDB, getUrlParam } from '@/utils/utils';
 import GoodsDrawer from '@/components/DistributionMarket/GoodsDrawer';
 
 import { getMarketGoodsAjax } from '@/services/goods';
+
 function sum(arr) {
-  var sum = 0;
-  for (var i = 0; i < arr.length; i++) {
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
     sum += arr[i];
   }
   return sum;
@@ -41,28 +35,28 @@ class SupplygoodsDetail extends React.Component {
     // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
   }
+
   componentDidMount() {
     this.getData();
   }
+
   getData = async () => {
     let productId = getUrlParam('productId');
     let productExist = getUrlParam('productExist');
-    console.log(productId);
     let teamId = localDB.getItem('teamId');
-    console.log(teamId);
 
     // getMarketGoodsAjax
     let postData = {
       productId,
       teamId: teamId,
+      productType: 'SUPPLY_GODDS',
     };
     let res = await getMarketGoodsAjax(postData);
-    console.log(res);
     let SupplyPriceList = [];
     let PriceList = [];
     let num = [];
     if (res.status == 0) {
-      res.data[0].skuPropertyList.map((item, ind) => {
+      res.data[0].skuPropertyList.map(item => {
         SupplyPriceList.push(item.supplyPrice);
         PriceList.push(item.price);
         num.push(item.stock);
@@ -80,9 +74,9 @@ class SupplygoodsDetail extends React.Component {
         MaxPrice = Math.max.apply(null, PriceList);
       }
       let Allstock = sum(num);
-      console.log(Allstock);
 
-      console.log(MinPrice, MaxPrice, MinSupplyPrice, MaxSupplyPrice);
+      // console.log(MinPrice, MaxPrice, MinSupplyPrice, MaxSupplyPrice);
+      let imglist = res.data[0].productPic.split(',');
 
       this.setState({
         MinPrice,
@@ -93,29 +87,24 @@ class SupplygoodsDetail extends React.Component {
         productExist,
         productDetail: JSON.parse(res.data[0].productDetail),
         detailData: res.data[0],
+        imglist,
       });
     }
   };
-  setGoodDetail = () => {
-    console.log('编辑');
-  };
-  setGoodState = () => {
-    console.log('上架下架');
-  };
-  deleteGood = () => {
-    console.log('删除');
-  };
+
+  setGoodDetail = () => {};
+
+  setGoodState = () => {};
+
+  deleteGood = () => {};
+
   skuClick = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[0] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      console.log(JSON.parse(item.skuJson)[titlename]);
-      let obj = {};
+
+    detailData.skuPropertyList.map(item => {
       if (JSON.parse(item.skuJson)[titlename] == name) {
-        console.log(1);
         SupplyPriceList[0] = item.supplyPrice;
         // moneryList.Price.push(item.price)
         PriceList[0] = item.price;
@@ -123,15 +112,23 @@ class SupplygoodsDetail extends React.Component {
     });
     let MinSupplyPrice;
     let MaxSupplyPrice;
-    if (SupplyPriceList.length > 1) {
+    if (SupplyPriceList.length > 2) {
       MinSupplyPrice = Math.min.apply(null, SupplyPriceList);
       MaxSupplyPrice = Math.max.apply(null, SupplyPriceList);
+      this.setState({
+        MinSupplyPrice,
+        MaxSupplyPrice,
+      });
     }
     let MinPrice;
     let MaxPrice;
-    if (PriceList.length > 1) {
+    if (PriceList.length > 2) {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
+      this.setState({
+        MinPrice,
+        MaxPrice,
+      });
     }
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
@@ -139,10 +136,8 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -154,26 +149,20 @@ class SupplygoodsDetail extends React.Component {
 
     this.setState({
       namedata,
-      MinSupplyPrice,
-      MaxSupplyPrice,
-      MinPrice,
-      MaxPrice,
+
       SupplyPriceList,
       PriceList,
       currentIndex: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   skuClick1 = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[1] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      let obj = {};
-      if (JSON.parse(item.skuJson)[titlename] == name) {
-        console.log('第二条可以了');
 
+    detailData.skuPropertyList.map(item => {
+      if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[1] = item.supplyPrice;
         // moneryList.Price.push(item.price)
         PriceList[1] = item.price;
@@ -182,27 +171,32 @@ class SupplygoodsDetail extends React.Component {
 
     let MinSupplyPrice;
     let MaxSupplyPrice;
-    if (SupplyPriceList.length > 1) {
+    if (SupplyPriceList.length > 2) {
       MinSupplyPrice = Math.min.apply(null, SupplyPriceList);
       MaxSupplyPrice = Math.max.apply(null, SupplyPriceList);
+      this.setState({
+        MinSupplyPrice,
+        MaxSupplyPrice,
+      });
     }
     let MinPrice;
     let MaxPrice;
-    if (PriceList.length > 1) {
+    if (PriceList.length > 2) {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
+      this.setState({
+        MinPrice,
+        MaxPrice,
+      });
     }
-    console.log(SupplyPriceList, PriceList);
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
       namedata.map(item => {
         namestr += item + '、';
       });
 
-      console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -214,25 +208,20 @@ class SupplygoodsDetail extends React.Component {
 
     this.setState({
       namedata,
-      MinSupplyPrice,
-      MaxSupplyPrice,
-      MinPrice,
-      MaxPrice,
+
       SupplyPriceList,
       PriceList,
       currentIndex1: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   skuClick2 = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
 
     let namelist = namedata;
     namelist[2] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      console.log(JSON.parse(item.skuJson)[titlename]);
-      let obj = {};
+
+    detailData.skuPropertyList.map(item => {
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[2] = item.supplyPrice;
         // moneryList.Price.push(item.price)
@@ -241,26 +230,32 @@ class SupplygoodsDetail extends React.Component {
     });
     let MinSupplyPrice;
     let MaxSupplyPrice;
-    if (SupplyPriceList.length > 1) {
+    if (SupplyPriceList.length > 2) {
       MinSupplyPrice = Math.min.apply(null, SupplyPriceList);
       MaxSupplyPrice = Math.max.apply(null, SupplyPriceList);
+      this.setState({
+        MinSupplyPrice,
+        MaxSupplyPrice,
+      });
     }
     let MinPrice;
     let MaxPrice;
-    if (PriceList.length > 1) {
+    if (PriceList.length > 2) {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
+      this.setState({
+        MinPrice,
+        MaxPrice,
+      });
     }
-    console.log(SupplyPriceList, PriceList);
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
       namedata.map(item => {
         namestr += item + '、';
       });
 
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -271,24 +266,19 @@ class SupplygoodsDetail extends React.Component {
     }
     this.setState({
       namedata,
-      MinSupplyPrice,
-      MaxSupplyPrice,
-      MinPrice,
-      MaxPrice,
+
       SupplyPriceList,
       PriceList,
       currentIndex2: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   skuClick3 = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[3] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      console.log(JSON.parse(item.skuJson)[titlename]);
-      let obj = {};
+
+    detailData.skuPropertyList.map(item => {
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[3] = item.supplyPrice;
         // moneryList.Price.push(item.price)
@@ -297,15 +287,23 @@ class SupplygoodsDetail extends React.Component {
     });
     let MinSupplyPrice;
     let MaxSupplyPrice;
-    if (SupplyPriceList.length > 1) {
+    if (SupplyPriceList.length > 2) {
       MinSupplyPrice = Math.min.apply(null, SupplyPriceList);
       MaxSupplyPrice = Math.max.apply(null, SupplyPriceList);
+      this.setState({
+        MinSupplyPrice,
+        MaxSupplyPrice,
+      });
     }
     let MinPrice;
     let MaxPrice;
-    if (PriceList.length > 1) {
+    if (PriceList.length > 2) {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
+      this.setState({
+        MinPrice,
+        MaxPrice,
+      });
     }
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
@@ -313,10 +311,8 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -327,20 +323,18 @@ class SupplygoodsDetail extends React.Component {
     }
     this.setState({
       namedata,
-      MinSupplyPrice,
-      MaxSupplyPrice,
-      MinPrice,
-      MaxPrice,
+
       SupplyPriceList,
       PriceList,
       currentIndex3: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   goMyshop = () => {
-    console.log('上架到本店');
     let { detailData } = this.state;
     this.goodsDrawer.current.open(detailData);
   };
+
   render() {
     const {
       detailData,
@@ -348,7 +342,6 @@ class SupplygoodsDetail extends React.Component {
       currentIndex1,
       currentIndex2,
       currentIndex3,
-      SupplyPriceList,
       PriceList,
       MinSupplyPrice,
       MaxSupplyPrice,
@@ -360,11 +353,9 @@ class SupplygoodsDetail extends React.Component {
       itemstock,
       productExist,
       productDetail,
-      teamId,
+      imglist,
     } = this.state;
-    console.log('render重新执行');
-    console.log(productExist);
-    console.log(productExist === 'ture');
+    // console.log('render重新执行');
 
     return (
       <div style={{ height: '1000px' }}>
@@ -374,7 +365,7 @@ class SupplygoodsDetail extends React.Component {
         </Breadcrumb>
 
         <div style={{ width: '100%', height: '360px' }}>
-          <ImageCarousel />
+          <ImageCarousel imglist={imglist} />
 
           <p
             style={{
@@ -409,7 +400,7 @@ class SupplygoodsDetail extends React.Component {
                       <span style={{ fontSize: '16px' }}>
                         供货价:
                         <b>
-                          {MinSupplyPrice}￥-{MaxSupplyPrice}￥
+                          {MinSupplyPrice}￥- {MaxSupplyPrice}￥
                         </b>
                       </span>
                     </>
@@ -435,7 +426,7 @@ class SupplygoodsDetail extends React.Component {
               </span> */}
                   {Allprice ? (
                     <span style={{ fontSize: '16px' }}>
-                      建议售价:<b>{Allprice}￥</b>
+                      建议售价:<b>{(Allprice * 0.01).toFixed(0)}￥</b>
                     </span>
                   ) : (
                     <>
@@ -626,7 +617,7 @@ class SupplygoodsDetail extends React.Component {
         <div style={{ width: '100%', minHeight: '200px', marginTop: '-20px' }}>
           {/*  */}
           {productDetail &&
-            productDetail.map((item, ind) => {
+            productDetail.map(item => {
               if (item.type == '1') {
                 return (
                   <p

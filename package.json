@@ -12,7 +12,6 @@
     "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
     "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
-    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
     "prettier": "prettier -c --write \"**/*\"",
     "dev": "npm run start:dev",
     "start": "cross-env REACT_APP_ENV=dev MOCK=none UMI_UI=none umi dev --port 8020",
@@ -28,7 +27,6 @@
     }
   },
   "lint-staged": {
-    "**/*.less": "stylelint --syntax less",
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
     "**/*.{js,jsx,tsx,ts,less,md,json}": [
       "prettier --write"
@@ -54,6 +52,7 @@
     "omit.js": "^1.0.2",
     "patch-package": "^6.2.2",
     "path-to-regexp": "2.4.0",
+    "prop-types": "^15.7.2",
     "qs": "^6.9.4",
     "react": "^16.8.6",
     "react-color": "^2.18.1",

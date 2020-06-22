@@ -14,10 +14,10 @@ import styles from './index.less';
 function calcDescartes(array) {
   if (array.length < 2) return array[0] || [];
   return [].reduce.call(array, function(col, set) {
-    var res = [];
+    let res = [];
     col.forEach(function(c) {
       set.forEach(function(s) {
-        var t = [].concat(Array.isArray(c) ? c : [c]);
+        let t = [].concat(Array.isArray(c) ? c : [c]);
         t.push(s);
         res.push(t);
       });
@@ -48,18 +48,16 @@ export default class index extends Component {
   /**
    * 周期
    */
+
   componentWillReceiveProps(nextProps) {
     //处理传进来的数据 value
-    console.log(nextProps);
 
     if (nextProps.value) {
       const { skuJson, skuList } = nextProps.value;
       //skuList
 
-      skuList.forEach((obj, index) => {
-        if (typeof obj.skuValue == 'object') {
-          return;
-        } else {
+      skuList.forEach(obj => {
+        if (typeof obj.skuValue != 'object') {
           try {
             obj.skuValue = JSON.parse(obj.skuValue);
           } catch (e) {}
@@ -67,12 +65,14 @@ export default class index extends Component {
       });
       //skuJson
       let skuJsonStateObj = {};
-      skuJson.forEach((obj, index) => {
+      skuJson.forEach(obj => {
         //keyStr
         let keyStr = '';
         let propertyList = obj.skuProperty.split('、');
-        let keyStrArr = propertyList.map((str, index) => {
-          return skuList[index].skuName + '=' + str;
+        let keyStrArr = propertyList.map((str, ind) => {
+          if (skuList[ind]) {
+            return skuList[ind].skuName + '=' + str;
+          }
         });
         keyStr = keyStrArr.join('、');
         //keyStr end
@@ -86,7 +86,6 @@ export default class index extends Component {
 
         // skuJsonStateObj[keyStr + '_stockNumber'] = obj.stockNumber;
       });
-      console.log(skuJsonStateObj);
 
       this.setState({
         skuList,
@@ -94,52 +93,62 @@ export default class index extends Component {
       });
     }
   }
+
   /**
    * 方法
    */
   validate = () => {
-    console.log(this.formRef.current.validateFields());
-
     return this.formRef.current.validateFields();
   };
+
   //增加大规格
   add1 = () => {
-    this.addModal.open(name => {
-      const { skuList } = this.state;
-      let obj = {
-        skuName: name,
-        skuValue: [],
-      };
-      skuList.push(obj);
-      this.setState({ skuList });
+    this.addModal.open(() => {
+      //括号里有name
+      // const { skuList } = this.state;
+      // return
+      // let obj = {
+      //   skuName: name,
+      //   skuValue: [],
+      // };
+      // skuList.push(obj);
+      // this.setState({ skuList });
     });
   };
+
   //增加小规格
-  add2 = index => {
-    this.addModal.open(name => {
-      const { skuList } = this.state;
-      let obj = { name };
-      if (!skuList[index].skuValue) {
-        skuList[index].skuValue = [];
-      }
-      skuList[index].skuValue.push(obj);
-      this.setState({ skuList });
+  add2 = () => {
+    this.addModal.open(() => {
+      //括号里有name
+      // const { skuList } = this.state;
+      // return
+      // let obj = { name };
+      // if (!skuList[index].skuValue) {
+      //   skuList[index].skuValue = [];
+      // }
+      // skuList[index].skuValue.push(obj);
+      // this.setState({ skuList });
     });
   };
-  //删除大规格
-  deleteSkuTable = index => {
-    const { skuList } = this.state;
-    skuList.splice(index, 1);
-    this.setState({ skuList });
+
+  //删除大规格 //index
+  deleteSkuTable = () => {
+    // const { skuList } = this.state;
+    // return
+    // skuList.splice(index, 1);
+    // this.setState({ skuList });
   };
-  //删除小规格
-  deleteSkuItem = (index, index2) => {
-    const { skuList } = this.state;
-    skuList[index].skuValue.splice(index2, 1);
-    this.setState({ skuList });
+
+  //删除小规格 index, index2 括号里的 用不到了
+  deleteSkuItem = () => {
+    // return
+    // const { skuList } = this.state;
+    // skuList[index].skuValue.splice(index2, 1);
+    // this.setState({ skuList });
   };
-  //下面input change
-  onValuesChange = (changedValues, allValues) => {
+
+  //下面input change changedValues, allValues括号里的 用不到了
+  onValuesChange = () => {
     let values = {};
     if (this.formRef && this.formRef.current) {
       values = this.formRef.current.getFieldsValue();
@@ -189,6 +198,7 @@ export default class index extends Component {
       skuJson,
     });
   };
+
   /**
    * 渲染
    */
@@ -225,6 +235,7 @@ export default class index extends Component {
                             onClick={() => {
                               this.add2(index);
                             }}
+                            disabled
                           >
                             新增
                           </Button>
@@ -253,7 +264,7 @@ export default class index extends Component {
                   </Fragment>
                 ))
               : null}
-            <Button type="primary" onClick={this.add1} style={{ marginTop: 8 }}>
+            <Button type="primary" disabled onClick={this.add1} style={{ marginTop: 8 }}>
               新增
             </Button>
           </Form.Item>

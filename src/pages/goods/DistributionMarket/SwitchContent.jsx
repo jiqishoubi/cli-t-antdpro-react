@@ -1,31 +1,14 @@
 import React from 'react';
-import { connect } from 'dva';
-import {
-  Button,
-  Card,
-  Row,
-  Col,
-  Breadcrumb,
-  Radio,
-  Modal,
-  message,
-  Form,
-  Select,
-  Input,
-  Tabs,
-  Pagination,
-} from 'antd';
-import { getUrlParam, localDB } from '@/utils/utils';
+// import { connect } from 'dva';
+import { Pagination } from 'antd';
+import { localDB } from '@/utils/utils';
 import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
-import Tablew from '@/components/Tablew';
-import ImageCarousel from '@/components/ImageCarousel';
+
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
-import moment from 'moment';
 import router from 'umi/router';
-const { TabPane } = Tabs;
+
 class SwitchContent extends React.Component {
   constructor(props) {
     super(props);
@@ -38,10 +21,12 @@ class SwitchContent extends React.Component {
     };
     //this.modifydata = this.modifydata.bind(this);
   }
+
   componentDidMount() {
     this.props.onRef(this);
     this.getData();
   }
+
   getData = async () => {
     let { supplyType } = this.props;
     let { pageNum, pageSize } = this.state;
@@ -56,7 +41,6 @@ class SwitchContent extends React.Component {
         queryType: 'RETAIL',
       },
     });
-    console.log(res);
     if (res.data && res.data.status == 0) {
       this.setState({
         goodsList: res.data.data.list,
@@ -64,6 +48,7 @@ class SwitchContent extends React.Component {
       });
     }
   };
+
   onChange = pageNum => {
     this.setState(
       {
@@ -74,8 +59,8 @@ class SwitchContent extends React.Component {
       },
     );
   };
+
   toDetail = toDetail => {
-    console.log(toDetail);
     router.push({
       pathname: '/DistributionDetail',
       query: {
@@ -84,16 +69,17 @@ class SwitchContent extends React.Component {
       },
     });
   };
+
   render() {
-    const { goodsList, total, teamId } = this.state;
-    const formItemLayout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 15 },
-    };
+    const { goodsList, total } = this.state;
+    // const formItemLayout = {
+    //   labelCol: { span: 4 },
+    //   wrapperCol: { span: 15 },
+    // };
     return (
       <>
         <div style={{ width: '100%', minHeight: '640px' }}>
-          {goodsList.map((item, ind) => {
+          {goodsList.map(item => {
             return (
               <div
                 className={styles.goodsbox}
@@ -110,7 +96,7 @@ class SwitchContent extends React.Component {
                 <div className={styles.goodstopimg}>
                   <img
                     style={{ width: '100%', height: '200px' }}
-                    src={item.productPic}
+                    src={item.productPic.split(',')[0]}
                     alt="路径错误"
                   />
                 </div>
