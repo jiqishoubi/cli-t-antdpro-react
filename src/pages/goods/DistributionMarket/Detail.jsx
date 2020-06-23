@@ -609,12 +609,20 @@ class SupplygoodsDetail extends React.Component {
             borderRadius: '5px',
           }}
         >
-          <div style={{ margin: '0 auto', width: '100px', fontSize: '16px', height: '30px' }}>
+          <div
+            style={{
+              margin: '0 auto',
+              width: '100px',
+              fontSize: '16px',
+              height: '30px',
+              marginBottom: '30px',
+            }}
+          >
             {' '}
             商品详情
           </div>
         </p>
-        <div style={{ width: '100%', minHeight: '200px', marginTop: '-20px' }}>
+        <div style={{ width: '100%', minHeight: '200px', marginTop: '30px' }}>
           {/*  */}
           {productDetail &&
             productDetail.map(item => {
