@@ -29,26 +29,13 @@ import router from 'umi/router';
 
 const { Option } = Select;
 
-// @connect(({ common }) => ({
-//   common,
-// }))
-// @Form.useForm()
 class index extends React.Component {
   constructor(props) {
     super(props);
     // 日期的key
     let startDateKey = null;
     let endDateKey = null;
-    // if (props.queryItems) {
-    //   let filterArrStart = props.queryItems.filter(
-    //     (obj) => obj.type == 'date' && obj.key.indexOf('start') > -1,
-    //   );
-    //   let filterArrEnd = props.queryItems.filter(
-    //     (obj) => obj.type == 'date' && obj.key.indexOf('end') > -1,
-    //   );
-    //   if (filterArrStart[0]) startDateKey = filterArrStart[0].key;
-    //   if (filterArrEnd[0]) endDateKey = filterArrEnd[0].key;
-    // }
+
     this.state = {
       // 查询
       startDateKey,
@@ -57,19 +44,15 @@ class index extends React.Component {
       page: 1,
       pageSize: 10,
       tableInfo: null,
-      // loading
       loading_table: false,
-      // teamId: localDB.getItem('teamId'),
     };
     if (props.onRef) {
       //如果父组件传来该方法 则调用方法将子组件this指针传过去
       props.onRef(this);
     }
-    // const form = Form.useForm();
   }
 
   componentDidMount() {
-    // this.getSelects(); // 查码表
     this.getData();
   }
   /**
@@ -77,19 +60,6 @@ class index extends React.Component {
    */
   // 查询条件相关
 
-  // getSelects = () => {
-  //   const { dispatch, queryItems } = this.props;
-  //   if (!queryItems) return;
-  //   for (let i = 0; i < queryItems.length; i++) {
-  //     let item = queryItems[i];
-  //     if (item.type == 'select' && item.codeParam) {
-  //       dispatch({
-  //         type: `common/getSysCodeByParam`,
-  //         payload: item.codeParam,
-  //       });
-  //     }
-  //   }
-  // };
   /** 日期方法开始 */
   // 开始日期不能大于 结束日期
 
@@ -152,14 +122,7 @@ class index extends React.Component {
     const { startDateKey, endDateKey } = this.state;
     const { queryApi, modifydata, retType, postdates, restype, pageOjb } = this.props;
     this.refs.formRef.validateFields().then(async values => {
-      // form.validateFields().then((values) => {
-      //   // success
-      //   console.log(values);
-      // });
-      // let formData = form.getFieldsValue();
-      // const formData = Form.useForm();
       let formData = values;
-      // console.log(form);
       let postData_date = {};
       if (startDateKey) {
         postData_date = {
@@ -276,99 +239,16 @@ class index extends React.Component {
       labelCol: { span: 4 },
       wrapperCol: { span: 15 },
     };
-    // const NormalLoginForm = () => {
-    //   const onFinish = (values) => {
-    //     //提交表单且数据验证成功后回调事件
-    //     console.log('Received values of form: ', values);
-    //   };
 
-    //   return (
-    //     <Form {...formItemLayout} form={form}>
-    //       <Row gutter={10} type="flex" align="middle">
-    //         {queryItems.map((obj, index) => {
-    //           let inputDom;
-    //           if (obj.type == 'select') {
-    //             let optionsArr = null;
-    //             if (obj.codeParam) {
-    //               //redux码表
-    //               // optionsArr = common[obj.codeParam + '_list'];
-    //             } else {
-    //               //自定义options
-    //               optionsArr = obj.customOptions;
-    //             }
-    //             inputDom = (
-    //               <Select placeholder={obj.title} style={{ width: 180 }}>
-    //                 <Option value="">不限</Option>
-    //                 {optionsArr && optionsArr.length > 0
-    //                   ? optionsArr.map((opObj, opIndex) => (
-    //                       <Option key={opIndex} value={opObj.codeKey}>
-    //                         {opObj.codeValue}
-    //                       </Option>
-    //                     ))
-    //                   : null}
-    //               </Select>
-    //             );
-    //           } else if (obj.type == 'date') {
-    //             inputDom = (
-    //               <DatePicker
-    //                 format="YYYY-MM-DD"
-    //                 placeholder={
-    //                   obj.key.indexOf('start') > -1 ? '请选择开始日期' : '请选择结束日期'
-    //                 }
-    //                 allowClear={false}
-    //                 style={{ width: 180 }}
-    //                 //方法
-    //                 disabledDate={
-    //                   obj.key.indexOf('start') > -1 ? this.disabledStartDate : this.disabledEndDate
-    //                 }
-    //                 onChange={
-    //                   obj.range == false
-    //                     ? () => {}
-    //                     : obj.key.indexOf('start') > -1
-    //                     ? (val) => {
-    //                         this.onStartChange(val, obj.range);
-    //                       }
-    //                     : (val) => {
-    //                         this.onEndChange(val, obj.range);
-    //                       }
-    //                 }
-    //               />
-    //             );
-    //           } else if (obj.type == 'dom') {
-    //             inputDom = obj.dom;
-    //           } else {
-    //             //input
-    //             inputDom = <Input placeholder={obj.title} style={{ width: 180 }} />;
-    //           }
-
-    //           return (
-    //             <Col key={index}>
-    //               <Form.Item style={{ marginRight: 0 }} name={obj.key}>
-    //                 {/* {getFieldDecorator(obj.key, {
-    //                 ...obj.options,
-    //               })(inputDom)} */}
-    //                 {inputDom}
-    //               </Form.Item>
-    //             </Col>
-    //           );
-    //         })}
-    //         <Col>
-    //           <Tooltip placement="top" title="重置搜索条件">
-    //             <Button type="primary" shape="circle" icon="reload" onClick={this.resetSearch} />
-    //           </Tooltip>
-    //         </Col>
-    //         <Col>
-    //           <Button type="primary" onClick={this.clickSearch}>
-    //             查询
-    //           </Button>
-    //         </Col>
-    //       </Row>
-    //     </Form>
-    //   );
-    // };
     // 查询条件
     let panel = queryItems ? (
-      <Form {...formItemLayout} onFinish={this.onFinish} form={form} ref="formRef">
+      <Form
+        {...formItemLayout}
+        onFinish={this.onFinish}
+        form={form}
+        ref="formRef"
+        style={{ marginBottom: '10px' }}
+      >
         {Externalplacement ? Externalplacement : null}
 
         <Row gutter={10} type="flex" align="middle" style={querystyle}>
@@ -384,7 +264,7 @@ class index extends React.Component {
                 optionsArr = obj.customOptions;
               }
               inputDom = (
-                <Select placeholder={obj.title} style={{ width: 180 }}>
+                <Select placeholder={obj.title} style={{ width: 25 }}>
                   <Option value="">不限</Option>
                   {optionsArr && optionsArr.length > 0
                     ? optionsArr.map((opObj, opIndex) => (
@@ -401,7 +281,7 @@ class index extends React.Component {
                   format="YYYY-MM-DD"
                   placeholder={obj.key.indexOf('start') > -1 ? '请选择开始日期' : '请选择结束日期'}
                   allowClear={false}
-                  style={{ width: 180 }}
+                  style={{ width: 25 }}
                   //方法
                   disabledDate={
                     obj.key.indexOf('start') > -1 ? this.disabledStartDate : this.disabledEndDate
@@ -429,9 +309,6 @@ class index extends React.Component {
             return (
               <Col key={index}>
                 <Form.Item style={{ marginRight: 0, marginBottom: '0' }} name={obj.key}>
-                  {/* {getFieldDecorator(obj.key, {
-                    ...obj.options,
-                  })(inputDom)} */}
                   {inputDom}
                 </Form.Item>
               </Col>
@@ -515,6 +392,7 @@ class index extends React.Component {
             pageSize: this.state.pageSize,
             total: tableInfo && tableInfo.rowTop ? tableInfo.rowTop : 0,
           }}
+          scroll={{ y: '470px' }}
           onChange={current => this.tableOnChange(current)}
           onRow={record => {
             return {

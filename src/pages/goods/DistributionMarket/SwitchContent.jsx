@@ -28,18 +28,22 @@ class SwitchContent extends React.Component {
   }
 
   getData = async () => {
-    let { supplyType } = this.props;
+    let { supplyType, goodsName } = this.props;
     let { pageNum, pageSize } = this.state;
     let teamId = localDB.getItem('teamId');
+    let data = {
+      supplyType,
+      pageNo: pageNum,
+      pageSize,
+      teamId,
+      queryType: 'RETAIL',
+    };
+    if (goodsName != '') {
+      data.productName = goodsName;
+    }
     let res = await requestw({
       url: api_goods.queySupplyProduct,
-      data: {
-        supplyType,
-        pageNo: pageNum,
-        pageSize,
-        teamId,
-        queryType: 'RETAIL',
-      },
+      data: data,
     });
     if (res.data && res.data.status == 0) {
       this.setState({

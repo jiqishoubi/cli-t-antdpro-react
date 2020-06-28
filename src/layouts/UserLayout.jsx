@@ -1,12 +1,9 @@
 import React from 'react';
-import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
 import { Link } from 'umi';
-import { connect } from 'dva';
 import logo from '../assets/logo.png';
 import styles from './UserLayout.less';
-
-export const defaultFooterDom = <DefaultFooter copyright="2020 便利电科技出品" links={[]} />;
 
 const UserLayout = props => {
   const {
@@ -47,7 +44,6 @@ const UserLayout = props => {
           </div>
           {children}
         </div>
-        {defaultFooterDom}
       </div>
     </>
   );

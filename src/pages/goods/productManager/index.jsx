@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import SublimeVideo from 'react-sublime-video';
 import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
-import { Button, Breadcrumb, Radio, Modal, message, Input, Switch } from 'antd';
+import { Button, Radio, Modal, message, Input, Switch } from 'antd';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
@@ -266,18 +266,13 @@ class productManager extends React.Component {
           <Radio.Button value="0">未上架</Radio.Button>
           <Radio.Button value="2">已售馨</Radio.Button>
         </Radio.Group>
-        <Button style={{ marginLeft: '630px' }} onClick={this.addGoods}>
+        <Button style={{ marginLeft: '10px' }} onClick={this.addGoods}>
           添加商品
         </Button>
       </>
     );
     return (
       <div>
-        <Breadcrumb>
-          <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>自营商品管理</Breadcrumb.Item>
-        </Breadcrumb>
-
         <Tablew
           onRef={c => {
             this.Tablew = c;

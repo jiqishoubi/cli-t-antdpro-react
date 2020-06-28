@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Breadcrumb, Radio, Modal, message, Input, Switch } from 'antd';
+import { Button, Modal, message, Input, Switch, Radio } from 'antd';
 import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
 import GoodsDrawer from '@/components/DistributionMarket/GoodsDrawer';
 import SublimeVideo from 'react-sublime-video';
-// import EditModal from '@/components/EditModal';
 import { localDB } from '@/utils/utils'; ///备用  pathVideoHeader  pathimgHeader
 import moment from 'moment';
 import router from 'umi/router';
@@ -30,7 +29,6 @@ class productManager extends React.Component {
       fenproductId: '',
     };
     this.goodsDrawer = React.createRef();
-    // this.modifydata = this.modifydata.bind(this);
   }
 
   componentDidMount() {
@@ -57,7 +55,6 @@ class productManager extends React.Component {
   };
 
   recordEdit(record) {
-    // history.push('/goodsAdd?id=' + record.productId);
     this.goodsDrawer.current.open(record);
   }
 
@@ -68,7 +65,6 @@ class productManager extends React.Component {
         goodsStatus: getCode,
       },
       () => {
-        // this.getData();
         this.Tablew.getData();
       },
     );
@@ -158,7 +154,6 @@ class productManager extends React.Component {
   };
 
   addGoods = () => {
-    // this.goodsDrawer.current.open();
     router.push({
       pathname: '/DistributionMarket',
     });
@@ -237,8 +232,6 @@ class productManager extends React.Component {
       postdata[1].id = fenList[1].id;
     }
 
-    // account1 = ''
-    // account1 = ''
     let res = await requestw({
       url: api_goods.goodsLevelCreateOrUpdate,
       type: 'formdata',
@@ -295,18 +288,13 @@ class productManager extends React.Component {
           <Radio.Button value="0">未上架</Radio.Button>
           <Radio.Button value="2">已售馨</Radio.Button>
         </Radio.Group>
-        <Button style={{ marginLeft: '630px' }} onClick={this.addGoods}>
+        <Button style={{ marginLeft: '10px' }} onClick={this.addGoods}>
           添加商品
         </Button>
       </>
     );
     return (
       <div>
-        <Breadcrumb>
-          <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>分销商品管理</Breadcrumb.Item>
-        </Breadcrumb>
-
         <Tablew
           onRef={c => {
             this.Tablew = c;
@@ -356,13 +344,11 @@ class productManager extends React.Component {
                           <SublimeVideo
                             loop
                             style={{ width: '80px', height: '80px' }}
-                            // src={pathVideoHeader + v.productPic.split(',')[0]}
                             src={v.productPic.split(',')[0]}
                           />
                         ) : (
                           <img
                             style={{ width: '80px', height: '80px', marginRight: '10px' }}
-                            // src={pathimgHeader + v.productPic.split(',')[0]}
                             src={v.productPic.split(',')[0]}
                           />
                         )}
@@ -382,13 +368,7 @@ class productManager extends React.Component {
                 );
               },
             },
-            // {
-            //   title: '商品类型',
-            //   key: 'type',
-            //   render: (type) => {
-            //     return <>{type == 'PRE_SALE' ? <span>认筹商品</span> : <span>普通商品</span>}</>;
-            //   },
-            // },
+
             { title: '所属分类', key: 'typeName' },
             { title: '销量', key: 'productTotalSale' },
             { title: '库存', key: 'stockNumber' },
@@ -415,16 +395,8 @@ class productManager extends React.Component {
                     )}
                   </>
                 );
-                // if (productStatus == '0') {
-                //   return (<span>下架</span>)
-                // } else if (productStatus == '1') {
-                //   return (<span>上架</span>)
-                // } else {
-                //   <span>失效</span>
-                // }
               },
             },
-            // { title: '完成时间', key: 'FINISH_DATE_STR' },
             {
               title: '操作',
               key: '',

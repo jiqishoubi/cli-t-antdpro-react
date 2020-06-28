@@ -1,19 +1,14 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Breadcrumb, Radio, Modal, message } from 'antd';
-// import { getUrlParam } from '@/utils/utils';
-// import styles from './index.less';
+import { Button, Radio, Modal, message } from 'antd';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
 import GoodsDrawer from '@/components/SupplyGoods/GoodsDrawer';
 import SublimeVideo from 'react-sublime-video';
-
-// import EditModal from '@/components/EditModal';
 import { localDB } from '@/utils/utils';
 import moment from 'moment';
 
-// import router from 'umi/router';
 class productManager extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +26,6 @@ class productManager extends React.Component {
   }
 
   componentDidMount() {
-    // this.getData();
     this.getgoodstypeList();
   }
 
@@ -54,7 +48,6 @@ class productManager extends React.Component {
   }
 
   recordEdit(record) {
-    // history.push('/goodsAdd?id=' + record.productId);
     this.goodsDrawer.current.open(record);
   }
 
@@ -65,7 +58,6 @@ class productManager extends React.Component {
         goodsStatus: getCode,
       },
       () => {
-        // this.getData();
         this.Tablew.getData();
       },
     );
@@ -169,18 +161,13 @@ class productManager extends React.Component {
           <Radio.Button value="0">未上架</Radio.Button>
           <Radio.Button value="2">已售馨</Radio.Button>
         </Radio.Group>
-        <Button style={{ marginLeft: '630px' }} onClick={this.addGoods}>
+        <Button style={{ marginLeft: '10px' }} onClick={this.addGoods}>
           添加商品
         </Button>
       </>
     );
     return (
       <div>
-        <Breadcrumb>
-          <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>供货商品管理</Breadcrumb.Item>
-        </Breadcrumb>
-
         <Tablew
           onRef={c => (this.Tablew = c)}
           //外部添加查询条件
@@ -253,13 +240,6 @@ class productManager extends React.Component {
                 );
               },
             },
-            // {
-            //   title: '商品类型',
-            //   key: 'type',
-            //   render: (type) => {
-            //     return <>{type == 'PRE_SALE' ? <span>认筹商品</span> : <span>普通商品</span>}</>;
-            //   },
-            // },
             { title: '所属分类', key: 'typeName' },
             { title: '销量', key: 'productTotalSale' },
             { title: '库存', key: 'stockNumber' },
@@ -280,7 +260,6 @@ class productManager extends React.Component {
                 return <>{productStatus == '0' ? <span>下架</span> : <span>上架</span>}</>;
               },
             },
-            // { title: '完成时间', key: 'FINISH_DATE_STR' },
             {
               title: '操作',
               key: '',
