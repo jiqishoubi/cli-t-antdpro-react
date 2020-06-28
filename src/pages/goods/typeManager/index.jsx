@@ -1,85 +1,79 @@
 import React from 'react';
-import { connect } from 'dva';
+// import { connect } from 'dva';
 import {
   Button,
-  Card,
-  Row,
-  Col,
-  Breadcrumb,
-  Radio,
   Modal,
   message,
   Form,
-  Upload,
+  // Upload,
   Input,
 } from 'antd';
-import { getUrlParam } from '@/utils/utils';
+// import { getUrlParam } from '@/utils/utils';
 import './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+// import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import TUpload2 from '@/components/T-Upload2';
 
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
-import moment from 'moment';
+import { localDB } from '@/utils/utils';
+// import moment from 'moment';
+import router from 'umi/router';
+
 const { confirm } = Modal;
 
-// import router from 'umi/router';
 class typeManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageSize: 10,
-      pageNo: 1,
-      tableDate: [],
-      productStatusValue: '',
-      upType: '',
-      upOrDown: false,
-      productId: '',
-      delGoods: false,
-      productStatus: '',
+      // pageSize: 10,
+      // pageNo: 1,
+      // tableDate: [],
+      // productStatusValue: '',
+      // upType: '',
+      // upOrDown: false,
+      // productId: '',
+      // delGoods: false,
+      // productStatus: '',
 
       //-----------------------------------新的///
       addModal: false,
       setModal: false,
 
       //----------------------上传
-      imageUrl: '',
-      loading: false,
+      // imageUrl: '',
+      // loading: false,
 
       previewVisible: false,
       previewImage: '',
       previewTitle: '',
-      fileList: [],
+      // fileList: [],
       setModalData: null,
       teamId: localDB.getItem('teamId'),
     };
     // this.modifydata = this.modifydata.bind(this);
     this.formRef = React.createRef();
   }
+
   componentDidMount() {
     // this.getData();
     this.Tablew.getData({ teamId: this.state.teamId });
   }
 
   modifydata(e) {
-    console.log(e);
-    console.log(1);
-
     let newObj = {};
     newObj.data = e.data;
     newObj.rowTop = e.total;
     newObj.pageNo = e.pageNum;
     return newObj;
   }
+
   recordEdit(record) {
-    // console.log(record);
     router.push('/goodsAdd?id=' + record.productId);
   }
+
   onRadioChange = e => {
-    console.log(e);
     let getCode = e.target.value;
     this.setState(
       {
@@ -91,31 +85,32 @@ class typeManager extends React.Component {
       },
     );
   };
+
   //上架下架
-  upOrDownMethod = e => {
-    if (e.productStatus == 0) {
-      this.setState({
-        productStatusValue: '上架',
-        upType: '1',
-      });
-    } else {
-      this.setState({
-        productStatusValue: '下架',
-        upType: '0',
-      });
-    }
-    this.setState({ upOrDown: true, productStatus: e.productStatus, productId: e.productId });
+  upOrDownMethod = () => {
+    // if (e.productStatus == 0) {
+    //   this.setState({
+    //     productStatusValue: '上架',
+    //     upType: '1',
+    //   });
+    // } else {
+    //   this.setState({
+    //     productStatusValue: '下架',
+    //     upType: '0',
+    //   });
+    // }
+    // this.setState({  productStatus: e.productStatus });
   };
+
   closeAddressModals = () => {
     this.setState({
       addModal: false,
     });
   };
-  addressModalsOk = async () => {
-    const { productId, upType, teamId } = this.state;
-    this.formRef.current.validateFields().then(async values => {
-      console.log(values);
 
+  addressModalsOk = async () => {
+    const { teamId } = this.state;
+    this.formRef.current.validateFields().then(async values => {
       let postdata = {
         ...values,
         teamId: teamId,
@@ -125,10 +120,9 @@ class typeManager extends React.Component {
         url: api_goods.createGoodsProduct,
         data: postdata,
       });
-      console.log(res);
-      this.setState({
-        upOrDown: false,
-      });
+      // this.setState({
+      //   upOrDown: false,
+      // });
       if (res.code == 200) {
         message.success('添加分类成功');
         this.Tablew.getData();
@@ -149,16 +143,16 @@ class typeManager extends React.Component {
   //     delProductId: e.productId,
   //   });
   // }
+
   //关闭删除商品弹框
   closedeleteGoodsModals = () => {
     this.setState({
       setModal: false,
     });
   };
+
   closeGoodsModalsOk = () => {
     this.formRef.current.validateFields().then(async values => {
-      console.log(values);
-
       let postdata = {
         typeId: this.state.setModalData.typeId,
         // ...values,
@@ -167,22 +161,18 @@ class typeManager extends React.Component {
         teamId: this.state.teamId,
         // typeImg: values.fileList[0].url,
       };
-      // console.log();
       if (values.fileList[0] && values.fileList[0].uid) {
         postdata.typeImg = values.fileList[0].url;
       } else {
         postdata.typeImg = values.fileList[0];
       }
-      console.log(postdata.typeImg);
-
       let res = await requestw({
         url: api_goods.updateGoodsProduct,
         data: postdata,
       });
-      console.log(res);
-      this.setState({
-        upOrDown: false,
-      });
+      // this.setState({
+      //   upOrDown: false,
+      // });
       if (res.code == 200) {
         message.success('修改分类成功');
         this.Tablew.getData();
@@ -196,10 +186,10 @@ class typeManager extends React.Component {
       }
     });
   };
+
   //删除商品接口
   deleteGoods = async e => {
     let that = this;
-    console.log(e);
     confirm({
       title: '确定删除该分类？',
       content: '',
@@ -213,7 +203,6 @@ class typeManager extends React.Component {
           url: api_goods.deleteGoodsType,
           data: postdata,
         });
-        console.log(res);
         if (res.code == 200) {
           message.success('删除商品成功');
           that.Tablew.getData();
@@ -224,9 +213,8 @@ class typeManager extends React.Component {
       },
     });
   };
-  setModal = e => {
-    console.log(e);
 
+  setModal = e => {
     this.setState({
       setModal: true,
       setModalData: e,
@@ -244,7 +232,6 @@ class typeManager extends React.Component {
   // handleCancel = () => this.setState({ previewVisible: false });
 
   // handlePreview = async (file) => {
-  //   console.log(file);
 
   //   if (!file.url && !file.preview) {
   //     file.preview = await this.getBase64(file.originFileObj);
@@ -258,7 +245,6 @@ class typeManager extends React.Component {
   // };
 
   // handleChange = ({ fileList }) => {
-  //   console.log(fileList);
   //   // let url = fileList[0].response.data.list[0].filePath;
   //   //  this.state.fileList.push(url)
   //   if (!fileList.length) {
@@ -271,10 +257,8 @@ class typeManager extends React.Component {
   //     fileList[0].status === 'error'
   //   ) {
   //     // this.setState({ loading: true });
-  //     console.log(1);
   //     this.setState({ fileList: fileList }, () => {
   //       if (fileList[0].status === 'uploading' || fileList[0].status === 'done') {
-  //         console.log(2);
   //         this.setState({ fileList: fileList });
   //       } else {
   //         this.setState({ fileList: [] });
@@ -289,21 +273,22 @@ class typeManager extends React.Component {
       addModal: true,
     });
   };
+
   render() {
     const {
-      tableDate,
+      // tableDate,
       goodsStatus,
-      productStatusValue,
-      upType,
-      upOrDown,
-      productId,
-      productStatus,
-      delGoods,
+      // productStatusValue,
+      // upType,
+      // upOrDown,
+      // productId,
+      // productStatus,
+      // delGoods,
 
       //////
       addModal,
       setModal,
-      fileList,
+      // fileList,
       previewVisible,
       previewTitle,
       previewImage,
@@ -313,14 +298,13 @@ class typeManager extends React.Component {
       labelCol: { span: 4 },
       wrapperCol: { span: 15 },
     };
-    console.log(pathimgHeader);
-    const { imageUrl } = this.state;
-    const uploadButton = (
-      <div>
-        {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
+    // const { imageUrl } = this.state;
+    // const uploadButton = (
+    //   <div>
+    //     {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
+    //     <div className="ant-upload-text">Upload</div>
+    //   </div>
+    // );
     let pageTiaojian = (
       <>
         <Button style={{}} onClick={this.shwoAddModal}>
@@ -330,11 +314,6 @@ class typeManager extends React.Component {
     );
     return (
       <div>
-        <Breadcrumb>
-          <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>一级分类</Breadcrumb.Item>
-        </Breadcrumb>
-
         <Tablew
           onRef={c => (this.Tablew = c)}
           //外部添加查询条件

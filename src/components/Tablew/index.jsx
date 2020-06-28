@@ -368,7 +368,13 @@ class index extends React.Component {
     // };
     // 查询条件
     let panel = queryItems ? (
-      <Form {...formItemLayout} onFinish={this.onFinish} form={form} ref="formRef">
+      <Form
+        {...formItemLayout}
+        onFinish={this.onFinish}
+        form={form}
+        ref="formRef"
+        style={{ marginBottom: '10px' }}
+      >
         {Externalplacement ? Externalplacement : null}
 
         <Row gutter={10} type="flex" align="middle" style={querystyle}>
@@ -384,7 +390,7 @@ class index extends React.Component {
                 optionsArr = obj.customOptions;
               }
               inputDom = (
-                <Select placeholder={obj.title} style={{ width: 180 }}>
+                <Select placeholder={obj.title} style={{ width: 25 }}>
                   <Option value="">不限</Option>
                   {optionsArr && optionsArr.length > 0
                     ? optionsArr.map((opObj, opIndex) => (
@@ -401,7 +407,7 @@ class index extends React.Component {
                   format="YYYY-MM-DD"
                   placeholder={obj.key.indexOf('start') > -1 ? '请选择开始日期' : '请选择结束日期'}
                   allowClear={false}
-                  style={{ width: 180 }}
+                  style={{ width: 25 }}
                   //方法
                   disabledDate={
                     obj.key.indexOf('start') > -1 ? this.disabledStartDate : this.disabledEndDate
@@ -515,6 +521,7 @@ class index extends React.Component {
             pageSize: this.state.pageSize,
             total: tableInfo && tableInfo.rowTop ? tableInfo.rowTop : 0,
           }}
+          scroll={{ y: '470px' }}
           onChange={current => this.tableOnChange(current)}
           onRow={record => {
             return {

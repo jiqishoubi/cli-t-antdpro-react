@@ -1,23 +1,24 @@
 import React from 'react';
-import { connect } from 'dva';
-import { Button, Card, Row, Col, Breadcrumb, Radio, Modal, message } from 'antd';
-import { getUrlParam } from '@/utils/utils';
+// import { connect } from 'dva';
+import { Button, Modal, message } from 'antd';
+// import {  } from '@/utils/utils';
 import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
-import Tablew from '@/components/Tablew';
-import SublimeVideo from 'react-sublime-video';
+// import Tablew from '@/components/Tablew';
+// import SublimeVideo from 'react-sublime-video';
 import ImageCarousel from '@/components/ImageCarousel';
 // import EditModal from '@/components/EditModal';
-import { pathimgHeader, pathVideoHeader, localDB } from '@/utils/utils';
-import moment from 'moment';
+import { localDB, getUrlParam } from '@/utils/utils';
+// import moment from 'moment';
 import GoodsDrawer from '@/components/SupplyGoods/GoodsDrawer';
 
 import { getMarketGoodsAjax } from '@/services/goods';
 import { router } from 'umi';
+
 function sum(arr) {
-  var sum = 0;
-  for (var i = 0; i < arr.length; i++) {
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
     sum += arr[i];
   }
   return sum;
@@ -37,25 +38,25 @@ class SupplygoodsDetail extends React.Component {
       Allstock: null,
       namedata: [],
       upOrDown: false,
-      productStatus: '',
+      // productStatus: '',
       productId: '',
       // productExist: getUrlParam('productExist'),
-      teamId: localDB.getItem('teamId'),
+      // teamId: localDB.getItem('teamId'),
       delGoods: false,
       delProductId: '',
     };
     // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
   }
+
   componentDidMount() {
     this.getData();
   }
+
   getData = async () => {
     let productId = getUrlParam('productId');
     let productType = getUrlParam('productType');
     let teamId = localDB.getItem('teamId');
-
-    // getMarketGoodsAjax
     let postData = {
       productId,
       teamId: teamId,
@@ -66,7 +67,7 @@ class SupplygoodsDetail extends React.Component {
     let PriceList = [];
     let num = [];
     if (res.status == 0) {
-      res.data[0].skuPropertyList.map((item, ind) => {
+      res.data[0].skuPropertyList.map(item => {
         SupplyPriceList.push(item.supplyPrice);
         PriceList.push(item.price);
         num.push(item.stock);
@@ -101,13 +102,12 @@ class SupplygoodsDetail extends React.Component {
       });
     }
   };
+
   setGoodDetail = record => {
-    console.log('编辑');
     this.goodsDrawer.current.open(record);
   };
 
   setGoodState = e => {
-    console.log(e);
     if (e.productStatus == 0) {
       this.setState({
         productStatusValue: '上架',
@@ -119,9 +119,9 @@ class SupplygoodsDetail extends React.Component {
         upType: '0',
       });
     }
-    this.setState({ upOrDown: true, productStatus: e.productStatus, productId: e.productId });
-    console.log('上架下架');
+    this.setState({ upOrDown: true, productId: e.productId });
   };
+
   addressModalsOk = async () => {
     const { productId, upType } = this.state;
     let postdata = {
@@ -150,18 +150,20 @@ class SupplygoodsDetail extends React.Component {
       message.warning('操作商品失败');
     }
   };
+
   closeAddressModals = () => {
     this.setState({
       upOrDown: false,
     });
   };
+
   deleteGood = e => {
-    console.log('删除');
     this.setState({
       delGoods: true,
       delProductId: e.productId,
     });
   };
+
   deleteGoodsModalsOk = async () => {
     let postdata = {
       productId: this.state.delProductId,
@@ -180,19 +182,21 @@ class SupplygoodsDetail extends React.Component {
       message.warning('删除商品失败');
     }
   };
+
   closedeleteGoodsModals = () => {
     this.setState({
       delGoods: false,
     });
   };
+
   skuClick = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[0] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      let obj = {};
+    // let SupplyPrice = SupplyPriceList;
+    // let Price = PriceList;
+    detailData.skuPropertyList.map(item => {
+      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[0] = item.supplyPrice;
         // moneryList.Price.push(item.price)
@@ -217,9 +221,8 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -240,14 +243,15 @@ class SupplygoodsDetail extends React.Component {
       currentIndex: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   skuClick1 = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[1] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
-      let obj = {};
+    // let SupplyPrice = SupplyPriceList;
+    // let Price = PriceList;
+    detailData.skuPropertyList.map(item => {
+      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[1] = item.supplyPrice;
         // moneryList.Price.push(item.price)
@@ -273,7 +277,7 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
           // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
@@ -296,16 +300,17 @@ class SupplygoodsDetail extends React.Component {
       currentIndex1: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   skuClick2 = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
 
     let namelist = namedata;
     namelist[2] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
+    // let SupplyPrice = SupplyPriceList;
+    // let Price = PriceList;
+    detailData.skuPropertyList.map(item => {
       // console.log(JSON.parse(item.skuJson)[titlename]);
-      let obj = {};
+      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[2] = item.supplyPrice;
         // moneryList.Price.push(item.price)
@@ -331,7 +336,7 @@ class SupplygoodsDetail extends React.Component {
         namestr += item + '、';
       });
 
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
           // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
@@ -353,15 +358,16 @@ class SupplygoodsDetail extends React.Component {
       currentIndex2: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   skuClick3 = (titlename, name, e) => {
-    let { detailData, monetydata, SupplyPriceList, PriceList, namedata } = this.state;
+    let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[3] = name;
-    let SupplyPrice = SupplyPriceList;
-    let Price = PriceList;
-    detailData.skuPropertyList.map((item, ind) => {
+    // let SupplyPrice = SupplyPriceList;
+    // let Price = PriceList;
+    detailData.skuPropertyList.map(item => {
       // console.log(JSON.parse(item.skuJson)[titlename]);
-      let obj = {};
+      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[3] = item.supplyPrice;
         // moneryList.Price.push(item.price)
@@ -387,7 +393,7 @@ class SupplygoodsDetail extends React.Component {
       });
 
       // console.log(namestr.substr(0, namestr.length - 1));
-      detailData.skuPropertyList.map((item, ind) => {
+      detailData.skuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
           // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
@@ -409,11 +415,13 @@ class SupplygoodsDetail extends React.Component {
       currentIndex3: parseInt(e.currentTarget.getAttribute('index'), 10),
     });
   };
+
   goMyshop = () => {
     // console.log('上架到本店');
     let { detailData } = this.state;
     this.goodsDrawer.current.open(detailData);
   };
+
   render() {
     const {
       detailData,
@@ -421,7 +429,7 @@ class SupplygoodsDetail extends React.Component {
       currentIndex1,
       currentIndex2,
       currentIndex3,
-      SupplyPriceList,
+      // SupplyPriceList,
       PriceList,
       MinSupplyPrice,
       MaxSupplyPrice,
@@ -433,24 +441,19 @@ class SupplygoodsDetail extends React.Component {
       itemstock,
       // productExist,
       productDetail,
-      teamId,
+      // teamId,
       imglist,
       upOrDown,
       productStatusValue,
       delGoods,
-      delProductId,
+      // delProductId,
     } = this.state;
     // console.log('render重新执行');
     // console.log(productExist);
     // console.log(productExist === 'ture');
 
     return (
-      <div style={{ height: '1000px' }}>
-        <Breadcrumb>
-          <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>分销市场商品详情</Breadcrumb.Item>
-        </Breadcrumb>
-
+      <div>
         <div style={{ width: '100%', height: '360px' }}>
           <ImageCarousel imglist={imglist} />
 
@@ -504,7 +507,7 @@ class SupplygoodsDetail extends React.Component {
                   )}
 
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                    运费:<b>{detailData.transportAmount}</b>
+                    运费:<b>{(detailData.transportAmount * 0.01).toFixed(0)}</b>
                   </span>
                 </p>
                 <p>
@@ -545,7 +548,7 @@ class SupplygoodsDetail extends React.Component {
                     <b>{detailData.skuPropertyList ? detailData.skuPropertyList[0].stock : 0}</b>
                   </span>
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                    运费:<b>{detailData.transportAmount}</b>
+                    运费:<b>{(detailData.transportAmount * 0.01).toFixed(0)}</b>
                   </span>
                 </p>
                 <p>
@@ -708,7 +711,7 @@ class SupplygoodsDetail extends React.Component {
             {productDetail ? (
               <>
                 {productDetail &&
-                  productDetail.map((item, ind) => {
+                  productDetail.map(item => {
                     if (item.type == '1') {
                       return (
                         <p
@@ -726,9 +729,9 @@ class SupplygoodsDetail extends React.Component {
                       );
                     } else {
                       return (
-                        <div style={{ width: '300px', height: '200px', margin: '0 auto' }}>
+                        <div style={{ width: '300px', margin: '0 auto' }}>
                           <img
-                            style={{ width: '100%', height: '100%' }}
+                            style={{ width: '100%', marginBottom: '10px' }}
                             src={item.value}
                             alt="图片路径错误"
                           />

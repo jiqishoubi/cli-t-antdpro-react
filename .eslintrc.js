@@ -47,5 +47,7 @@ module.exports = {
     'no-continue': 0, //----。。。。。
     'color-hex-length': null, //color 必须三位？
     'order/properties-order': null, //color 必须在background前面？
+    'react/self-closing-comp': 0, //
+    'no-empty-pattern': 0, //我把对象注释了还报错 神奇
   },
 };

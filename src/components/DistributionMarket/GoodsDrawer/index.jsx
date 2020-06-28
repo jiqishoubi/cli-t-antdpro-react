@@ -9,13 +9,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Drawer, Form, Input, Radio, Select, Button, message } from 'antd';
-import TUpload2 from '@/components/T-Upload2';
+// import TUpload2 from '@/components/T-Upload2';
 import TSku from '@/components/DistributionMarket/T-Sku';
-import TEditDetails from '@/components/DistributionMarket/T-EditDetails';
+// import TEditDetails from '@/components/DistributionMarket/T-EditDetails';
 import { mConfirm, pathimgHeader, localDB } from '@/utils/utils';
 import {
   getProductsAjax,
-  updateProductAjax,
+  // updateProductAjax,
   addProductAjax,
   addGoodsProductAjax,
   updateRetailProductsAjax,
@@ -76,6 +76,7 @@ class index extends Component {
       this.getInfo(record);
     }
   };
+
   close = () => {
     this.setState({
       visible: false,
@@ -83,16 +84,17 @@ class index extends Component {
       lookingRecord: null,
     });
   };
+
   /**
    * form change
    */
-  onValuesChange = (changedValues, allValues) => {
-    console.log(changedValues);
-  };
+  onValuesChange = () => {};
+
   typeIdChange = typeId => {
     this.setState({ typeId });
     this.formRef.current.resetFields(['subTypeId']);
   };
+
   specsTypeChange = e => {
     let value = e.target.value;
     this.setState({ specsType: value });
@@ -207,9 +209,6 @@ class index extends Component {
 
   //获取详情
   getInfo = async record => {
-    let { supplyGoodsList } = this.props;
-    console.log(record);
-
     let postData = {
       productId: record.productId,
       teamId: record.teamId,
@@ -217,7 +216,6 @@ class index extends Component {
     };
     let res = await getProductsAjax(postData);
     if (res && res.status == 0 && res.data && res.data[0]) {
-      console.log('详情', res.data[0]);
       let productObj = res.data[0];
 
       this.setState({
@@ -229,12 +227,12 @@ class index extends Component {
       });
       //回显
       let formData = this.dealInfoData(1, productObj);
-      console.log(formData);
       formData.retailPrice = formData.supplyPrice;
 
       this.formRef.current.setFieldsValue(formData);
     }
   };
+
   /**
    * 提交
    */
@@ -247,10 +245,11 @@ class index extends Component {
     let values = await this.formRef.current.validateFields();
 
     let confirmStr = lookingRecord ? '确认修改？' : '确认新增？';
-    mConfirm(confirmStr, async () => {
-      return await this.edit(values);
+    mConfirm(confirmStr, () => {
+      return this.edit(values);
     });
   };
+
   /**
    * 编辑
    */
@@ -259,11 +258,9 @@ class index extends Component {
       let postData = this.dealInfoData(0, values);
       postData.productType = 'RETAIL_GOODS';
       postData.teamId = localDB.getItem('teamId');
-      console.log(this.state.productId);
 
       postData.supplyProductId = this.state.productId;
       let res;
-      console.log(this.props.type);
 
       if (this.props.type == 'fenxiao') {
         res = await updateRetailProductsAjax(postData);
@@ -305,6 +302,7 @@ class index extends Component {
       // resolve();
     });
   };
+
   /**
    * 新增
    */
@@ -333,7 +331,6 @@ class index extends Component {
   render() {
     const {
       visible,
-      productObj,
       //form
       typeId,
       specsType,
@@ -396,7 +393,7 @@ class index extends Component {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="在线支付"
             name="canBuy"
             rules={[{ required: true, message: '是否在线支付' }]}
@@ -406,7 +403,7 @@ class index extends Component {
               <Radio value={1}>支持线上支付</Radio>
               <Radio value={0}>仅线上展示</Radio>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="商品排序"
             name="productSort"
@@ -436,7 +433,7 @@ class index extends Component {
               <Radio value="0">不推荐</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="是否送券"
             name="Songdelivery"
             rules={[{ required: true, message: '是否是否送券' }]}
@@ -446,7 +443,7 @@ class index extends Component {
               <Radio value={1}>是</Radio>
               <Radio value={0}>否</Radio>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
 
           {/* 商品详情 */}
           {/* <Form.Item className={styles.item_title}>商品详情</Form.Item>

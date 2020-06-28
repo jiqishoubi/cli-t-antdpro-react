@@ -35,7 +35,6 @@ class index extends Component {
       lookingRecord: null,
 
       //form
-      typeId: '',
       specsType: 0,
     };
     this.formRef = React.createRef();
@@ -65,12 +64,11 @@ class index extends Component {
       lookingRecord: record || null,
     });
     //获取详情
-    console.log(record);
-
     if (record) {
       this.getInfo(record);
     }
   };
+
   close = () => {
     this.setState({
       visible: false,
@@ -78,22 +76,21 @@ class index extends Component {
       lookingRecord: null,
     });
   };
+
   /**
    * form change
    */
-  onValuesChange = (changedValues, allValues) => {
-    console.log(changedValues);
-  };
-  typeIdChange = typeId => {
-    this.setState({ typeId });
+  onValuesChange = () => {};
+
+  typeIdChange = () => {
     this.formRef.current.resetFields(['subTypeId']);
   };
+
   specsTypeChange = e => {
     let value = e.target.value;
     this.setState({ specsType: value });
   };
 
-  //select
   getSelect2List = typeId => {
     const { goods } = this.props;
     const { goodsTypeList } = goods;
@@ -110,7 +107,7 @@ class index extends Component {
   //type 1 old=>form
   //type 2 form=>old
   dealInfoData = (type, values) => {
-    const { productObj, lookingRecord } = this.state;
+    const { productObj, lookingRecord, radioValue } = this.state;
     let data = '';
     if (type == 1) {
       /**
@@ -167,7 +164,7 @@ class index extends Component {
       }
       //图片
       let productPic = values.fileList
-        .map((item, index) => {
+        .map(item => {
           return item.url;
         })
         .join(',');
@@ -176,17 +173,24 @@ class index extends Component {
         ...values,
         productPic,
         //价格
-        price: values.price ? values.price * 100 : null,
+        // price: values.price ? values.price * 100 : null,
         // productPrice: values.productPrice * 100,
-        transportAmount: values.transportAmount * 100,
+        // transportAmount: values.transportAmount * 100,
       };
-      //多规格
-      if (data.specsType == 1) {
-        data.sku.skuJson.forEach(obj => {
-          obj.price = obj.price * 100;
-        });
-        data.skuJson = data.sku.skuJson;
-        data.tradeSkuProperty = data.sku.skuList;
+      if (radioValue == 1) {
+        data.price = values.price ? values.price * 100 : null;
+        // data.productPrice = values.productPrice * 100
+        data.transportAmount = values.transportAmount * 100;
+        //多规格
+        if (data.specsType == 1) {
+          data.sku.skuJson.forEach(obj => {
+            obj.price = obj.price * 100;
+          });
+          data.skuJson = data.sku.skuJson;
+          data.tradeSkuProperty = data.sku.skuList;
+        }
+      } else {
+        data.price = 0;
       }
     }
     return data;
@@ -194,8 +198,6 @@ class index extends Component {
 
   //获取详情
   getInfo = async record => {
-    console.log(record);
-
     let postData = {
       productId: record.productId,
       teamId: record.teamId,
@@ -203,20 +205,21 @@ class index extends Component {
     };
     let res = await getProductsAjax(postData);
     if (res && res.status == 0 && res.data && res.data[0]) {
-      console.log('详情', res.data[0]);
       let productObj = res.data[0];
 
       this.setState({
         productObj,
         //form
-        typeId: productObj.typeId,
+        // typeId: productObj.typeId,
         specsType: productObj.specsType,
+        radioValue: productObj.canBuy,
       });
       //回显
       let formData = this.dealInfoData(1, productObj);
       this.formRef.current.setFieldsValue(formData);
     }
   };
+
   /**
    * 提交
    */
@@ -226,13 +229,12 @@ class index extends Component {
       await this.tSku.current.validate();
     }
     let values = await this.formRef.current.validateFields();
-    console.log(values);
-
     let confirmStr = lookingRecord ? '确认修改？' : '确认新增？';
-    mConfirm(confirmStr, async () => {
-      return lookingRecord ? await this.edit(values) : await this.add(values);
+    mConfirm(confirmStr, () => {
+      return lookingRecord ? this.edit(values) : this.add(values);
     });
   };
+
   /**
    * 编辑
    */
@@ -254,6 +256,7 @@ class index extends Component {
       resolve();
     });
   };
+
   /**
    * 新增
    */
@@ -261,7 +264,6 @@ class index extends Component {
     return new Promise(async resolve => {
       let postData = this.dealInfoData(0, values);
       postData.productType = 'SUPPLY_GOODS';
-      console.log(postData);
       postData.teamId = localDB.getItem('teamId');
       let res = await addProductAjaxs(postData);
       if (res && res.data.status == 0) {
@@ -277,22 +279,28 @@ class index extends Component {
     });
   };
 
+  //  在线支付点击change事件
+  radiochange = e => {
+    let value = e.target.value;
+    this.setState({
+      radioValue: value,
+    });
+  };
+
   /**
    * 渲染
    */
   render() {
     const {
       visible,
-      productObj,
       //form
-      typeId,
+      // typeId,
       specsType,
+      radioValue,
     } = this.state;
-    const { goods, supplyGoodsList } = this.props;
-    const { goodsTypeList } = goods;
-    console.log(supplyGoodsList);
+    const { supplyGoodsList } = this.props;
 
-    let goodsTypeList2 = this.getSelect2List(typeId);
+    // let goodsTypeList2 = this.getSelect2List(typeId);
 
     return (
       <Drawer
@@ -313,12 +321,15 @@ class index extends Component {
           >
             <TUpload2 />
           </Form.Item>
+          <div style={{ marginLeft: '125px', color: '#ccc', marginTop: '-27px' }}>
+            图片大小每张不超过2M，视频大小不能超过10M，最多添加6张
+          </div>
           <Form.Item
             label="商品名称"
             name="productName"
             rules={[{ required: true, message: '请输入商品名称' }]}
           >
-            <Input placeholder="请输入商品名称" />
+            <Input placeholder="请输入商品名称" maxLength="25" />
           </Form.Item>
           {/* <Form.Item
             label="商品一级分类"
@@ -365,41 +376,42 @@ class index extends Component {
             rules={[{ required: true, message: '是否在线支付' }]}
             initialValue={1}
           >
-            <Radio.Group>
+            <Radio.Group onChange={this.radiochange}>
               <Radio value={1}>支持线上支付</Radio>
               <Radio value={0}>仅线上展示</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="商品排序"
             name="productSort"
             rules={[{ required: true, message: '请输入商品排序' }]}
           >
             <Input placeholder="请输入商品排序" />
-          </Form.Item>
+          </Form.Item> */}
+          {radioValue == 1 ? (
+            <>
+              {/* 商品详情 */}
+              <Form.Item className={styles.item_title}>商品详情</Form.Item>
+              <Form.Item label="详情设置" name="productDetail">
+                <TEditDetails />
+              </Form.Item>
 
-          {/* 商品详情 */}
-          <Form.Item className={styles.item_title}>商品详情</Form.Item>
-          <Form.Item label="详情设置" name="productDetail">
-            <TEditDetails />
-          </Form.Item>
-
-          {/* 价格库存 */}
-          <Form.Item className={styles.item_title}>价格库存</Form.Item>
-          <Form.Item label="规格设置" name="specsType" required initialValue={0}>
-            <Radio.Group onChange={this.specsTypeChange}>
-              <Radio value={0}>单规格</Radio>
-              <Radio value={1}>多规格</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            label="销售单位"
-            name="productCompany"
-            rules={[{ required: true, message: '请输入销售单位' }]}
-          >
-            <Input placeholder="请输入销售单位" />
-          </Form.Item>
-          {/* <Form.Item
+              {/* 价格库存 */}
+              <Form.Item className={styles.item_title}>价格库存</Form.Item>
+              <Form.Item label="规格设置" name="specsType" required initialValue={0}>
+                <Radio.Group onChange={this.specsTypeChange}>
+                  <Radio value={0}>单规格</Radio>
+                  <Radio value={1}>多规格</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item
+                label="销售单位"
+                name="productCompany"
+                rules={[{ required: true, message: '请输入销售单位' }]}
+              >
+                <Input placeholder="请输入销售单位" />
+              </Form.Item>
+              {/* <Form.Item
             label="商品原价"
             name="productPrice"
             rules={[{ required: true, message: '请输入商品原价' }]}
@@ -407,52 +419,55 @@ class index extends Component {
             <Input placeholder="请输入商品原价" prefix="￥" />
           </Form.Item> */}
 
-          <Form.Item
-            label="建议售价"
-            name="price"
-            rules={[{ required: true, message: '请输入建议售价' }]}
-          >
-            <Input placeholder="请输入建议售价" prefix="￥" />
-          </Form.Item>
-          {specsType == 0 ? (
-            <Fragment>
               <Form.Item
-                label="供货价"
-                name="supplyPrice"
-                rules={[{ required: true, message: '请输入供货价' }]}
+                label="建议售价"
+                name="price"
+                rules={[{ required: true, message: '请输入建议售价' }]}
               >
-                <Input placeholder="请输供货价" prefix="￥" />
+                <Input placeholder="请输入建议售价" prefix="￥" />
               </Form.Item>
-              <Form.Item
-                label="库存"
-                name="productStock"
-                rules={[{ required: true, message: '请输入库存' }]}
-              >
-                <Input placeholder="请输入库存" />
-              </Form.Item>
-              {/* <Form.Item
+              {specsType == 0 ? (
+                <Fragment>
+                  <Form.Item
+                    label="供货价"
+                    name="supplyPrice"
+                    rules={[{ required: true, message: '请输入供货价' }]}
+                  >
+                    <Input placeholder="请输供货价" prefix="￥" />
+                  </Form.Item>
+                  <Form.Item
+                    label="库存"
+                    name="productStock"
+                    rules={[{ required: true, message: '请输入库存' }]}
+                  >
+                    <Input placeholder="请输入库存" />
+                  </Form.Item>
+                  {/* <Form.Item
                 label="物料编号"
                 name="productStockNumber"
                 rules={[{ required: true, message: '请输入物料编号' }]}
               >
                 <Input placeholder="请输入物料编号" />
               </Form.Item> */}
-            </Fragment>
-          ) : (
-            <Form.Item name="sku" wrapperCol={{ span: 24 }}>
-              <TSku ref={this.tSku} {...formLayout} />
-            </Form.Item>
-          )}
+                </Fragment>
+              ) : (
+                <Form.Item name="sku" wrapperCol={{ span: 24 }}>
+                  <TSku ref={this.tSku} {...formLayout} />
+                </Form.Item>
+              )}
 
-          {/* 配送设置 */}
-          <Form.Item className={styles.item_title}>配送设置</Form.Item>
-          <Form.Item
-            label="运费"
-            name="transportAmount"
-            rules={[{ required: true, message: '请输入商品原价' }]}
-          >
-            <Input placeholder="请输入商品原价" prefix="￥" />
-          </Form.Item>
+              {/* 配送设置 */}
+              <Form.Item className={styles.item_title}>配送设置</Form.Item>
+              <Form.Item
+                label="运费"
+                name="transportAmount"
+                // rules={[{ required: true, message: '请输入商品原价' }]}
+                initialValue={0}
+              >
+                <Input placeholder="请输入商品原价" prefix="￥" />
+              </Form.Item>
+            </>
+          ) : null}
 
           {/* 操作 */}
           <Form.Item {...formLayoutTail}>

@@ -108,7 +108,7 @@ class Index extends Component {
   // type 1 old=>form
   // type 2 form=>old
   dealInfoData = (type, values) => {
-    const { productObj, lookingRecord } = this.state;
+    const { productObj, lookingRecord, radioValue } = this.state;
     let data = '';
     if (type == 1) {
       /**
@@ -164,6 +164,7 @@ class Index extends Component {
         data = JSON.parse(JSON.stringify(values));
       }
       // 图片
+
       const productPic = values.fileList
         .map(item => {
           return item.url;
@@ -174,17 +175,22 @@ class Index extends Component {
         ...values,
         productPic,
         // 价格
-        price: values.price ? values.price * 100 : null,
-        productPrice: values.productPrice * 100,
-        transportAmount: values.transportAmount * 100,
       };
-      // 多规格
-      if (data.specsType == 1) {
-        data.sku.skuJson.forEach(obj => {
-          obj.price = obj.price * 100;
-        });
-        data.skuJson = data.sku.skuJson;
-        data.tradeSkuProperty = data.sku.skuList;
+
+      if (radioValue == 1) {
+        data.price = values.price;
+        data.productPrice = values.productPrice * 100;
+        data.transportAmount = values.transportAmount * 100;
+        // 多规格
+        if (data.specsType == 1) {
+          data.sku.skuJson.forEach(obj => {
+            obj.price = obj.price * 100;
+          });
+          data.skuJson = data.sku.skuJson;
+          data.tradeSkuProperty = data.sku.skuList;
+        }
+      } else {
+        data.price = 0;
       }
     }
     return data;
@@ -206,6 +212,7 @@ class Index extends Component {
         // form
         typeId: productObj.typeId,
         specsType: productObj.specsType,
+        radioValue: productObj.canBuy,
       });
       // 回显
       const formData = this.dealInfoData(1, productObj);
@@ -239,10 +246,11 @@ class Index extends Component {
   edit = values => {
     return new Promise(async resolve => {
       const postData = this.dealInfoData(0, values);
+
       postData.productType = 'SELF_SUPPORT_GOODS';
       const res = await updateProductAjax(postData);
       if (res && res.status == 0) {
-        message.success(res.message || '修改成功');
+        message.success('修改成功');
         this.close();
         if (this.props.callback) {
           this.props.callback();
@@ -263,7 +271,7 @@ class Index extends Component {
       postData.productType = 'SELF_SUPPORT_GOODS';
       const res = await addProductAjax(postData);
       if (res && res.status == 0) {
-        message.success(res.message || '新增成功');
+        message.success('新增成功');
         this.close();
         if (this.props.callback) {
           this.props.callback();
@@ -272,6 +280,14 @@ class Index extends Component {
         message.warning(res.message || '网络异常');
       }
       resolve();
+    });
+  };
+
+  //  在线支付点击change事件
+  radiochange = e => {
+    let value = e.target.value;
+    this.setState({
+      radioValue: value,
     });
   };
 
@@ -284,6 +300,7 @@ class Index extends Component {
       // form
       typeId,
       specsType,
+      radioValue,
     } = this.state;
     const { goods } = this.props;
     const { goodsTypeList } = goods;
@@ -314,7 +331,7 @@ class Index extends Component {
             name="productName"
             rules={[{ required: true, message: '请输入商品名称' }]}
           >
-            <Input placeholder="请输入商品名称" />
+            <Input placeholder="请输入商品名称" maxLength="25" />
           </Form.Item>
           <Form.Item
             label="商品一级分类"
@@ -348,7 +365,7 @@ class Index extends Component {
             rules={[{ required: true, message: '是否在线支付' }]}
             initialValue={1}
           >
-            <Radio.Group>
+            <Radio.Group onChange={this.radiochange}>
               <Radio value={1}>支持线上支付</Radio>
               <Radio value={0}>仅线上展示</Radio>
             </Radio.Group>
@@ -361,73 +378,77 @@ class Index extends Component {
             <Input placeholder="请输入商品排序" />
           </Form.Item>
 
-          {/* 商品详情 */}
-          <Form.Item className={styles.item_title}>商品详情</Form.Item>
-          <Form.Item label="详情设置" name="productDetail">
-            <TEditDetails />
-          </Form.Item>
+          {radioValue == 1 ? (
+            <>
+              {/* 商品详情 */}
+              <Form.Item className={styles.item_title}>商品详情</Form.Item>
+              <Form.Item label="详情设置" name="productDetail">
+                <TEditDetails />
+              </Form.Item>
 
-          {/* 价格库存 */}
-          <Form.Item className={styles.item_title}>价格库存</Form.Item>
-          <Form.Item label="规格设置" name="specsType" required initialValue={0}>
-            <Radio.Group onChange={this.specsTypeChange}>
-              <Radio value={0}>单规格</Radio>
-              <Radio value={1}>多规格</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            label="销售单位"
-            name="productCompany"
-            rules={[{ required: true, message: '请输入销售单位' }]}
-          >
-            <Input placeholder="请输入销售单位" />
-          </Form.Item>
-          <Form.Item
-            label="商品原价"
-            name="productPrice"
-            rules={[{ required: true, message: '请输入商品原价' }]}
-          >
-            <Input placeholder="请输入商品原价" prefix="￥" />
-          </Form.Item>
-          {specsType == 0 ? (
-            <Fragment>
+              {/* 价格库存 */}
+              <Form.Item className={styles.item_title}>价格库存</Form.Item>
+              <Form.Item label="规格设置" name="specsType" required initialValue={0}>
+                <Radio.Group onChange={this.specsTypeChange}>
+                  <Radio value={0}>单规格</Radio>
+                  <Radio value={1}>多规格</Radio>
+                </Radio.Group>
+              </Form.Item>
               <Form.Item
-                label="商品售价"
-                name="price"
+                label="销售单位"
+                name="productCompany"
+                rules={[{ required: true, message: '请输入销售单位' }]}
+              >
+                <Input placeholder="请输入销售单位" maxLength="1" />
+              </Form.Item>
+              <Form.Item
+                label="商品原价"
+                name="productPrice"
                 rules={[{ required: true, message: '请输入商品原价' }]}
               >
                 <Input placeholder="请输入商品原价" prefix="￥" />
               </Form.Item>
-              <Form.Item
-                label="库存"
-                name="productStock"
-                rules={[{ required: true, message: '请输入库存' }]}
-              >
-                <Input placeholder="请输入库存" />
-              </Form.Item>
-              <Form.Item
-                label="物料编号"
-                name="productStockNumber"
-                rules={[{ required: true, message: '请输入物料编号' }]}
-              >
-                <Input placeholder="请输入物料编号" />
-              </Form.Item>
-            </Fragment>
-          ) : (
-            <Form.Item name="sku" wrapperCol={{ span: 24 }}>
-              <TSku ref={this.tSku} {...formLayout} />
-            </Form.Item>
-          )}
+              {specsType == 0 ? (
+                <Fragment>
+                  <Form.Item
+                    label="商品售价"
+                    name="price"
+                    rules={[{ required: true, message: '请输入商品原价' }]}
+                  >
+                    <Input placeholder="请输入商品原价" prefix="￥" />
+                  </Form.Item>
+                  <Form.Item
+                    label="库存"
+                    name="productStock"
+                    rules={[{ required: true, message: '请输入库存' }]}
+                  >
+                    <Input placeholder="请输入库存" />
+                  </Form.Item>
+                  <Form.Item
+                    label="物料编号"
+                    name="productStockNumber"
+                    // rules={[{ required: true, message: '请输入物料编号' }]}
+                  >
+                    <Input placeholder="请输入物料编号" />
+                  </Form.Item>
+                </Fragment>
+              ) : (
+                <Form.Item name="sku" wrapperCol={{ span: 24 }}>
+                  <TSku ref={this.tSku} {...formLayout} />
+                </Form.Item>
+              )}
 
-          {/* 配送设置 */}
-          <Form.Item className={styles.item_title}>配送设置</Form.Item>
-          <Form.Item
-            label="运费"
-            name="transportAmount"
-            rules={[{ required: true, message: '请输入商品原价' }]}
-          >
-            <Input placeholder="请输入商品原价" prefix="￥" />
-          </Form.Item>
+              {/* 配送设置 */}
+              <Form.Item className={styles.item_title}>配送设置</Form.Item>
+              <Form.Item
+                label="运费"
+                name="transportAmount"
+                rules={[{ required: true, message: '请输入商品原价' }]}
+              >
+                <Input placeholder="请输入商品原价" prefix="￥" />
+              </Form.Item>
+            </>
+          ) : null}
 
           {/* 操作 */}
           <Form.Item {...formLayoutTail}>

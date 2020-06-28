@@ -1,6 +1,6 @@
 import React from 'react';
 // import { connect } from 'dva';
-import { Button, Breadcrumb } from 'antd';
+import { Button } from 'antd';
 import styles from './index.less';
 import ImageCarousel from '@/components/ImageCarousel';
 import { localDB, getUrlParam } from '@/utils/utils';
@@ -358,15 +358,9 @@ class SupplygoodsDetail extends React.Component {
     // console.log('render重新执行');
 
     return (
-      <div style={{ height: '1000px' }}>
-        <Breadcrumb>
-          <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-          <Breadcrumb.Item>分销市场商品详情</Breadcrumb.Item>
-        </Breadcrumb>
-
+      <div>
         <div style={{ width: '100%', height: '360px' }}>
           <ImageCarousel imglist={imglist} />
-
           <p
             style={{
               paddingLeft: '40px',
@@ -393,7 +387,7 @@ class SupplygoodsDetail extends React.Component {
                 <p>
                   {AllsupplyPrice ? (
                     <span style={{ fontSize: '16px' }}>
-                      供货价:<b>{AllsupplyPrice}￥</b>
+                      供货价:<b>{AllsupplyPrice && AllsupplyPrice ? AllsupplyPrice : '0'}￥</b>
                     </span>
                   ) : (
                     <>
@@ -417,7 +411,7 @@ class SupplygoodsDetail extends React.Component {
                   )}
 
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                    运费:<b>{detailData.transportAmount}</b>
+                    运费:<b>{(detailData.transportAmount * 0.01).toFixed(0)}</b>
                   </span>
                 </p>
                 <p>
@@ -451,14 +445,23 @@ class SupplygoodsDetail extends React.Component {
                 <p>
                   <span style={{ fontSize: '16px' }}>
                     供货价:
-                    <b>{detailData.priceRange ? detailData.priceRange.maxSupplyPrice : '0'}￥</b>
+                    <b>
+                      {detailData.priceRange && detailData.priceRange.maxSupplyPrice != null
+                        ? detailData.priceRange.maxSupplyPrice
+                        : '0'}
+                      ￥
+                    </b>
                   </span>
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
                     库存:
-                    <b>{detailData.skuPropertyList ? detailData.skuPropertyList[0].stock : 0}</b>
+                    <b>
+                      {detailData.skuPropertyList && detailData.skuPropertyList.length
+                        ? detailData.skuPropertyList[0].stock
+                        : 0}
+                    </b>
                   </span>
                   <span style={{ fontSize: '16px', marginLeft: '30px' }}>
-                    运费:<b>{detailData.transportAmount}</b>
+                    运费:<b>{(detailData.transportAmount * 0.01).toFixed(0)}</b>
                   </span>
                 </p>
                 <p>
@@ -636,9 +639,9 @@ class SupplygoodsDetail extends React.Component {
                 );
               } else {
                 return (
-                  <div style={{ width: '300px', height: '200px', margin: '0 auto' }}>
+                  <div style={{ width: '300px', margin: '0 auto' }}>
                     <img
-                      style={{ width: '100%', height: '100%' }}
+                      style={{ width: '100%', marginBottom: '10px' }}
                       src={item.value}
                       alt="图片路径错误"
                     />
