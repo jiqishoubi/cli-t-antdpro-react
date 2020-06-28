@@ -4,7 +4,7 @@ import { Form, Input, InputNumber, Radio, Button } from 'antd';
 import ChooseProductModal, { getGreeImg } from '../../../ChooseProductModal/index';
 import SortableTable from '@/components/SortableTable';
 import { onValuesChange } from '../../../../utils_editor';
-// import arrayMove from 'array-move';
+import arrayMove from 'array-move';
 import styles from './index.less';
 
 const formItemLayout = {
@@ -41,7 +41,6 @@ const Index = props => {
   };
 
   //拖拽表格
-
   const columns = [
     {
       title: '商品图片',
@@ -63,25 +62,19 @@ const Index = props => {
     { align: 'center', title: '库存', dataIndex: 'stockNumber', width: 150 },
     { align: 'center', title: '状态', dataIndex: 'productStatus', width: 150 },
   ];
-  // const renderItem = (record) => {
-  //   let pic = getGreeImg(record.productPic);
-  //   return (
-  //     <div className={styles.product_item}>
-  //       <div className={styles.product_img_wrap}>
-  //         <img className={styles.product_img} src={pic} />
-  //         <div>{record.productName}</div>
-  //       </div>
-  //       <div>{record.typeName}</div>
-  //       <div>{record.productTotalSale}</div>
-  //       <div>{record.stockNumber}</div>
-  //       <div>{record.productStatus == '0' ? '下架' : '上架'}</div>
-  //     </div>
-  //   )
-  // }
-  // const onSortEnd = ({ oldIndex, newIndex }) => {
-  //   // console.log(oldIndex, newIndex)
-  // }
-  const onSortEnd = () => {};
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    let newItem = JSON.parse(JSON.stringify(item));
+    newItem.list = arrayMove(newItem.list, oldIndex, newIndex);
+    let list = itemList;
+    list[itemIndex] = newItem;
+    dispatch({
+      type: 'h5Editor/save',
+      payload: {
+        itemList: list,
+      },
+    });
+  };
 
   return (
     <div>
@@ -127,7 +120,7 @@ const Index = props => {
         {/* 商品列表 */}
         <div>商品列表</div>
         <div style={{ marginLeft: 30 }}>
-          <Button type="primary" onClick={openProductModal}>
+          <Button type="primary" onClick={openProductModal} style={{ margin: '10px 0' }}>
             添加商品
           </Button>
 

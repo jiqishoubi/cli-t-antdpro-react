@@ -11,9 +11,6 @@ import styles from './index.less';
 class SortableComponent extends Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.props.onSortEnd({ oldIndex, newIndex });
-    // this.setState(({ items }) => ({
-    //   items: arrayMove(items, oldIndex, newIndex),
-    // }));
   };
 
   render() {
@@ -68,7 +65,11 @@ class SortableComponent extends Component {
             </div>
           ))}
         </div>
-        <SortableList items={items} onSortEnd={this.onSortEnd} />
+        {items && items.length > 0 ? (
+          <SortableList items={items} onSortEnd={this.onSortEnd} />
+        ) : (
+          <div style={{ textAlign: 'center' }}>暂无数据</div>
+        )}
       </div>
     );
   }
