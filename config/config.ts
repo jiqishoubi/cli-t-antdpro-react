@@ -95,7 +95,8 @@ export default {
       if (
         context.resourcePath.includes('node_modules') ||
         context.resourcePath.includes('ant.design.pro.less') ||
-        context.resourcePath.includes('global.less')
+        context.resourcePath.includes('global.less') ||
+        context.resourcePath.includes('_localName.less') //如果样式文件以_localName结尾 那就不使用css modules //tongzhou
       ) {
         return localName;
       }

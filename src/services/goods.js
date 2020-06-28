@@ -13,6 +13,15 @@ export async function getGoodsTypeAjax(teamId) {
   });
 }
 
+// 获取商品 (原)
+export async function getProductsListAjax(params) {
+  return requestw({
+    type: 'get',
+    url: api_goods.getGoodsList,
+    data: params,
+  });
+}
+
 // 获取商品
 export async function getProductsAjax(params) {
   return requestw({
