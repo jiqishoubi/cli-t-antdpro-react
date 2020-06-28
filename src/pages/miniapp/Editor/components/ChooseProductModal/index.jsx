@@ -5,12 +5,33 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Modal, Tabs, Spin } from 'antd';
+import { Modal, Tabs, Table, Button } from 'antd';
 import { getProductsListAjax } from '@/services/goods';
+import { isIMG, pathimgHeader } from '@/utils/utils';
 import styles from './index.less';
 import './index_localName.less';
 
 const { TabPane } = Tabs;
+
+export const getGreeImg = productPic => {
+  let pic = '';
+  let picStr = '';
+  if (productPic) {
+    let productPicArr = productPic.split(',');
+    for (let i = 0; i < productPicArr.length; i++) {
+      if (productPicArr[i] && isIMG(productPicArr[i])) {
+        pic = productPicArr[i];
+        break;
+      }
+    }
+  }
+  if (pic.indexOf('http') > -1) {
+    picStr = pic;
+  } else {
+    picStr = pathimgHeader + pic;
+  }
+  return picStr;
+};
 
 class Index extends Component {
   constructor(props) {
@@ -38,14 +59,10 @@ class Index extends Component {
     this.setState({ visible: false });
   };
 
-  onOk = () => {
-    if (this.props.callback) {
-      this.props.callback();
-    }
-  };
-
   tabChange = key => {
-    this.setState({ activeKey: key });
+    this.setState({ activeKey: key }, () => {
+      this.getProduct();
+    });
   };
 
   getType = () => {
@@ -113,6 +130,13 @@ class Index extends Component {
     }
   };
 
+  clickTableRow = record => {
+    this.close();
+    if (this.props.callback) {
+      this.props.callback(record);
+    }
+  };
+
   render() {
     const {
       visible,
@@ -124,21 +148,47 @@ class Index extends Component {
     const { goods } = this.props;
     const { goodsTypeList } = goods;
 
-    const modalHeight = 600;
+    const modalHeight = 650;
 
     const index = this.findIndex(activeKey);
     const showProductList = productList[index];
+
+    const columns = [
+      {
+        align: 'left',
+        title: '商品图片',
+        key: '1',
+        width: 350,
+        render: record => {
+          let pic = getGreeImg(record.productPic);
+          return (
+            <div className={styles.product_img_wrap}>
+              <img className={styles.product_img} src={pic} />
+              <div>{record.productName}</div>
+            </div>
+          );
+        },
+      },
+      { align: 'center', title: '销量', key: 'productTotalSale', dataIndex: 'productTotalSale' },
+      { align: 'center', title: '库存', key: 'stockNumber', dataIndex: 'stockNumber' },
+      {
+        align: 'center',
+        title: '状态',
+        key: 'productStatus',
+        dataIndex: 'productStatus',
+        render: v => (v == '0' ? '下架' : '上架'),
+      },
+    ];
 
     return (
       <Modal
         visible={visible}
         centered
-        cancelText="取消"
-        okText="确定"
-        width={800}
+        maskClosable={false}
+        footer={[<Button onClick={this.close}>取消</Button>]}
+        width={900}
         bodyStyle={{ height: modalHeight }}
         onCancel={this.close}
-        onOk={this.onOk}
       >
         <div className={styles.container} id="editor_chooseProductModal_tabs_container">
           <div className={styles.tabs}>
@@ -154,20 +204,23 @@ class Index extends Component {
             </Tabs>
           </div>
           <div className={styles.content}>
-            {showProductList && showProductList.length > 0
-              ? showProductList.map(obj => (
-                  <div key={obj.productId} className={styles.product_item}>
-                    商品
-                  </div>
-                ))
-              : null}
-          </div>
-          {/* loading */}
-          <div
-            className={styles.loading_mask}
-            style={{ display: loading_product ? 'flex' : 'none' }}
-          >
-            <Spin />
+            <Table
+              rowKey="productId"
+              size="small"
+              columns={columns}
+              dataSource={showProductList || []}
+              loading={loading_product}
+              pagination={false}
+              scroll={{ y: modalHeight - (24 * 2 + 35) }}
+              rowClassName="editor_chooseProductModal_tabs_container_table_row"
+              onRow={record => {
+                return {
+                  onClick: () => {
+                    this.clickTableRow(record);
+                  }, // 点击行
+                };
+              }}
+            />
           </div>
         </div>
       </Modal>

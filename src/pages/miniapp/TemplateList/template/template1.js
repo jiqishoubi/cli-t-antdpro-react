@@ -140,18 +140,18 @@ const template = {
       showSaledNum: false,
       //item列表
       list: [
-        {
-          id: 's13',
-          productId: '',
-        },
-        {
-          id: 's14',
-          productId: '',
-        },
-        {
-          id: 's15',
-          productId: '',
-        },
+        // {
+        //   id: 's13',
+        //   productId: '',
+        // },
+        // {
+        //   id: 's14',
+        //   productId: '',
+        // },
+        // {
+        //   id: 's15',
+        //   productId: '',
+        // },
       ],
       //常规 end
       //面板样式

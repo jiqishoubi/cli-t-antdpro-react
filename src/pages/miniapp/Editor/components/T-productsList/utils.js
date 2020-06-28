@@ -10,24 +10,7 @@ export const defaultItem = {
   showPrice: true,
   showSaledNum: true,
   //item列表
-  list: [
-    {
-      id: randomStrKey(),
-      productId: '',
-    },
-    {
-      id: randomStrKey(),
-      productId: '',
-    },
-    {
-      id: randomStrKey(),
-      productId: '',
-    },
-    {
-      id: randomStrKey(),
-      productId: '',
-    },
-  ],
+  list: [],
   //常规 end
   //面板样式
   marginTop: 0,
