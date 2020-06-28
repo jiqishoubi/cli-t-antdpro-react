@@ -5,8 +5,13 @@
  * onSortEnd
  */
 import React, { Component } from 'react';
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { MenuOutlined } from '@ant-design/icons';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import styles from './index.less';
+
+const DragHandle = SortableHandle(() => (
+  <MenuOutlined style={{ cursor: 'move', color: '#999', fontSize: 19, paddingTop: 15 }} />
+));
 
 class SortableComponent extends Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
@@ -19,6 +24,9 @@ class SortableComponent extends Component {
     const SortableItem = SortableElement(({ value }) => {
       return (
         <div className={styles.row_item}>
+          <div className={`${styles.row_item_item} ${styles.move_item}`}>
+            <DragHandle />
+          </div>
           {columns.map((columnsItem, index) => {
             let dom;
             if (columnsItem.render) {
@@ -45,7 +53,7 @@ class SortableComponent extends Component {
       return (
         <div>
           {items.map((value, index) => (
-            <SortableItem key={`item-${value}`} index={index} value={value} />
+            <SortableItem key={index} index={index} value={value} />
           ))}
         </div>
       );
@@ -53,23 +61,26 @@ class SortableComponent extends Component {
 
     return (
       <div>
-        {/* 表头 */}
-        <div className={styles.columns_wrap}>
-          {columns.map((columnsItem, index) => (
-            <div
-              key={index}
-              className={styles.columns_item}
-              style={{ width: columnsItem.width || null, textAlign: columnsItem.align || 'left' }}
-            >
-              {columnsItem.title}
-            </div>
-          ))}
+        <div style={{ display: 'inline-block' }}>
+          {/* 表头 */}
+          <div className={styles.columns_wrap}>
+            <div className={`${styles.columns_item} ${styles.move_item}`}>移动</div>
+            {columns.map((columnsItem, index) => (
+              <div
+                key={index}
+                className={styles.columns_item}
+                style={{ width: columnsItem.width || null, textAlign: columnsItem.align || 'left' }}
+              >
+                {columnsItem.title}
+              </div>
+            ))}
+          </div>
+          {items && items.length > 0 ? (
+            <SortableList useDragHandle items={items} onSortEnd={this.onSortEnd} />
+          ) : (
+            <div style={{ textAlign: 'center', padding: '30px 0' }}>暂无数据</div>
+          )}
         </div>
-        {items && items.length > 0 ? (
-          <SortableList items={items} onSortEnd={this.onSortEnd} />
-        ) : (
-          <div style={{ textAlign: 'center' }}>暂无数据</div>
-        )}
       </div>
     );
   }

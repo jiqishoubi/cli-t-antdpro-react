@@ -41,6 +41,22 @@ const Index = props => {
   };
 
   //拖拽表格
+  const deleteProduct = record => {
+    let newItem = JSON.parse(JSON.stringify(item));
+
+    let index = newItem.list.findIndex(obj => obj.productId == record.productId);
+    newItem.list.splice(index, 1);
+
+    let list = itemList;
+    list[itemIndex] = newItem;
+    dispatch({
+      type: 'h5Editor/save',
+      payload: {
+        itemList: list,
+      },
+    });
+  };
+
   const columns = [
     {
       title: '商品图片',
@@ -61,6 +77,23 @@ const Index = props => {
     { align: 'center', title: '销量', dataIndex: 'productTotalSale', width: 150 },
     { align: 'center', title: '库存', dataIndex: 'stockNumber', width: 150 },
     { align: 'center', title: '状态', dataIndex: 'productStatus', width: 150 },
+    {
+      align: 'center',
+      title: '操作',
+      width: 80,
+      render: record => {
+        return (
+          <a
+            onClick={() => {
+              deleteProduct(record);
+            }}
+            style={{ position: 'relative', zIndex: 99999 }}
+          >
+            删除
+          </a>
+        );
+      },
+    },
   ];
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
