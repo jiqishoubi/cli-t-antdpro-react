@@ -38,6 +38,7 @@ module.exports = {
     'no-nested-ternary': 0, //三元表达式
     'no-lonely-if': 0, //
     'react/require-default-props': 0, //
+    'react/jsx-no-undef': 0,
     'no-plusplus': 0, //不让用++可还行
     'class-methods-use-this': 0, //this
     'no-return-assign': 0, //间接导致 onRef=(ref=>this.ref)不能使用

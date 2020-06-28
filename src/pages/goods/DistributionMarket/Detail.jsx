@@ -1,5 +1,4 @@
 import React from 'react';
-// import { connect } from 'dva';
 import { Button } from 'antd';
 import styles from './index.less';
 import ImageCarousel from '@/components/ImageCarousel';
@@ -15,7 +14,6 @@ function sum(arr) {
   }
   return sum;
 }
-// import router from 'umi/router';
 class SupplygoodsDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +30,6 @@ class SupplygoodsDetail extends React.Component {
       productExist: getUrlParam('productExist'),
       teamId: localDB.getItem('teamId'),
     };
-    // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
   }
 
@@ -44,8 +41,6 @@ class SupplygoodsDetail extends React.Component {
     let productId = getUrlParam('productId');
     let productExist = getUrlParam('productExist');
     let teamId = localDB.getItem('teamId');
-
-    // getMarketGoodsAjax
     let postData = {
       productId,
       teamId: teamId,
@@ -74,8 +69,6 @@ class SupplygoodsDetail extends React.Component {
         MaxPrice = Math.max.apply(null, PriceList);
       }
       let Allstock = sum(num);
-
-      // console.log(MinPrice, MaxPrice, MinSupplyPrice, MaxSupplyPrice);
       let imglist = res.data[0].productPic.split(',');
 
       this.setState({
@@ -106,7 +99,6 @@ class SupplygoodsDetail extends React.Component {
     detailData.skuPropertyList.map(item => {
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[0] = item.supplyPrice;
-        // moneryList.Price.push(item.price)
         PriceList[0] = item.price;
       }
     });

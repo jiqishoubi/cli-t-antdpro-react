@@ -1,16 +1,10 @@
 import React from 'react';
-// import { connect } from 'dva';
 import { Button, Modal, message } from 'antd';
-// import {  } from '@/utils/utils';
 import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
-// import Tablew from '@/components/Tablew';
-// import SublimeVideo from 'react-sublime-video';
 import ImageCarousel from '@/components/ImageCarousel';
-// import EditModal from '@/components/EditModal';
 import { localDB, getUrlParam } from '@/utils/utils';
-// import moment from 'moment';
 import GoodsDrawer from '@/components/DistributionMarket/GoodsDrawer';
 import router from 'umi/router';
 
@@ -37,8 +31,6 @@ class SupplygoodsDetail extends React.Component {
       PriceList: [],
       Allstock: null,
       namedata: [],
-      // productExist: getUrlParam('productExist'),
-      // teamId: localDB.getItem('teamId'),
       isfenxiao: '',
       upOrDown: false,
       // productStatus: '',
@@ -46,7 +38,6 @@ class SupplygoodsDetail extends React.Component {
       delGoods: false,
       delProductId: '',
     };
-    // this.modifydata = this.modifydata.bind(this);
     this.goodsDrawer = React.createRef();
   }
 
@@ -58,8 +49,6 @@ class SupplygoodsDetail extends React.Component {
     let productId = getUrlParam('productId');
     let productType = getUrlParam('productType');
     let teamId = localDB.getItem('teamId');
-
-    // getMarketGoodsAjax
     let postData = {
       productId,
       teamId: teamId,
@@ -70,9 +59,6 @@ class SupplygoodsDetail extends React.Component {
     let PriceList = [];
     let num = [];
     if (res.status == 0) {
-      // if (res.data[0].specsType == 0) {
-
-      // }
       res.data[0].retailProductSkuPropertyList.map(item => {
         SupplyPriceList.push(item.supplyPrice);
         PriceList.push(item.price);
@@ -100,7 +86,6 @@ class SupplygoodsDetail extends React.Component {
         MinSupplyPrice,
         MaxSupplyPrice,
         Allstock,
-        // productExist,
         productDetail: JSON.parse(res.data[0].productDetail),
         detailData: res.data[0],
         imglist,
@@ -157,11 +142,9 @@ class SupplygoodsDetail extends React.Component {
     if (res.data.status == 0) {
       if (upType == '1') {
         message.success('上架成功');
-        // this.Tablew.getData();
         router.push('/DistributionGoods');
       } else {
         message.success('下架成功');
-        // this.Tablew.getData();
         router.push('/DistributionGoods');
       }
     } else {
@@ -197,7 +180,6 @@ class SupplygoodsDetail extends React.Component {
     if (res.data.status == 0) {
       message.success('删除商品成功');
       router.push('/DistributionGoods');
-      // this.Tablew.getData();
     } else {
       message.warning('删除商品失败');
     }
@@ -210,7 +192,6 @@ class SupplygoodsDetail extends React.Component {
     detailData.retailProductSkuPropertyList.map(item => {
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[0] = item.supplyPrice;
-        // moneryList.Price.push(item.price)
         PriceList[0] = item.price;
       }
     });
@@ -234,7 +215,6 @@ class SupplygoodsDetail extends React.Component {
 
       detailData.retailProductSkuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -260,13 +240,9 @@ class SupplygoodsDetail extends React.Component {
     let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[1] = name;
-    // let SupplyPrice = SupplyPriceList;
-    // let Price = PriceList;
     detailData.retailProductSkuPropertyList.map(item => {
-      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[1] = item.supplyPrice;
-        // moneryList.Price.push(item.price)
         PriceList[1] = item.price;
       }
     });
@@ -291,7 +267,6 @@ class SupplygoodsDetail extends React.Component {
 
       detailData.retailProductSkuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -318,14 +293,9 @@ class SupplygoodsDetail extends React.Component {
 
     let namelist = namedata;
     namelist[2] = name;
-    // let SupplyPrice = SupplyPriceList;
-    // let Price = PriceList;
     detailData.retailProductSkuPropertyList.map(item => {
-      // console.log(JSON.parse(item.skuJson)[titlename]);
-      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[2] = item.supplyPrice;
-        // moneryList.Price.push(item.price)
         PriceList[2] = item.price;
       }
     });
@@ -341,7 +311,6 @@ class SupplygoodsDetail extends React.Component {
       MinPrice = Math.min.apply(null, PriceList);
       MaxPrice = Math.max.apply(null, PriceList);
     }
-    // console.log(SupplyPriceList, PriceList);
     let namestr = '';
     if (SupplyPriceList.length == detailData.skuPropertys.length) {
       namedata.map(item => {
@@ -350,7 +319,6 @@ class SupplygoodsDetail extends React.Component {
 
       detailData.retailProductSkuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -375,14 +343,9 @@ class SupplygoodsDetail extends React.Component {
     let { detailData, SupplyPriceList, PriceList, namedata } = this.state;
     let namelist = namedata;
     namelist[3] = name;
-    // let SupplyPrice = SupplyPriceList;
-    // let Price = PriceList;
     detailData.retailProductSkuPropertyList.map(item => {
-      // console.log(JSON.parse(item.skuJson)[titlename]);
-      // let obj = {};
       if (JSON.parse(item.skuJson)[titlename] == name) {
         SupplyPriceList[3] = item.supplyPrice;
-        // moneryList.Price.push(item.price)
         PriceList[3] = item.price;
       }
     });
@@ -403,11 +366,8 @@ class SupplygoodsDetail extends React.Component {
       namedata.map(item => {
         namestr += item + '、';
       });
-
-      // console.log(namestr.substr(0, namestr.length - 1));
       detailData.retailProductSkuPropertyList.map(item => {
         if (item.skuProperty == namestr.substr(0, namestr.length - 1)) {
-          // console.log(item.supplyPrice, item.price, '相同');
           this.setState({
             AllsupplyPrice: item.supplyPrice,
             Allprice: item.price,
@@ -429,7 +389,6 @@ class SupplygoodsDetail extends React.Component {
   };
 
   goMyshop = () => {
-    // console.log('上架到本店');
     let { detailData } = this.state;
     this.goodsDrawer.current.open(detailData);
   };
@@ -441,7 +400,6 @@ class SupplygoodsDetail extends React.Component {
       currentIndex1,
       currentIndex2,
       currentIndex3,
-      // SupplyPriceList,
       PriceList,
       MinSupplyPrice,
       MaxSupplyPrice,
@@ -451,19 +409,12 @@ class SupplygoodsDetail extends React.Component {
       AllsupplyPrice,
       Allprice,
       itemstock,
-      // productExist,
       productDetail,
-      // teamId,
       imglist,
       upOrDown,
-      // productStatus,
-      // productId,
       productStatusValue,
       delGoods,
     } = this.state;
-    // console.log('render重新执行');
-    // console.log(productExist);
-    // console.log(productExist === 'ture');
 
     return (
       <div style={{ height: '1000px' }}>
@@ -524,9 +475,6 @@ class SupplygoodsDetail extends React.Component {
                   </span>
                 </p>
                 <p>
-                  {/* <span style={{ fontSize: '16px' }}>
-                建议售价:<b>16￥</b>
-              </span> */}
                   {Allprice ? (
                     <span style={{ fontSize: '16px' }}>
                       建议售价:<b>{Allprice}￥</b>
@@ -699,18 +647,6 @@ class SupplygoodsDetail extends React.Component {
                 </>
               ) : null}
             </div>
-            {/* {productExist === 'true' ? (
-              ''
-            ) : (
-                <>
-                  {
-                    detailData && detailData.teamId == this.state.teamId ? null :
-                      <div style={{ width: '50%', height: '30px', float: 'left' }}>
-                        <Button onClick={this.goMyshop}>上架到本店</Button>
-                      </div>
-                  }
-                </>
-              )} */}
           </div>
         </div>
         <p

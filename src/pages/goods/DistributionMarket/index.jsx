@@ -1,31 +1,12 @@
 import React from 'react';
-// import { connect } from 'dva';
-import {
-  Button,
-  // Card,
-  // Row,
-  // Col,
-  // Radio,
-  // Modal,
-  // message,
-  Form,
-  // Select,
-  Input,
-  Tabs,
-} from 'antd';
-// import {  } from '@/utils/utils';
+import { Button, Form, Input, Tabs } from 'antd';
 import styles from './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
-// import Tablew from '@/components/Tablew';
-// import ImageCarousel from '@/components/ImageCarousel';
-// import EditModal from '@/components/EditModal';
-// import { getUrlParam } from '@/utils/utils';
-// import moment from 'moment';
 import SwitchContent from './SwitchContent';
 
-// import router from 'umi/router';
 const { TabPane } = Tabs;
+
 class SupplygoodsDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -34,14 +15,11 @@ class SupplygoodsDetail extends React.Component {
       TabsList: [],
       goodsName: '',
     };
-    // this.modifydata = this.modifydata.bind(this);
     this.formRef = React.createRef();
   }
 
   componentDidMount() {
-    // this.getData();
     this.getTabsList();
-    // this.child.getData()
   }
 
   getTabsList = async () => {
@@ -53,7 +31,6 @@ class SupplygoodsDetail extends React.Component {
     if (res && res.data.status == 0) {
       let TabsList = res.data.data;
       TabsList.unshift({
-        // teamId: 2,
         typeGct: '2020-06-11 16:10:15',
         typeId: '',
         typeName: '全部',
@@ -127,17 +104,6 @@ class SupplygoodsDetail extends React.Component {
               // ref='formRef'
               style={{ float: 'right' }}
             >
-              {/* <Form.Item
-                style={{ float: 'left' }}
-                name="selectName"
-              // initialValue={item.defaultValue ? item.defaultValue : ''}
-              >
-                <Select placeholder={'请选择搜索类型'} style={{ width: 80 }}>
-                  <Option value="1">123</Option>
-                  <Option value="2">234</Option>
-                </Select>
-              </Form.Item> */}
-
               <Form.Item style={{ float: 'right' }} name="sosuoName">
                 <Input placeholder="请输入商品名称" style={{ width: 180 }} />
               </Form.Item>
@@ -147,10 +113,6 @@ class SupplygoodsDetail extends React.Component {
         </div>
 
         <div className={styles.tab}>
-          {/* <Radio.Group onChange={this.handleModeChange} value={mode} style={{ marginBottom: 8 }}>
-            <Radio.Button value="top">Horizontal</Radio.Button>
-            <Radio.Button value="left">Vertical</Radio.Button>
-          </Radio.Group> */}
           <Tabs
             defaultActiveKey="0"
             onTabClick={this.tabclick}
@@ -159,7 +121,6 @@ class SupplygoodsDetail extends React.Component {
           >
             {TabsList.map(i => (
               <TabPane forceRender={false} tab={i.typeName} key={i.typeId}>
-                {/* Content of tab {i.typeName} */}
                 <SwitchContent
                   onRef={this.onRef}
                   supplyType={supplyType}

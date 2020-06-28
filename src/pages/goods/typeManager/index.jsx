@@ -1,24 +1,11 @@
 import React from 'react';
-// import { connect } from 'dva';
-import {
-  Button,
-  Modal,
-  message,
-  Form,
-  // Upload,
-  Input,
-} from 'antd';
-// import { getUrlParam } from '@/utils/utils';
+import { Button, Modal, message, Form, Input } from 'antd';
 import './index.less';
 import requestw from '@/utils/requestw';
 import api_goods from '@/services/api/goods';
 import Tablew from '@/components/Tablew';
-// import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import TUpload2 from '@/components/T-Upload2';
-
-// import EditModal from '@/components/EditModal';
 import { localDB } from '@/utils/utils';
-// import moment from 'moment';
 import router from 'umi/router';
 
 const { confirm } = Modal;
@@ -27,37 +14,20 @@ class typeManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // pageSize: 10,
-      // pageNo: 1,
-      // tableDate: [],
-      // productStatusValue: '',
-      // upType: '',
-      // upOrDown: false,
-      // productId: '',
-      // delGoods: false,
-      // productStatus: '',
-
       //-----------------------------------新的///
       addModal: false,
       setModal: false,
-
       //----------------------上传
-      // imageUrl: '',
-      // loading: false,
-
       previewVisible: false,
       previewImage: '',
       previewTitle: '',
-      // fileList: [],
       setModalData: null,
       teamId: localDB.getItem('teamId'),
     };
-    // this.modifydata = this.modifydata.bind(this);
     this.formRef = React.createRef();
   }
 
   componentDidMount() {
-    // this.getData();
     this.Tablew.getData({ teamId: this.state.teamId });
   }
 
@@ -80,27 +50,13 @@ class typeManager extends React.Component {
         goodsStatus: getCode,
       },
       () => {
-        // this.getData();
         this.Tablew.getData();
       },
     );
   };
 
   //上架下架
-  upOrDownMethod = () => {
-    // if (e.productStatus == 0) {
-    //   this.setState({
-    //     productStatusValue: '上架',
-    //     upType: '1',
-    //   });
-    // } else {
-    //   this.setState({
-    //     productStatusValue: '下架',
-    //     upType: '0',
-    //   });
-    // }
-    // this.setState({  productStatus: e.productStatus });
-  };
+  upOrDownMethod = () => {};
 
   closeAddressModals = () => {
     this.setState({
@@ -120,9 +76,6 @@ class typeManager extends React.Component {
         url: api_goods.createGoodsProduct,
         data: postdata,
       });
-      // this.setState({
-      //   upOrDown: false,
-      // });
       if (res.code == 200) {
         message.success('添加分类成功');
         this.Tablew.getData();
@@ -132,17 +85,9 @@ class typeManager extends React.Component {
       } else {
         message.success('添加分类失败');
         return false;
-        // this.Tablew.getData();
       }
     });
   };
-  // ///删除 商品
-  // deleteGoods(e) {
-  //   this.setState({
-  //     delGoods: true,
-  //     delProductId: e.productId,
-  //   });
-  // }
 
   //关闭删除商品弹框
   closedeleteGoodsModals = () => {
@@ -155,11 +100,9 @@ class typeManager extends React.Component {
     this.formRef.current.validateFields().then(async values => {
       let postdata = {
         typeId: this.state.setModalData.typeId,
-        // ...values,
         typeName: values.typeName,
         typeSortValue: values.typeSortValue,
         teamId: this.state.teamId,
-        // typeImg: values.fileList[0].url,
       };
       if (values.fileList[0] && values.fileList[0].uid) {
         postdata.typeImg = values.fileList[0].url;
@@ -170,9 +113,6 @@ class typeManager extends React.Component {
         url: api_goods.updateGoodsProduct,
         data: postdata,
       });
-      // this.setState({
-      //   upOrDown: false,
-      // });
       if (res.code == 200) {
         message.success('修改分类成功');
         this.Tablew.getData();
@@ -182,7 +122,6 @@ class typeManager extends React.Component {
       } else {
         message.success('修改分类失败');
         return false;
-        // this.Tablew.getData();
       }
     });
   };
@@ -209,7 +148,6 @@ class typeManager extends React.Component {
         } else {
           message.warning('删除商品失败');
         }
-        // Modal.destroyAll();
       },
     });
   };
@@ -220,53 +158,6 @@ class typeManager extends React.Component {
       setModalData: e,
     });
   };
-  // 上传方法-----------------------------------------
-  // getBase64(file) {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // }
-  // handleCancel = () => this.setState({ previewVisible: false });
-
-  // handlePreview = async (file) => {
-
-  //   if (!file.url && !file.preview) {
-  //     file.preview = await this.getBase64(file.originFileObj);
-  //   }
-
-  //   this.setState({
-  //     previewImage: file.url || file.preview,
-  //     previewVisible: true,
-  //     previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
-  //   });
-  // };
-
-  // handleChange = ({ fileList }) => {
-  //   // let url = fileList[0].response.data.list[0].filePath;
-  //   //  this.state.fileList.push(url)
-  //   if (!fileList.length) {
-  //     this.setState({ fileList: [] });
-  //     return;
-  //   }
-  //   if (
-  //     fileList[0].status === 'uploading' ||
-  //     fileList[0].status === 'done' ||
-  //     fileList[0].status === 'error'
-  //   ) {
-  //     // this.setState({ loading: true });
-  //     this.setState({ fileList: fileList }, () => {
-  //       if (fileList[0].status === 'uploading' || fileList[0].status === 'done') {
-  //         this.setState({ fileList: fileList });
-  //       } else {
-  //         this.setState({ fileList: [] });
-  //       }
-  //     });
-  //   }
-  //   // this.setState({ fileList });
-  // };
 
   shwoAddModal = () => {
     this.setState({
@@ -276,19 +167,9 @@ class typeManager extends React.Component {
 
   render() {
     const {
-      // tableDate,
       goodsStatus,
-      // productStatusValue,
-      // upType,
-      // upOrDown,
-      // productId,
-      // productStatus,
-      // delGoods,
-
-      //////
       addModal,
       setModal,
-      // fileList,
       previewVisible,
       previewTitle,
       previewImage,
@@ -298,13 +179,6 @@ class typeManager extends React.Component {
       labelCol: { span: 4 },
       wrapperCol: { span: 15 },
     };
-    // const { imageUrl } = this.state;
-    // const uploadButton = (
-    //   <div>
-    //     {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
-    //     <div className="ant-upload-text">Upload</div>
-    //   </div>
-    // );
     let pageTiaojian = (
       <>
         <Button style={{}} onClick={this.shwoAddModal}>
@@ -387,25 +261,6 @@ class typeManager extends React.Component {
           width={600}
         >
           <div style={{ height: '240px' }}>
-            {/* <div className="Managerimgleftbox">
-              <span style={{ float: 'left', height: '100px', lineHeight: '80px' }}>上传图片：</span>
-            </div>
-            <div className="Managerimgrightbox">
-              <Upload
-                style={{ float: 'left', height: '100px' }}
-                action={'https://greecardcrmt.bld365.com/' + api_goods.upload}
-                name="file"
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={this.handlePreview}
-                onChange={this.handleChange}
-              >
-                {fileList.length >= 1 ? null : uploadButton}
-              </Upload>
-              <span style={{ color: '#ccc', width: '100%' }}>
-                最多上传一张请选择格式为jpg、jpeg、png，小于2MB的图片
-              </span>
-            </div> */}
             <Form {...formItemLayout} ref={this.formRef} style={{ float: 'left' }}>
               <Form.Item
                 label="商品图片"
@@ -447,25 +302,6 @@ class typeManager extends React.Component {
           onOk={this.closeGoodsModalsOk}
         >
           <div style={{ height: '240px' }}>
-            {/* <div className="Managerimgleftbox">
-              <span style={{ float: 'left', height: '100px', lineHeight: '80px' }}>上传图片：</span>
-            </div>
-            <div className="Managerimgrightbox">
-              <Upload
-                style={{ float: 'left', height: '100px' }}
-                action={'https://greecardcrmt.bld365.com/' + api_goods.upload}
-                name="file"
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={this.handlePreview}
-                onChange={this.handleChange}
-              >
-                {fileList.length >= 1 ? null : uploadButton}
-              </Upload>
-              <span style={{ color: '#ccc', width: '100%' }}>
-                最多上传一张请选择格式为jpg、jpeg、png，小于2MB的图片
-              </span>
-            </div> */}
             <Form {...formItemLayout} ref={this.formRef} style={{ float: 'left' }}>
               <Form.Item
                 label="商品图片"
@@ -494,7 +330,6 @@ class typeManager extends React.Component {
             </Form>
           </div>
         </Modal>
-        {/* setModalData */}
       </div>
     );
   }

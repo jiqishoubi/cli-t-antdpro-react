@@ -33,7 +33,6 @@ class index extends Component {
       visible: false,
       productObj: {},
       lookingRecord: null,
-
       //form
       specsType: 0,
     };

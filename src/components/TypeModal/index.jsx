@@ -1,41 +1,10 @@
 import React from 'react';
-// import { connect } from 'dva';
-import {
-  // Button,
-  // Card,
-  // Row,
-  // Col,
-  // Radio,
-  Modal,
-  // message,
-  Form,
-  Option,
-  // Upload,
-  Input,
-  Select,
-} from 'antd';
-// import { getUrlParam } from '@/utils/utils';
+import { Modal, Form, Input, Select } from 'antd';
 import './index.less';
-// import requestw from '@/utils/requestw';
-// import api_goods from '@/services/api/goods';
-// import Tablew from '@/components/Tablew';
-// import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-// import TUpload2 from '@/components/T-Upload2';
 
-// import EditModal from '@/components/EditModal';
-// import { pathimgHeader, pathVideoHeader } from '@/utils/utils';
-// import moment from 'moment';
-
-// const { confirm } = Modal;
-
-// import router from 'umi/router';
 class typeManager extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      // imageUrl: '',
-    };
-    // this.modifydata = this.modifydata.bind(this);
     this.formRef = React.createRef();
   }
 
@@ -46,15 +15,6 @@ class typeManager extends React.Component {
   }
 
   closeAddressModals = () => {
-    // this.setState({
-    //   show: false,
-    // })
-    // this.formRef.current.setFieldsValue({
-    //   parentTypeId: '',
-    //   subTypeName: '',
-    // })
-    // this.formRef.current.resetFields()
-
     this.props.onCancel();
   };
 
@@ -72,16 +32,6 @@ class typeManager extends React.Component {
       wrapperCol: { span: 15 },
     };
     const { formList, show } = this.props;
-
-    // const { imageUrl } = this.state;
-
-    // const uploadButton = (
-    //   <div>
-    //     {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
-    //     <div className="ant-upload-text">Upload</div>
-    //   </div>
-    // );
-    // const {}
 
     return (
       <div>
