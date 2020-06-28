@@ -14,6 +14,13 @@ const DragHandle = SortableHandle(() => (
 ));
 
 class SortableComponent extends Component {
+  shouldComponentUpdate(nextProps) {
+    if (JSON.stringify(nextProps.items) == JSON.stringify(this.props.items)) {
+      return false;
+    }
+    return true;
+  }
+
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.props.onSortEnd({ oldIndex, newIndex });
   };
