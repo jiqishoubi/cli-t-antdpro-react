@@ -1,0 +1,27 @@
+@import '~@/utils/utils.less';
+
+.container {
+  &:extend(.flex);
+  position: relative;
+
+  .content {
+    flex: 1 0 0;
+    padding: 10px;
+
+    .product_item {
+      &:extend(.flex);
+    }
+  }
+
+  .loading_mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    &:extend(.flexCenter);
+    &:extend(.flexJCenter);
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
