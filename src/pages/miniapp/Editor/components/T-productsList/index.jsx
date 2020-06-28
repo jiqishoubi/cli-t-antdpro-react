@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
+import { getGreeImg } from '../ChooseProductModal/index';
 import styles from './index.less';
 
 const ProductsList = props => {
@@ -54,7 +55,7 @@ const ProductsList = props => {
                       marginBottom: item.imgMarginBottom || 0,
                     }}
                   >
-                    <img className={styles.img} src={obj.imgUrl} />
+                    <img className={styles.img} src={getGreeImg(obj.productPic)} />
                   </div>
                   {/* 内容 */}
                   <div className={styles.content}>
@@ -69,15 +70,19 @@ const ProductsList = props => {
                           color: item.textNameColor || null,
                         }}
                       >
-                        商品名称商品名称商品名称商品名称商品名称商品名称商品名称
+                        {obj.productName}
                       </div>
                     ) : null}
                     <div className={styles.price_wrap}>
                       <div>
-                        {item.showPrice ? <div className={styles.price}>&yen;50</div> : null}
+                        {item.showPrice ? (
+                          <div className={styles.price}>&yen;{obj.price / 100}</div>
+                        ) : null}
                       </div>
                       <div>
-                        {item.showSaledNum ? <div className={styles.saledNum}>已售300</div> : null}
+                        {item.showSaledNum ? (
+                          <div className={styles.saledNum}>已售{obj.productTotalSale}</div>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -111,11 +116,7 @@ const ProductsList = props => {
                       marginBottom: item.imgMarginBottom || 0,
                     }}
                   >
-                    <img
-                      className={styles.img}
-                      // src={obj.imgUrl}
-                      src="https://greecardcrm.bld365.com/static/img/229db55e-906f-4d7d-9a9c-5de761c1317a.jpg"
-                    />
+                    <img className={styles.img} src={getGreeImg(obj.productPic)} />
                   </div>
                   {/* 内容 */}
                   <div className={styles.content}>
@@ -130,7 +131,7 @@ const ProductsList = props => {
                           color: item.textNameColor || null,
                         }}
                       >
-                        商品名称商品名称商品名称商品名称商品名称商品名称商品名称
+                        {obj.productName}
                       </div>
                     ) : null}
                     <div
@@ -141,10 +142,14 @@ const ProductsList = props => {
                       }}
                     >
                       <div>
-                        {item.showPrice ? <div className={styles.price}>&yen;50</div> : null}
+                        {item.showPrice ? (
+                          <div className={styles.price}>&yen;{obj.price / 100}</div>
+                        ) : null}
                       </div>
                       <div>
-                        {item.showSaledNum ? <div className={styles.saledNum}>已售300</div> : null}
+                        {item.showSaledNum ? (
+                          <div className={styles.saledNum}>已售{obj.productTotalSale}</div>
+                        ) : null}
                       </div>
                     </div>
                   </div>
