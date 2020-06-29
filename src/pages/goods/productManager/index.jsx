@@ -30,7 +30,11 @@ class productManager extends React.Component {
   }
 
   recordEdit(record) {
-    this.goodsDrawer.current.open(record);
+    // this.goodsDrawer.current.open(record);
+
+    //跳转新页面
+    localDB.setItem('page_params_product_record', record);
+    window.open(window.location.origin + '/#/nside/addgoods');
   }
 
   modifydata = e => {
@@ -43,7 +47,10 @@ class productManager extends React.Component {
   };
 
   addGoods = () => {
-    this.goodsDrawer.current.open();
+    // this.goodsDrawer.current.open();
+
+    //跳转新页面
+    window.open(window.location.origin + '/#/nside/addgoods');
   };
 
   onRadioChange = e => {

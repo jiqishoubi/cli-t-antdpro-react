@@ -1,0 +1,33 @@
+@import '~@/utils/utils.less';
+@import '../../config/theme/defaultTheme.less';
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: @layout-header-height;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  z-index: 5;
+
+  .left_content {
+    flex: 1 0 0;
+    height: 100%;
+    // &:extend(.flexCenter);
+    // justify-content: flex-end;
+    // padding: 0 25px;
+  }
+}
+
+.container {
+  overflow: hidden;
+  margin-top: @layout-header-height;
+
+  .content {
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
+    min-height: 80vh;
+  }
+}

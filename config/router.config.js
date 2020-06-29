@@ -18,6 +18,19 @@ const routes = [
     icon: 'smile',
     component: './miniapp/Editor',
   },
+  //无侧边栏的layout
+  {
+    path: '/nside',
+    component: '../layouts/NoSideLayout',
+    routes: [
+      //创建商品页面
+      {
+        path: '/nside/addgoods',
+        name: '商品',
+        component: './goods/goodsDetail/goods',
+      },
+    ],
+  },
   {
     path: '/',
     component: '../layouts/SecurityLayout',

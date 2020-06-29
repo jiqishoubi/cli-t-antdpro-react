@@ -64,7 +64,7 @@ const index = props => {
   };
 
   return (
-    <div className={styles.editor} id="sass_editor_header_wrap">
+    <div className={styles.editor} id="sass_editor_container_id">
       <Row className={styles.header} align="middle" justify="end">
         <div className={styles.left_content}>
           <Button className={`${styles.btn} ${styles.btn_cancel}`} onClick={goBack}>
