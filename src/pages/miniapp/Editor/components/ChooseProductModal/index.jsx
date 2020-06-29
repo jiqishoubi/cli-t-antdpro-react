@@ -51,6 +51,13 @@ class Index extends Component {
     this.getProduct();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (JSON.stringify(nextState) == JSON.stringify(this.state)) {
+      return false;
+    }
+    return true;
+  }
+
   open = () => {
     this.setState({ visible: true });
   };

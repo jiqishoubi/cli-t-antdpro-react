@@ -23,10 +23,12 @@ const index = props => {
 
   return (
     <div className={styles.attr_wrap}>
-      <div className={styles.attr_wrap_content}>
-        {panel_title ? <div className={styles.panel_title}>{panel_title}</div> : null}
-        {panel}
-      </div>
+      {panel_title ? (
+        <div className={styles.attr_wrap_content}>
+          {panel_title ? <div className={styles.panel_title}>{panel_title}</div> : null}
+          {panel}
+        </div>
+      ) : null}
     </div>
   );
 };
