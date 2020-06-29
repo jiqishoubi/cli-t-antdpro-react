@@ -87,7 +87,6 @@ const Index = props => {
             onClick={() => {
               deleteProduct(record);
             }}
-            style={{ position: 'relative', zIndex: 99999 }}
           >
             删除
           </a>
