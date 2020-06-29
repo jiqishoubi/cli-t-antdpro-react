@@ -1,5 +1,5 @@
 diff --git a/node_modules/@ant-design/pro-layout/es/BasicLayout.js b/node_modules/@ant-design/pro-layout/es/BasicLayout.js
-index 20c1b1b..0d45f68 100644
+index 20c1b1b..09df01c 100644
 --- a/node_modules/@ant-design/pro-layout/es/BasicLayout.js
 +++ b/node_modules/@ant-design/pro-layout/es/BasicLayout.js
 @@ -1,5 +1,6 @@
@@ -60,7 +60,7 @@ index f493e3f..e123640 100644
      cursor: pointer;
      transition: all 0.3s, padding 0s;
 diff --git a/node_modules/@ant-design/pro-layout/es/Header.js b/node_modules/@ant-design/pro-layout/es/Header.js
-index 9b0720c..e6e0b3b 100644
+index 9b0720c..f0cf6fe 100644
 --- a/node_modules/@ant-design/pro-layout/es/Header.js
 +++ b/node_modules/@ant-design/pro-layout/es/Header.js
 @@ -1,5 +1,6 @@
@@ -84,7 +84,7 @@ index 9b0720c..e6e0b3b 100644
            right: fixedHeader ? 0 : undefined
          }, style),
 diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
-index 58588f6..191a8fd 100644
+index 58588f6..3c11f96 100644
 --- a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
 +++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
 @@ -7,6 +7,7 @@ import classNames from 'classnames';
@@ -110,7 +110,7 @@ index 58588f6..191a8fd 100644
      className: "ant-pro-sider-menu-logo",
      onClick: onMenuHeaderClick,
 diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
-index 8de251d..ddc1e17 100644
+index 8de251d..0c48856 100644
 --- a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
 +++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
 @@ -1,4 +1,5 @@
@@ -128,3 +128,16 @@ index 8de251d..ddc1e17 100644
      }
  
      img {
+@@ -48,6 +49,12 @@
+       height: 100%;
+       overflow: auto;
+       box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
++
++      // 左侧隐藏滚动条
++      &::-webkit-scrollbar {
++        display: none;
++      }
++
+       > .ant-menu-root {
+         :not(.@{pro-layout-sider-menu-prefix-cls}-link-menu) {
+           height: ~'calc(100vh - @{nav-header-height})';
