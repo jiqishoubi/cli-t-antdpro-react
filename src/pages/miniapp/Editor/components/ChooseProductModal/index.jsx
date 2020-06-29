@@ -198,7 +198,7 @@ class Index extends Component {
         onCancel={this.close}
       >
         <div className={styles.container} id="editor_chooseProductModal_tabs_container">
-          <div className={styles.tabs}>
+          <div className={styles.tabs} id="editor_chooseProductModal_tabs_container_tabs">
             <Tabs
               tabPosition="left"
               activeKey={activeKey}

@@ -1,12 +1,23 @@
 @import '~@/utils/utils.less';
 
+@tabWidth: 130px;
+
 .container {
   &:extend(.flex);
   position: relative;
 
+  .tabs {
+    box-sizing: border-box;
+    width: @tabWidth;
+    overflow: hidden;
+  }
+
   .content {
-    flex: 1 0 0;
+    box-sizing: border-box;
+    width: calc(100% - @tabWidth);
+    // flex: 1 0 0;
     padding: 0 10px;
+    overflow: hidden;
 
     .product_item {
       &:extend(.flex);
