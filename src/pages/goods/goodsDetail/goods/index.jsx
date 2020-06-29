@@ -10,7 +10,7 @@
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Radio, Select, Button, message } from 'antd';
+import { Form, Input, Radio, Select, Button, message, Modal } from 'antd';
 import TUpload2 from '@/components/T-Upload2';
 import TSku from '@/components/goods/T-Sku';
 import TEditDetails from '@/components/goods/T-EditDetails';
@@ -258,11 +258,17 @@ class Index extends Component {
       postData.productType = 'SELF_SUPPORT_GOODS';
       const res = await updateProductAjax(postData);
       if (res && res.status == 0) {
-        message.success('修改成功');
+        // message.success('修改成功');
         // this.close();
         // if (this.props.callback) {
         //   this.props.callback();
         // }
+        Modal.success({
+          content: '修改成功',
+          onOk: () => {
+            window.close();
+          },
+        });
       } else {
         message.warning(res.message || '网络异常');
       }
@@ -279,11 +285,17 @@ class Index extends Component {
       postData.productType = 'SELF_SUPPORT_GOODS';
       const res = await addProductAjax(postData);
       if (res && res.status == 0) {
-        message.success('新增成功');
+        // message.success('新增成功');
         // this.close();
         // if (this.props.callback) {
         //   this.props.callback();
         // }
+        Modal.success({
+          content: '新增成功',
+          onOk: () => {
+            window.close();
+          },
+        });
       } else {
         message.warning(res.message || '网络异常');
       }
