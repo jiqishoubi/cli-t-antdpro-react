@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Button, Divider, Spin } from 'antd';
 import PublishDrawer from '../PublishDrawer';
-import { getAuthUrlAjax, verifyListAjax } from '@/services/miniapp';
+import { getAuthUrlAjax } from '@/services/miniapp';
 import { getUrlParam, mConfirm } from '@/utils/utils';
 import styles from './index.less';
 
@@ -13,6 +13,7 @@ class MiniappInfo extends Component {
       loading_getUrl: false,
     };
   }
+
   async componentDidMount() {
     const { dispatch, miniapp } = this.props;
     const { appid, miniappInfo } = miniapp;
@@ -49,17 +50,9 @@ class MiniappInfo extends Component {
     window.location.href = url;
   };
 
-  //上传代码
-  upload = () => {
-    this.publishDrawer.open();
-  };
-
   //提交审核
   submitVerify = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'miniapp/submitVerify',
-    });
+    this.publishDrawer.open();
   };
 
   //撤销审核
@@ -86,7 +79,6 @@ class MiniappInfo extends Component {
       miniapp,
       //loading
       loadingGetMiniappInfo,
-      loadingSubmitVerify,
       loadingCancelVerify,
       loadingPublishApp,
     } = this.props;
@@ -122,40 +114,41 @@ class MiniappInfo extends Component {
               <div className={styles.ctrl_wrap}>
                 {miniappInfo ? (
                   <div>
-                    <Button
-                      type="primary"
-                      onClick={this.upload}
-                      disabled={miniappStatus == '审核中'}
-                    >
-                      上传代码
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={this.submitVerify}
-                      style={{ marginLeft: 10 }}
-                      loading={loadingSubmitVerify}
-                      disabled={miniappStatus == '审核中'}
-                    >
-                      提交审核
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={this.cancelVerify}
-                      style={{ marginLeft: 10 }}
-                      loading={loadingCancelVerify}
-                      disabled={miniappStatus !== '审核中'}
-                    >
-                      撤销审核
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={this.publish}
-                      style={{ marginLeft: 10 }}
-                      loading={loadingPublishApp}
-                      disabled={miniappStatus !== '审核成功'}
-                    >
-                      发布上线
-                    </Button>
+                    {miniappStatus == '审核中' ? null : (
+                      <Button
+                        type="primary"
+                        onClick={this.submitVerify}
+                        style={{ marginLeft: 10 }}
+                        disabled={miniappStatus == '审核中'}
+                      >
+                        提交审核
+                      </Button>
+                    )}
+
+                    {miniappStatus == '审核中' ? (
+                      <Button
+                        type="primary"
+                        onClick={this.cancelVerify}
+                        style={{ marginLeft: 10 }}
+                        loading={loadingCancelVerify}
+                        disabled={miniappStatus !== '审核中'}
+                      >
+                        撤销审核
+                      </Button>
+                    ) : null}
+
+                    {miniappStatus == '审核成功' ? (
+                      <Button
+                        type="primary"
+                        onClick={this.publish}
+                        style={{ marginLeft: 10 }}
+                        loading={loadingPublishApp}
+                        disabled={miniappStatus !== '审核成功'}
+                      >
+                        发布上线
+                      </Button>
+                    ) : null}
+                    {/* 是否需要一个待发布列表？ */}
                   </div>
                 ) : (
                   <Button type="primary" onClick={this.getAuth} loading={loading_getUrl}>
@@ -192,7 +185,6 @@ class MiniappInfo extends Component {
 
 export default connect(({ miniapp, loading }) => ({
   miniapp,
-  loadingSubmitVerify: loading.effects['miniapp/submitVerify'],
   loadingCancelVerify: loading.effects['miniapp/cancelVerify'], //撤销审核
   loadingPublishApp: loading.effects['miniapp/publishApp'],
 }))(MiniappInfo);
