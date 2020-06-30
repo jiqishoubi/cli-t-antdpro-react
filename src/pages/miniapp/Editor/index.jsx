@@ -10,14 +10,7 @@ import { mConfirm } from '@/utils/utils';
 import styles from './index.less';
 import './index_localName.less';
 
-const index = props => {
-  const {
-    //dva
-    dispatch,
-    h5Editor,
-  } = props;
-  const { activeItem } = h5Editor;
-
+const index = () => {
   const goBack = () => {
     mConfirm('确认放弃当前操作，返回页面？', () => {
       router.goBack();
@@ -30,39 +23,6 @@ const index = props => {
       // const itemList = h5Editor.itemList
       // console.log(JSON.stringify(itemList))
     });
-  };
-
-  //拖拽 点击
-  const onDropEnd = (
-    list,
-    // fromIndex, toIndex
-  ) => {
-    dispatch({
-      type: 'h5Editor/save',
-      payload: {
-        itemList: [...list],
-      },
-    });
-  };
-
-  const onDelete = list => {
-    dispatch({
-      type: 'h5Editor/save',
-      payload: {
-        itemList: [...list],
-      },
-    });
-  };
-
-  const onClick = tItem => {
-    if (tItem.id !== (activeItem && activeItem.id ? activeItem.id : '')) {
-      dispatch({
-        type: 'h5Editor/save',
-        payload: {
-          activeItem: JSON.parse(JSON.stringify(tItem)),
-        },
-      });
-    }
   };
 
   return (
@@ -83,7 +43,7 @@ const index = props => {
       <ComponentsList />
 
       {/* 中间展示面板 */}
-      <ItemList onDropEnd={onDropEnd} onDelete={onDelete} onClick={onClick} />
+      <ItemList />
 
       {/* 右侧属性面板 */}
       <ItemAttrPanel />

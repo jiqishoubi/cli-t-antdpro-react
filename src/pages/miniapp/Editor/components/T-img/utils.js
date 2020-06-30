@@ -8,7 +8,7 @@ export const defaultItem = () => ({
   goType: '',
   goUrl: '',
   //样式
-  height: 100,
+  height: 0,
   marginTop: 0,
   marginBottom: 0,
   marginLeftRight: 0,

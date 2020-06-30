@@ -13,13 +13,18 @@ const Img = props => {
       <div
         className={styles.img_box}
         style={{
-          height: item.height || 'auto',
           margin: `${item.marginTop || 0}px ${item.marginLeftRight || 0}px ${item.marginBottom ||
             0}px`,
           borderRadius: item.borderRadius || 0,
         }}
       >
-        <img className={styles.img} src={item.imgUrl} />
+        <img
+          className={styles.img}
+          src={item.imgUrl}
+          style={{
+            height: item.height || 'auto',
+          }}
+        />
       </div>
     </div>
   );

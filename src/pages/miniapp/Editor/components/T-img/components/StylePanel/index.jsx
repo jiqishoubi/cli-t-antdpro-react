@@ -1,10 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Form, Slider, Radio, InputNumber, Select } from 'antd';
-import { ChromePicker } from 'react-color';
+import { Form, Slider } from 'antd';
 import { onValuesChange } from '../../../../utils_editor';
-
-const { Option } = Select;
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -12,7 +9,7 @@ const formItemLayout = {
 };
 
 const index = props => {
-  const { form, h5Editor, dispatch } = props;
+  const { h5Editor, dispatch } = props;
   const { itemList, activeItem } = h5Editor;
 
   let item = itemList.find(obj => obj.id == activeItem.id);
@@ -32,6 +29,8 @@ const index = props => {
     >
       <Form.Item label="高度" name="height" initialValue={item.height || 0}>
         <Slider max={500} />
+      </Form.Item>
+      <Form.Item label={<span></span>} colon={false}>
         <div>（0代表自适应）</div>
       </Form.Item>
       <Form.Item label="上边距" name="marginTop" initialValue={item.marginTop || 0}>

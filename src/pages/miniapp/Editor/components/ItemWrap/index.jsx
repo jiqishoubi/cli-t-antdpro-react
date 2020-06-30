@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { CloseCircleFilled, UpCircleFilled, DownCircleFilled } from '@ant-design/icons';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
+import { DragSource, DropTarget } from 'react-dnd';
 import styles from './index.less';
 
 const ItemWrap = props => {
@@ -21,14 +21,11 @@ const ItemWrap = props => {
     move,
     remove,
     onClick,
-    onDelete,
-    onDropEnd,
     ...restProps
   } = props;
   const {
     tItem,
     //dva
-    dispatch,
     h5Editor,
   } = restProps;
   const { activeItem, itemList } = h5Editor;
@@ -151,7 +148,10 @@ const dropSpec = {
 };
 
 //注入
-const dropCollect = (connect, monitor) => ({
+const dropCollect = (
+  connect,
+  // monitor
+) => ({
   connectDropTarget: connect.dropTarget(), // 用于包装需接收拖拽的组件
 });
 

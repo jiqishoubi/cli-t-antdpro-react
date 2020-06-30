@@ -14,7 +14,7 @@ const List = props => {
     dispatch,
     h5Editor,
   } = props;
-  const { itemList } = h5Editor;
+  const { itemList, activeItem } = h5Editor;
 
   //根据id返回一个source对象
   const find = id => {
@@ -34,6 +34,39 @@ const List = props => {
     };
   };
 
+  //拖拽 点击
+  const onDropEnd = (
+    list,
+    // fromIndex, toIndex
+  ) => {
+    dispatch({
+      type: 'h5Editor/save',
+      payload: {
+        itemList: [...list],
+      },
+    });
+  };
+
+  const onDelete = list => {
+    dispatch({
+      type: 'h5Editor/save',
+      payload: {
+        itemList: [...list],
+      },
+    });
+  };
+
+  const onClick = tItem => {
+    if (tItem.id !== (activeItem && activeItem.id ? activeItem.id : '')) {
+      dispatch({
+        type: 'h5Editor/save',
+        payload: {
+          activeItem: JSON.parse(JSON.stringify(tItem)),
+        },
+      });
+    }
+  };
+
   const move = (id, toIndex) => {
     const { item, index } = find(id);
     itemList.splice(index, 1);
@@ -48,16 +81,12 @@ const List = props => {
 
   const change = (id, fromIndex) => {
     const { index: toIndex } = find(id);
-    props.onDropEnd(itemList, fromIndex, toIndex);
+    onDropEnd(itemList, fromIndex, toIndex);
   };
 
   const remove = tItem => {
     const newList = itemList.filter(it => it.id !== tItem.id);
-    props.onDelete(newList);
-  };
-
-  const onClick = tItem => {
-    props.onClick(tItem);
+    onDelete(newList);
   };
 
   return connectDropTarget(
