@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { Popover } from 'antd';
 import { com_map } from '../components_map';
+import { itemListScrollBottom } from '../../utils_editor';
 import styles from './index.less';
 
 const index = props => {
@@ -19,6 +20,9 @@ const index = props => {
         activeItem: item,
       },
     });
+
+    //滚动到底部
+    itemListScrollBottom();
   };
 
   let arr = [];

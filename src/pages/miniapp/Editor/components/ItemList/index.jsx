@@ -64,8 +64,8 @@ const List = props => {
     <div className={styles.panel}>
       <div className={styles.header}>名片夹</div>
 
-      {/* 内容 */}
-      <div className={styles.content}>
+      {/* 内容 可以滚动的 */}
+      <div className={styles.content} id="itemlist_scroll_content">
         {/* 名片 */}
         {h5Editor.h5Type == 'card' ? <TCard /> : null}
 

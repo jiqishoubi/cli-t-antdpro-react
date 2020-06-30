@@ -1,5 +1,4 @@
 export const onValuesChange = ({ changedValues, allValues, itemList, activeItem, dispatch }) => {
-  console.log(itemList);
   //修改相关属性
   let list = itemList;
   for (let i = 0; i < list.length; i++) {
@@ -32,4 +31,20 @@ export const onValuesChange = ({ changedValues, allValues, itemList, activeItem,
       },
     });
   }, 50);
+};
+
+//滚动到底部
+export const scrollBottomById = idStr => {
+  let dom = document.getElementById(idStr);
+  if (dom) {
+    let scrollHeight = dom.scrollHeight;
+    dom.scrollTop = scrollHeight;
+  }
+};
+
+//中间预览滚动到底部
+export const itemListScrollBottom = () => {
+  setTimeout(() => {
+    scrollBottomById('itemlist_scroll_content');
+  }, 100);
 };
