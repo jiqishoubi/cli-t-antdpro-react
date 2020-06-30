@@ -21,7 +21,7 @@ const index = props => {
     let list = itemList;
     for (let i = 0; i < list.length; i++) {
       if (list[i].id == activeItem.id) {
-        list[i].list.push(defaultItem.list[0]);
+        list[i].list.push(defaultItem().list[0]);
         break;
       }
     }

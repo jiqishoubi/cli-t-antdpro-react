@@ -1,6 +1,6 @@
 import { randomStrKey } from '@/utils/utils';
 
-export const defaultItem = {
+export const defaultItem = () => ({
   id: randomStrKey(),
   type: 'text',
   //常规
@@ -14,4 +14,4 @@ export const defaultItem = {
   fontWeight: 'normal',
   justifyContent: '',
   backgroundColor: '',
-};
+});

@@ -6,7 +6,7 @@ import styles from './index.less';
 
 const index = props => {
   const { dispatch, h5Editor } = props;
-  const { itemList, activeItem } = h5Editor;
+  const { itemList } = h5Editor;
 
   const addItem = obj => {
     let item = obj.createItem();
@@ -16,6 +16,7 @@ const index = props => {
       type: 'h5Editor/save',
       payload: {
         itemList: [...list],
+        activeItem: item,
       },
     });
   };

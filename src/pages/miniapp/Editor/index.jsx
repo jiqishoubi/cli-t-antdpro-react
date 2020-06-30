@@ -26,7 +26,9 @@ const index = props => {
 
   const save = () => {
     mConfirm('确认保存？', () => {
-      router.goBack();
+      // const h5Editor = props.h5Editor
+      // const itemList = h5Editor.itemList
+      // console.log(JSON.stringify(itemList))
     });
   };
 

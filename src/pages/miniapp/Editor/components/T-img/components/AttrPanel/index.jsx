@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Select } from 'antd';
-import TUpload from '@/components/T-Upload';
+import TUpload2 from '@/components/T-Upload2';
 import { onValuesChange } from '../../../../utils_editor';
 
-const { TextArea } = Input;
 const { Option } = Select;
 
 const formItemLayout = {
@@ -12,20 +11,31 @@ const formItemLayout = {
   wrapperCol: { span: 15 },
 };
 
-const index = props => {
-  const { form, h5Editor } = props;
+const Index = props => {
+  const [formRef] = Form.useForm();
+  const { h5Editor, dispatch } = props;
   const { itemList, activeItem } = h5Editor;
 
   let item = itemList.find(obj => obj.id == activeItem.id);
 
-  const imgUrlChange = url => {
-    console.log(url);
+  const init = () => {
+    formRef.setFieldsValue({
+      imgUrl: item.imgUrl ? [item.imgUrl] : [],
+    });
   };
+
+  useEffect(() => {
+    init();
+  }, [item]);
 
   return (
     <Form
+      form={formRef}
       {...formItemLayout}
       onValuesChange={(changedValues, allValues) => {
+        if (changedValues.imgUrl) {
+          changedValues.imgUrl = changedValues.imgUrl[0] ? changedValues.imgUrl[0].url : '';
+        }
         onValuesChange({
           changedValues,
           allValues,
@@ -37,7 +47,7 @@ const index = props => {
       style={{ paddingTop: 10 }}
     >
       <Form.Item label="图片" name="imgUrl" rules={[{ required: true, message: '请上传图片' }]}>
-        <TUpload onUploadChange={imgUrlChange} />
+        <TUpload2 length={1} />
       </Form.Item>
 
       <Form.Item label="跳转类型" name="goType" initialValue={item.goType || undefined}>
@@ -55,4 +65,4 @@ const index = props => {
 
 export default connect(({ h5Editor }) => ({
   h5Editor,
-}))(index);
+}))(Index);

@@ -1,4 +1,4 @@
-import { randomStrKey } from '@/utils/utils';
+import React from 'react';
 import {
   GoldOutlined,
   PictureOutlined,
@@ -15,13 +15,16 @@ export const com_map = {
     title: '轮播图',
     icon: <GoldOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-banner/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-banner/panel');
     },
     createItem: () => {
-      return require('./T-banner/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-banner/utils').defaultItem();
     },
   },
   //图片
@@ -29,13 +32,16 @@ export const com_map = {
     title: '图片',
     icon: <PictureOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-img/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-img/panel');
     },
     createItem: () => {
-      return require('./T-img/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-img/utils').defaultItem();
     },
   },
   //间隔
@@ -43,13 +49,16 @@ export const com_map = {
     title: '间隔',
     icon: <ColumnHeightOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-height/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-height/panel');
     },
     createItem: () => {
-      return require('./T-height/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-height/utils').defaultItem();
     },
   },
   //文字
@@ -57,13 +66,16 @@ export const com_map = {
     title: '文字',
     icon: <FontColorsOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-text/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-text/panel');
     },
     createItem: () => {
-      return require('./T-text/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-text/utils').defaultItem();
     },
   },
   //图片魔方
@@ -71,13 +83,16 @@ export const com_map = {
     title: '图片魔方',
     icon: <AppstoreOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-imgCube/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-imgCube/panel');
     },
     createItem: () => {
-      return require('./T-imgCube/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-imgCube/utils').defaultItem();
     },
   },
   //商品列表
@@ -85,13 +100,16 @@ export const com_map = {
     title: '商品列表',
     icon: <HddOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-productsList/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-productsList/panel');
     },
     createItem: () => {
-      return require('./T-productsList/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-productsList/utils').defaultItem();
     },
   },
   //enter
@@ -99,13 +117,16 @@ export const com_map = {
     title: '介绍导航',
     icon: <HddOutlined />,
     component: () => {
+      // eslint-disable-next-line
       return require('./T-enter/index');
     },
     panel: () => {
+      // eslint-disable-next-line
       return require('./T-enter/panel');
     },
     createItem: () => {
-      return require('./T-enter/utils').defaultItem;
+      // eslint-disable-next-line
+      return require('./T-enter/utils').defaultItem();
     },
   },
 };

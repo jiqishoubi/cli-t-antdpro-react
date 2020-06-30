@@ -28,8 +28,14 @@ const Index = props => {
 
   //添加商品
   const getSelectProduct = record => {
+    let imgItem = {
+      productPic: record.productPic,
+      productName: record.productName,
+      price: record.price,
+      productTotalSale: record.productTotalSale,
+    };
     let newItem = JSON.parse(JSON.stringify(item));
-    newItem.list.push(record);
+    newItem.list.push(imgItem);
     let list = itemList;
     list[itemIndex] = newItem;
     dispatch({

@@ -1,6 +1,6 @@
 import { randomStrKey } from '@/utils/utils';
 
-export const defaultItem = {
+export const defaultItem = () => ({
   id: randomStrKey(),
   type: 'imgCube',
   //常规
@@ -50,4 +50,4 @@ export const defaultItem = {
   borderRadiusItem: 0,
   haveTitle: false,
   titleFontSize: 12,
-};
+});

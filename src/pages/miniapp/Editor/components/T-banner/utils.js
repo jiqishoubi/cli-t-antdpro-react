@@ -1,6 +1,6 @@
 import { randomStrKey } from '@/utils/utils';
 
-export const defaultItem = {
+export const defaultItem = () => ({
   id: randomStrKey(),
   type: 'banner',
   //常规
@@ -19,4 +19,4 @@ export const defaultItem = {
   marginLeftRight: 0,
   height: 145,
   borderRadius: 0,
-};
+});

@@ -1,6 +1,6 @@
 import { randomStrKey } from '@/utils/utils';
 
-export const defaultItem = {
+export const defaultItem = () => ({
   id: randomStrKey(),
   type: 'enter',
   //常规
@@ -68,4 +68,4 @@ export const defaultItem = {
   marginTopBottomItem: 0,
   marginLeftRightItem: 0,
   borderRadiusItem: 0,
-};
+});

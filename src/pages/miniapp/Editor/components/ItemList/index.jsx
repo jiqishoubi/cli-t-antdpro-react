@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
+import { DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { getComponent } from '../components_map';
 import TCard from '../T-card';
