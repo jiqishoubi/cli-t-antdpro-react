@@ -58,7 +58,7 @@ export const dealMenu2 = menuTree => {
         if (item.menuLevel !== 1) {
           item.icon = '';
         } else {
-          item.icon = '';
+          item.icon = ''; //加icon
         }
         if (item.sons) {
           item.children = item.sons;

@@ -82,9 +82,25 @@ const BasicLayout = props => {
   //   authority: undefined,
   // };
 
+  // 2020.07.23新增动态icon的方法
   const menuDataRender = () => {
-    let arr = login.menuTree || [];
-    return arr;
+    let menuTree = JSON.parse(JSON.stringify(login.menuTree || []))
+
+    const loopDealMenuItemIcon = (arr) => {
+      if (arr && arr.length > 0) {
+        arr.forEach((obj) => {
+          //加icon的判断
+          if (obj.parentId == 0) {
+            obj.icon = <GithubOutlined /> //这里可以改成一个icon的映射函数
+          }
+          loopDealMenuItemIcon(obj.children)
+        });
+      }
+    }
+
+    //处理icon
+    loopDealMenuItemIcon(menuTree)
+    return menuTree;
   };
 
   return (
