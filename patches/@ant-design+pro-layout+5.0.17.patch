@@ -110,7 +110,7 @@ index 58588f6..3c11f96 100644
      className: "ant-pro-sider-menu-logo",
      onClick: onMenuHeaderClick,
 diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
-index 8de251d..0c48856 100644
+index 8de251d..f29f19b 100644
 --- a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
 +++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
 @@ -1,4 +1,5 @@
@@ -119,7 +119,19 @@ index 8de251d..0c48856 100644
  
  @pro-layout-sider-menu-prefix-cls: ~'@{ant-prefix}-pro-sider-menu';
  
-@@ -17,7 +18,7 @@
+@@ -7,17 +8,19 @@
+ .@{pro-layout-sider-menu-prefix-cls} {
+   position: relative;
+   &-logo {
++    box-sizing: border-box;
+     position: relative;
+     padding: 0 (@menu-collapsed-width - 32px) / 2;
+     overflow: hidden;
+     background: @layout-sider-background;
+     cursor: pointer;
+     transition: all 0.3s;
++    height: @nav-header-height; //左侧logo wrap高度
+ 
      > a {
        display: flex;
        align-items: center;
@@ -128,7 +140,7 @@ index 8de251d..0c48856 100644
      }
  
      img {
-@@ -48,6 +49,12 @@
+@@ -48,6 +51,12 @@
        height: 100%;
        overflow: auto;
        box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);

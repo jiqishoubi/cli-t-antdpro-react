@@ -24,7 +24,7 @@ const noMatch = (
     subTitle="Sorry, you are not authorized to access this page."
     extra={
       <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+        <Link to="/user/login">返回首页</Link>
       </Button>
     }
   />
@@ -91,10 +91,13 @@ const BasicLayout = props => {
     <ProLayout
       logo={() => <img style={{ width: 50, height: 'auto', marginLeft: 10 }} src={logo} />}
       menuHeaderRender={(logoDom, titleDom) => (
-        <Link to="/">
-          {logoDom}
-          {titleDom}
-        </Link>
+        <div style={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          {logoDom}{titleDom}
+        </div>
       )}
       onCollapse={handleMenuCollapse}
       menuItemRender={(menuItemProps, defaultDom) => {
@@ -116,8 +119,8 @@ const BasicLayout = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-          <span>{route.breadcrumbName}</span>
-        );
+            <span>{route.breadcrumbName}</span>
+          );
       }}
       footerRender={() => defaultFooterDom}
       menuDataRender={menuDataRender}
@@ -141,8 +144,8 @@ const BasicLayout = props => {
             {...props}
           />
         ) : (
-          children
-        )}
+            children
+          )}
       </Authorized>
     </ProLayout>
   );
