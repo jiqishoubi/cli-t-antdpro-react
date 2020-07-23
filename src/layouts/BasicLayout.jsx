@@ -39,6 +39,7 @@ const BasicLayout = props => {
       pathname: '/',
     },
     login,
+    collapsed,
   } = props;
   /**
    * constructor
@@ -106,15 +107,20 @@ const BasicLayout = props => {
   return (
     <ProLayout
       logo={() => <img style={{ width: 50, height: 'auto', marginLeft: 10 }} src={logo} />}
-      menuHeaderRender={(logoDom, titleDom) => (
-        <div style={{
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          {logoDom}{titleDom}
-        </div>
-      )}
+      menuHeaderRender={(logoDom, titleDom) => {
+        return (
+          <div style={{ height: '100%' }}>
+            {collapsed ? null :
+              <div style={{
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                {logoDom}{titleDom}
+              </div>}
+          </div>
+        )
+      }}
       onCollapse={handleMenuCollapse}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
