@@ -30,6 +30,30 @@ const noMatch = (
   />
 );
 
+//获得上面mixMenu的index
+export const getMixMenuIndex = (menuTree, pathname) => {
+  //自己及子集是否包含
+  const isHaveUrlFunc = (menuItem) => {
+    let flag = false
+    const test = (item) => {
+      if (item.path == pathname) {
+        flag = true
+      }
+      if (item.children) {
+        item.children.forEach((obj) => {
+          test(obj)
+        })
+      }
+    }
+    test(menuItem)
+    return flag
+  }
+
+  let index = menuTree.findIndex((menuItem) => isHaveUrlFunc(menuItem))
+
+  return index
+}
+
 const BasicLayout = props => {
   const tabsLayout = useRef();
   const {
@@ -47,15 +71,27 @@ const BasicLayout = props => {
 
   useEffect(() => {
     //监听路由
-    if (defaultSettings.isTabs) {
-      if (!window.UNLISTEN) {
-        window.UNLISTEN = props.history.listen((location, type) => {
-          console.log('监听', location);
+    if (!window.UNLISTEN) {
+      window.UNLISTEN = props.history.listen((location, type) => {
+        console.log('监听', location);
+        //mix模式 上面的menu active index
+        if (defaultSettings.layout == 'mixmenu') {
+          let mixMenuActiveIndex = getMixMenuIndex(login.menuTree, location.pathname)
+          dispatch({
+            type: 'login/saveDB',
+            payload: {
+              mixMenuActiveIndex: mixMenuActiveIndex + '',
+            }
+          })
+        }
+
+        //多tab 增减tab
+        if (defaultSettings.isTabs) {
           if (tabsLayout && tabsLayout.current) {
             tabsLayout.current.addCutTab(location.pathname);
           }
-        });
-      }
+        }
+      });
     }
     //卸载监听路由
     return () => {
@@ -83,9 +119,9 @@ const BasicLayout = props => {
   //   authority: undefined,
   // };
 
+  //mix模式 上面的菜单
   const mixMenuRender = () => {
     let menuTree = login.menuTree || []
-    console.log(menuTree)
     let mixMenuActiveIndex = login.mixMenuActiveIndex
 
     const handleClick = (e) => {
