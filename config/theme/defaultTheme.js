@@ -4,7 +4,7 @@ const theme = {
   'layout-header-background': '#0a4a5d',
   'menu-dark-submenu-bg': '#063c4c',
   'layout-header-height': '45px',
-  'menu-collapsed-width': '44px',
+  'menu-collapsed-width': '44px', // 44  mix模式23
   //自定义
   't-siderMenu-width': '190px',
   't-istabs-tabbar-height': '35px', //多tab时，tabbar高度

@@ -191,24 +191,29 @@ index 9b0720c..a59b5d3 100644
          className: className
        }, this.renderContent()));
 diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
-index 58588f6..69d0e65 100644
+index 58588f6..222a234 100644
 --- a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
 +++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
-@@ -7,6 +7,7 @@ import classNames from 'classnames';
+@@ -7,7 +7,11 @@ import classNames from 'classnames';
  import './index.less';
  import BaseMenu from './BaseMenu';
  import MenuCounter from './Counter';
 +import defaultTheme from '../../../../../config/theme/defaultTheme';
++import { isBrowser } from '../utils/utils';
++
  var Sider = _Layout.Sider;
++
  export var defaultRenderLogo = function defaultRenderLogo(logo) {
    if (typeof logo === 'string') {
-@@ -58,14 +59,16 @@ var SiderMenu = function SiderMenu(props) {
+     return React.createElement("img", {
+@@ -58,16 +62,35 @@ var SiderMenu = function SiderMenu(props) {
        breakpoint = _props$breakpoint === void 0 ? 'lg' : _props$breakpoint,
        style = props.style,
        links = props.links,
 -      onOpenChange = props.onOpenChange;
 +      onOpenChange = props.onOpenChange,
-+      layout = props.layout;
++      layout = props.layout,
++      collapsedButtonRender = props.collapsedButtonRender;
  
    var _MenuCounter$useConta = MenuCounter.useContainer(),
        flatMenuKeys = _MenuCounter$useConta.flatMenuKeys;
@@ -220,8 +225,26 @@ index 58588f6..69d0e65 100644
 +    'ant-pro-sider-menu-sider-mix': layout == 'mixmenu'
    });
    var headerDom = defaultRenderLogoAndTitle(props);
++
++  //切换
++  const triggerResizeEvent = function () {
++    if (isBrowser()) {
++      var event = document.createEvent('HTMLEvents');
++      event.initEvent('resize', true, false);
++      window.dispatchEvent(event);
++    }
++  };
++
++  const toggle = function () {
++    if (_onCollapse) _onCollapse(!collapsed);
++    triggerResizeEvent()
++  };
++  //切换 end
++
    return React.createElement(Sider, {
-@@ -83,12 +86,17 @@ var SiderMenu = function SiderMenu(props) {
+     collapsible: true,
+     trigger: null,
+@@ -83,12 +106,17 @@ var SiderMenu = function SiderMenu(props) {
      style: style,
      width: siderWidth,
      theme: theme,
@@ -242,8 +265,32 @@ index 58588f6..69d0e65 100644
      mode: "inline",
      handleOpenChange: onOpenChange,
      style: {
+@@ -109,7 +137,21 @@ var SiderMenu = function SiderMenu(props) {
+         key: index
+       }, node)
+     );
+-  }))));
++  }))), 
++  React.createElement('div', {
++    style: {
++      height: 44
++    }
++  }),
++  layout == 'mixmenu' && collapsedButtonRender && React.createElement('div', {
++    className: 'mix_collapsed_button_wrap',
++    onClick: toggle,
++    style: {
++      right: collapsed ? 0 : 7,
++      justifyContent: collapsed ? 'center' : 'right'
++    }
++  }, collapsedButtonRender(collapsed))
++  );
+ };
+ 
+ export default SiderMenu;
+\ No newline at end of file
 diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
-index 8de251d..b9fc586 100644
+index 8de251d..ae6740d 100644
 --- a/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
 +++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/index.less
 @@ -1,4 +1,5 @@
@@ -305,3 +352,21 @@ index 8de251d..b9fc586 100644
    }
  
    &-icon {
+@@ -129,6 +144,17 @@
+   }
+ }
+ 
++//mix模式下的切换button
++.mix_collapsed_button_wrap{
++  position: absolute;
++  bottom: 0;
++  width: 23px;
++  height: 42px;
++  display: flex;
++  align-items: center;
++  // justify-content: right;
++}
++
+ @keyframes fade-in {
+   0% {
+     opacity: 0;

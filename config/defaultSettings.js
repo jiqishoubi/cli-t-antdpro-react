@@ -2,7 +2,7 @@ import defaultTheme from './theme/defaultTheme';
 
 export default {
   navTheme: 'dark', //'light' | 'dark';
-  layout: 'mixmenu', //'sidemenu' | 'topmenu' | 'mixmenu';
+  layout: 'sidemenu', //'sidemenu' | 'topmenu' | 'mixmenu';
   contentWidth: 'Fluid', //'Fluid' | 'Fixed';
   fixedHeader: true,
   autoHideHeader: false,

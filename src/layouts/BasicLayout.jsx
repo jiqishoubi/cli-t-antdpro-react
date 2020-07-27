@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ProLayout from '@ant-design/pro-layout';
 import { Link, router } from 'umi';
 import { connect } from 'dva';
-import { GithubOutlined } from '@ant-design/icons';
+import { GithubOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Result, Button, Menu } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -13,6 +13,7 @@ import defaultSettings from '../../config/defaultSettings';
 import defaultTheme from '../../config/theme/defaultTheme';
 import { defaultFooterDom } from './UserLayout';
 import { findFirstMenuUrl2 } from '@/utils/login';
+import './BasicLayout_localName.less';
 
 const siderWidth = defaultTheme['t-siderMenu-width']
   ? Number(defaultTheme['t-siderMenu-width'].split('px')[0])
@@ -53,6 +54,12 @@ export const getMixMenuIndex = (menuTree, pathname) => {
   let index = menuTree.findIndex(menuItem => isHaveUrlFunc(menuItem));
 
   return index;
+};
+
+const collapsedButtonStyle = {
+  color: 'rgba(255,255,255,0.65)',
+  fontSize: 23,
+  cursor: 'pointer',
 };
 
 const BasicLayout = props => {
@@ -125,18 +132,18 @@ const BasicLayout = props => {
 
     //点击方法
     const handleClick = e => {
-      let mixMenuActiveIndex = e.key;
+      let mixMenuActiveIndex2 = e.key;
       // //跳转
       if (
-        menuTree[mixMenuActiveIndex] &&
-        !menuTree[mixMenuActiveIndex].children &&
-        menuTree[mixMenuActiveIndex].menuUrl
+        menuTree[mixMenuActiveIndex2] &&
+        !menuTree[mixMenuActiveIndex2].children &&
+        menuTree[mixMenuActiveIndex2].menuUrl
       ) {
-        router.push(menuTree[mixMenuActiveIndex].menuUrl);
-      } else if (defaultSettings.mixNeedJump) {
+        router.push(menuTree[mixMenuActiveIndex2].menuUrl);
+      } else if (defaultSettings.mixNeedJump && mixMenuActiveIndex !== mixMenuActiveIndex2) {
         //如果mix模式 需要跳转就跳转
         let firstUrl = findFirstMenuUrl2({
-          arr: menuTree[mixMenuActiveIndex].children,
+          arr: menuTree[mixMenuActiveIndex2].children,
           urlKey: 'menuUrl',
         });
         router.push(firstUrl);
@@ -240,9 +247,17 @@ const BasicLayout = props => {
        * 自定义
        */
       siderWidth={siderWidth}
-      // collapsedButtonRender={(e)=>{
-      //   return <span>1</span>
-      // }}
+      collapsedButtonRender={
+        defaultSettings.layout == 'mixmenu'
+          ? collapsed => {
+              return collapsed ? (
+                <MenuUnfoldOutlined style={{ ...collapsedButtonStyle, fontSize: 15 }} />
+              ) : (
+                <MenuFoldOutlined style={collapsedButtonStyle} />
+              );
+            }
+          : undefined
+      }
       mixMenuRender={mixMenuRender}
     >
       <Authorized
