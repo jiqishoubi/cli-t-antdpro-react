@@ -110,7 +110,7 @@ const BasicLayout = props => {
       menuHeaderRender={(logoDom, titleDom) => {
         return (
           <div style={{ height: '100%' }}>
-            {collapsed ? null :
+            {collapsed && defaultSettings.layout !== 'mixmenu' ? null :
               <div style={{
                 height: '100%',
                 display: 'flex',
@@ -153,6 +153,10 @@ const BasicLayout = props => {
        * 自定义
        */
       siderWidth={siderWidth}
+      collapsedButtonRender={(e)=>{
+        console.log(e)
+        return <span>1</span>
+      }}
     >
       <Authorized
         // authority={authorized!.authority}
