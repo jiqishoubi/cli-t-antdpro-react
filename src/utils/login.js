@@ -98,7 +98,7 @@ export const findFirstMenuUrl2 = ({ arr, childrenkey = 'children', urlKey = 'url
   let url = '';
   const getFirst = arr => {
     let item = arr[0];
-    if (arr && item && item[urlKey].indexOf('_') == -1) {
+    if (arr && item && item[urlKey] && item[urlKey].indexOf('_') == -1) {
       //是菜单
       if (
         (item[childrenkey][0] &&

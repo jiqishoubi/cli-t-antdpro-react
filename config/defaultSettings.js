@@ -21,4 +21,5 @@ export default {
    * 自定义
    */
   isTabs: false, //是否多tab
+  mixNeedJump: true, //如果是mix模式，点击mixMenu需要跳转吗？
 };
