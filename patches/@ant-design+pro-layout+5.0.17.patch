@@ -81,21 +81,19 @@ index ae910f6..e3f4312 100644
      &-disable-margin {
        margin: 0;
 diff --git a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.js b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.js
-index e938dae..db81e49 100644
+index e938dae..001569f 100644
 --- a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.js
 +++ b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.js
-@@ -24,8 +24,9 @@ import './index.less';
+@@ -24,7 +24,7 @@ import './index.less';
  import React, { Component } from 'react';
  import classNames from 'classnames';
  import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 -import { defaultRenderLogo } from '../SiderMenu/SiderMenu';
 +import { defaultRenderLogo, defaultRenderLogoAndTitle } from '../SiderMenu/SiderMenu';
  import { isBrowser } from '../utils/utils';
-+import MixMenu from '../TopNavHeader/MixMenu'
  
  var defaultRenderCollapsedButton = function defaultRenderCollapsedButton(collapsed) {
-   return collapsed ? React.createElement(MenuUnfoldOutlined, null) : React.createElement(MenuFoldOutlined, null);
-@@ -101,7 +102,11 @@ var GlobalHeader = /*#__PURE__*/function (_Component) {
+@@ -101,7 +101,12 @@ var GlobalHeader = /*#__PURE__*/function (_Component) {
            rightContentRender = _this$props3.rightContentRender,
            menuHeaderRender = _this$props3.menuHeaderRender,
            propClassName = _this$props3.className,
@@ -103,12 +101,13 @@ index e938dae..db81e49 100644
 +          style = _this$props3.style,
 +
 +          layout = _this$props3.layout,
-+          siderWidth = _this$props3.siderWidth;
++          siderWidth = _this$props3.siderWidth,
++          mixMenuRender = _this$props3.mixMenuRender;
 +
        var className = classNames(propClassName, 'ant-pro-global-header');
        var logoDom = React.createElement("span", {
          className: "ant-pro-global-header-logo",
-@@ -110,11 +115,33 @@ var GlobalHeader = /*#__PURE__*/function (_Component) {
+@@ -110,11 +115,28 @@ var GlobalHeader = /*#__PURE__*/function (_Component) {
        return React.createElement("div", {
          className: className,
          style: style
@@ -135,12 +134,7 @@ index e938dae..db81e49 100644
            flex: 1
          }
 -      }), rightContentRender && rightContentRender(this.props));
-+      },
-+      //菜单
-+      layout == 'mixmenu' ? React.createElement(MixMenu, Object.assign({
-+        mode: "horizontal",
-+      }, this.props)) :null
-+      ), rightContentRender && rightContentRender(this.props));
++      }, (layout == 'mixmenu' && mixMenuRender && mixMenuRender()) || null), rightContentRender && rightContentRender(this.props));
      }
    }]);
  
@@ -196,19 +190,6 @@ index 9b0720c..a59b5d3 100644
          }, style),
          className: className
        }, this.renderContent()));
-diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/BaseMenu.js b/node_modules/@ant-design/pro-layout/es/SiderMenu/BaseMenu.js
-index a140985..d8e9a6a 100644
---- a/node_modules/@ant-design/pro-layout/es/SiderMenu/BaseMenu.js
-+++ b/node_modules/@ant-design/pro-layout/es/SiderMenu/BaseMenu.js
-@@ -322,6 +322,8 @@ var BaseMenu = function BaseMenu(props) {
-     }
-   }
- 
-+  console.log(selectedKeys)
-+
-   return React.createElement(_Menu, Object.assign({}, openKeysProps, {
-     key: "Menu",
-     mode: mode,
 diff --git a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js b/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
 index 58588f6..69d0e65 100644
 --- a/node_modules/@ant-design/pro-layout/es/SiderMenu/SiderMenu.js
@@ -324,49 +305,3 @@ index 8de251d..b9fc586 100644
    }
  
    &-icon {
-diff --git a/node_modules/@ant-design/pro-layout/es/TopNavHeader/MixMenu.js b/node_modules/@ant-design/pro-layout/es/TopNavHeader/MixMenu.js
-new file mode 100644
-index 0000000..e323117
---- /dev/null
-+++ b/node_modules/@ant-design/pro-layout/es/TopNavHeader/MixMenu.js
-@@ -0,0 +1,39 @@
-+import React, { useRef } from 'react';
-+import classNames from 'classnames';
-+import './index.less';
-+import BaseMenu from '../SiderMenu/BaseMenu';
-+/**
-+ * 抽离出来是为了防止 rightSize 经常改变导致菜单 render
-+ * @param param0
-+ */
-+
-+var MixMenu = function MixMenu(props) {
-+  var ref = useRef(null);
-+  var theme = props.theme,
-+      contentWidth = props.contentWidth,
-+      propsClassName = props.className,
-+      style = props.style;
-+  var baseClassName = 'ant-pro-top-nav-header';
-+  var className = classNames(baseClassName, propsClassName, {
-+    light: theme === 'light'
-+  });
-+  return React.createElement("div", {
-+    className: className,
-+    style: {
-+      boxShadow: 'none',
-+      ...style
-+    }
-+  }, React.createElement("div", {
-+    ref: ref,
-+    className: "".concat(baseClassName, "-main ").concat(contentWidth === 'Fixed' ? 'wide' : ''),
-+    style: {
-+      paddingLeft: 0
-+    }
-+  }, 
-+  React.createElement(BaseMenu, Object.assign({}, props, props.menuProps,
-+  {id: 'mix_top_menu'}
-+  ))
-+  ));
-+};
-+
-+export default MixMenu;
-\ No newline at end of file

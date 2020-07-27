@@ -10,6 +10,7 @@ const defaultState = {
   loginInfo: null,
   allMenu: [],
   menuTree: [],
+  mixMenuActiveIndex: '0',
   rightsArr: [],
 };
 

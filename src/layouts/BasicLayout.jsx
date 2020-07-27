@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
-import { Link } from 'umi';
+import { Link, router } from 'umi';
 import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
-import { Result, Button } from 'antd';
+import { Result, Button, Menu } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import TabsLayout from './TabsLayout';
@@ -83,9 +83,52 @@ const BasicLayout = props => {
   //   authority: undefined,
   // };
 
+  const mixMenuRender = () => {
+    let menuTree = login.menuTree || []
+    console.log(menuTree)
+    let mixMenuActiveIndex = login.mixMenuActiveIndex
+
+    const handleClick = (e) => {
+      console.log(e)
+      dispatch({
+        type: 'login/saveDB',
+        payload: {
+          mixMenuActiveIndex: e.key
+        }
+      })
+      // //跳转
+      if (menuTree[mixMenuActiveIndex] && !menuTree[mixMenuActiveIndex].children && menuTree[mixMenuActiveIndex].menuUrl) {
+        router.push(menuTree[mixMenuActiveIndex].menuUrl)
+      }
+    }
+
+    return (
+      <Menu
+        onClick={handleClick}
+        selectedKeys={[(mixMenuActiveIndex + '')]}
+        mode="horizontal"
+      >
+        {menuTree.map((obj, index) => {
+          return (
+            <Menu.Item key={index + ''}>
+              {obj.menuName}
+            </Menu.Item>
+          )
+        })}
+      </Menu>
+    )
+  }
   // 2020.07.23新增动态icon的方法
   const menuDataRender = () => {
     let menuTree = JSON.parse(JSON.stringify(login.menuTree || []))
+    let arrTemp
+
+    if (defaultSettings.layout == 'mixmenu') {
+      let mixMenuActiveIndex = login.mixMenuActiveIndex
+      arrTemp = (menuTree[mixMenuActiveIndex] && menuTree[mixMenuActiveIndex].children) || []
+    } else {
+      arrTemp = menuTree
+    }
 
     const loopDealMenuItemIcon = (arr) => {
       if (arr && arr.length > 0) {
@@ -100,8 +143,8 @@ const BasicLayout = props => {
     }
 
     //处理icon
-    loopDealMenuItemIcon(menuTree)
-    return menuTree;
+    loopDealMenuItemIcon(arrTemp)
+    return arrTemp;
   };
 
   return (
@@ -153,10 +196,10 @@ const BasicLayout = props => {
        * 自定义
        */
       siderWidth={siderWidth}
-      collapsedButtonRender={(e)=>{
-        console.log(e)
-        return <span>1</span>
-      }}
+      // collapsedButtonRender={(e)=>{
+      //   return <span>1</span>
+      // }}
+      mixMenuRender={mixMenuRender}
     >
       <Authorized
         // authority={authorized!.authority}
