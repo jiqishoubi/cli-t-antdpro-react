@@ -1,11 +1,3 @@
-import React, { Component } from 'react'
-
-export default class index extends Component {
-  render() {
-    return (
-      <div>
-        首页
-      </div>
-    )
-  }
-}
+export default () => {
+  return '首页';
+};

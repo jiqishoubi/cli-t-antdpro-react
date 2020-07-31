@@ -2,24 +2,22 @@
  * props:
  * onChange
  */
-import React, { Component, useState } from 'react';
-import { Upload, Button, Icon, Input } from 'antd';
+import React, { Component } from 'react';
+import { Upload } from 'antd';
 
 class index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      list: [],
+      // loading: false,
       imgUrl: '',
     };
   }
 
-  handleRequest = e => {
-    console.log('request', e);
+  handleRequest = () => {
     this.setState(
       {
-        loading: true,
+        // loading: true,
         imgUrl: '',
       },
       () => {
@@ -29,7 +27,7 @@ class index extends Component {
     setTimeout(() => {
       this.setState(
         {
-          loading: false,
+          // loading: false,
           imgUrl: 'https://cdn.s.bld365.com/greecardindex_banner_new2_03_01.png',
         },
         () => {
@@ -39,9 +37,7 @@ class index extends Component {
     }, 1000);
   };
 
-  handleChange = e => {
-    console.log('change', e);
-  };
+  handleChange = () => {};
 
   imgUrlChange = () => {
     const { onUploadChange } = this.props;
@@ -51,11 +47,11 @@ class index extends Component {
   };
 
   render() {
-    const { loading, list, imgUrl } = this.state;
+    const { imgUrl } = this.state;
 
     const uploadButton = (
       <div>
-        <Icon type={loading ? 'loading' : 'plus'} />
+        {/* <Icon type={loading ? 'loading' : 'plus'} /> */}
         <div className="ant-upload-text">上传</div>
       </div>
     );

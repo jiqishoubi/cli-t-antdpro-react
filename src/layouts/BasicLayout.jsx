@@ -114,8 +114,10 @@ const BasicLayout = props => {
     const loopDealMenuItemIcon = arr => {
       if (arr && arr.length > 0) {
         arr.forEach(obj => {
-          //加icon的判断
-          if (obj.parentId == 0) {
+          /**
+           * 加icon的判断条件 写在这里
+           */
+          if (obj.menuLevel == 1) {
             obj.icon = <GithubOutlined />; //这里可以改成一个icon的映射函数
           }
           loopDealMenuItemIcon(obj.children);

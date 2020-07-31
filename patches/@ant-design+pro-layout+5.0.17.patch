@@ -139,10 +139,19 @@ index e938dae..001569f 100644
    }]);
  
 diff --git a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
-index f493e3f..e123640 100644
+index f493e3f..1e4788a 100644
 --- a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
 +++ b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
-@@ -41,7 +41,8 @@
+@@ -13,6 +13,8 @@
+   padding: 0;
+   background: @pro-layout-header-bg;
+   box-shadow: @pro-layout-header-box-shadow;
++  //2020.07.31
++  overflow: hidden; 
+ 
+   &-logo {
+     display: inline-flex;
+@@ -41,7 +43,8 @@
  
    &-trigger {
      height: @layout-header-height;
