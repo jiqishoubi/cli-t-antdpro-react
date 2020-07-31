@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import ProLayout from '@ant-design/pro-layout';
 import { Link, router } from 'umi';
 import { connect } from 'dva';
@@ -12,14 +12,14 @@ import logo from '../assets/logo.png';
 import defaultSettings from '../../config/defaultSettings';
 import defaultTheme from '../../config/theme/defaultTheme';
 import { defaultFooterDom } from './UserLayout';
-import { findFirstMenuUrl2 } from '@/utils/login';
+import { findFirstMenuUrl } from '@/utils/login';
 import './BasicLayout_localName.less';
 
-const siderWidth = defaultTheme['t-siderMenu-width']
+export const siderWidth = defaultTheme['t-siderMenu-width']
   ? Number(defaultTheme['t-siderMenu-width'].split('px')[0])
   : 0;
 
-const noMatch = (
+export const noMatch = (
   <Result
     status={403}
     title="403"
@@ -32,85 +32,54 @@ const noMatch = (
   />
 );
 
-//获得上面mixMenu的index
-export const getMixMenuIndex = (menuTree, pathname) => {
-  //自己及子集是否包含
-  const isHaveUrlFunc = menuItem => {
-    let flag = false;
-    const test = item => {
-      if (item.path == pathname) {
-        flag = true;
-      }
-      if (item.children) {
-        item.children.forEach(obj => {
-          test(obj);
-        });
-      }
-    };
-    test(menuItem);
-    return flag;
-  };
-
-  let index = menuTree.findIndex(menuItem => isHaveUrlFunc(menuItem));
-
-  return index;
-};
-
 const collapsedButtonStyle = {
   color: 'rgba(255,255,255,0.65)',
   fontSize: 23,
   cursor: 'pointer',
 };
 
-const BasicLayout = props => {
-  const tabsLayout = useRef();
-  const {
-    dispatch,
-    children,
-    // location = {
-    //   pathname: '/',
-    // },
-    login,
-    collapsed,
-  } = props;
-  /**
-   * constructor
-   */
+export const mixMenuRenderFunc = (dispatch, login) => {
+  let menuTree = login.menuTree || [];
+  let mixMenuActiveIndex = login.mixMenuActiveIndex;
 
-  useEffect(() => {
-    //监听路由
-    if (!window.UNLISTEN) {
-      window.UNLISTEN = props.history.listen(location => {
-        //mix模式 上面的menu active index
-        if (defaultSettings.layout == 'mixmenu') {
-          let mixMenuActiveIndex = getMixMenuIndex(login.menuTree, location.pathname);
-          dispatch({
-            type: 'login/saveDB',
-            payload: {
-              mixMenuActiveIndex: mixMenuActiveIndex + '',
-            },
-          });
-        }
-
-        //多tab 增减tab
-        if (defaultSettings.isTabs) {
-          if (tabsLayout && tabsLayout.current) {
-            tabsLayout.current.addCutTab(location.pathname);
-          }
-        }
+  //点击方法
+  const handleClick = e => {
+    let mixMenuActiveIndex2 = e.key;
+    //跳转自己
+    if (
+      menuTree[mixMenuActiveIndex2] &&
+      !menuTree[mixMenuActiveIndex2].children &&
+      menuTree[mixMenuActiveIndex2].menuUrl
+    ) {
+      router.push(menuTree[mixMenuActiveIndex2].menuUrl);
+    } else if (defaultSettings.mixNeedJump && mixMenuActiveIndex !== mixMenuActiveIndex2) {
+      //如果mix模式 需要跳转就跳转 跳转第一个子菜单
+      let firstUrl = findFirstMenuUrl({
+        arr: menuTree[mixMenuActiveIndex2].children,
+        urlKey: 'menuUrl',
       });
+      router.push(firstUrl);
     }
-    //卸载监听路由
-    return () => {
-      if (window.UNLISTEN) {
-        window.UNLISTEN();
-        window.UNLISTEN = null;
-      }
-    };
-  }, []);
-  /**
-   * init variables
-   */
+
+    dispatch({
+      type: 'login/saveDB',
+      payload: {
+        mixMenuActiveIndex,
+      },
+    });
+  };
+
+  return (
+    <Menu onClick={handleClick} selectedKeys={[mixMenuActiveIndex + '']} mode="horizontal">
+      {menuTree.map((obj, index) => {
+        return <Menu.Item key={index + ''}>{obj.menuName}</Menu.Item>;
+      })}
+    </Menu>
+  );
+};
+
+const BasicLayout = props => {
+  const { dispatch, children, login, collapsed } = props;
 
   const handleMenuCollapse = payload => {
     if (dispatch) {
@@ -127,44 +96,9 @@ const BasicLayout = props => {
 
   //mix模式 上面的菜单
   const mixMenuRender = () => {
-    let menuTree = login.menuTree || [];
-    let mixMenuActiveIndex = login.mixMenuActiveIndex;
-
-    //点击方法
-    const handleClick = e => {
-      let mixMenuActiveIndex2 = e.key;
-      // //跳转
-      if (
-        menuTree[mixMenuActiveIndex2] &&
-        !menuTree[mixMenuActiveIndex2].children &&
-        menuTree[mixMenuActiveIndex2].menuUrl
-      ) {
-        router.push(menuTree[mixMenuActiveIndex2].menuUrl);
-      } else if (defaultSettings.mixNeedJump && mixMenuActiveIndex !== mixMenuActiveIndex2) {
-        //如果mix模式 需要跳转就跳转
-        let firstUrl = findFirstMenuUrl2({
-          arr: menuTree[mixMenuActiveIndex2].children,
-          urlKey: 'menuUrl',
-        });
-        router.push(firstUrl);
-      }
-
-      dispatch({
-        type: 'login/saveDB',
-        payload: {
-          mixMenuActiveIndex,
-        },
-      });
-    };
-
-    return (
-      <Menu onClick={handleClick} selectedKeys={[mixMenuActiveIndex + '']} mode="horizontal">
-        {menuTree.map((obj, index) => {
-          return <Menu.Item key={index + ''}>{obj.menuName}</Menu.Item>;
-        })}
-      </Menu>
-    );
+    return mixMenuRenderFunc(dispatch, login);
   };
+
   // 2020.07.23新增动态icon的方法
   const menuDataRender = () => {
     let menuTree = JSON.parse(JSON.stringify(login.menuTree || []));
@@ -264,16 +198,7 @@ const BasicLayout = props => {
         // authority={authorized!.authority}
         noMatch={noMatch}
       >
-        {defaultSettings.isTabs ? (
-          <TabsLayout
-            onRef={e => {
-              tabsLayout.current = e;
-            }}
-            {...props}
-          />
-        ) : (
-          children
-        )}
+        {defaultSettings.isTabs ? <TabsLayout {...props} /> : children}
       </Authorized>
     </ProLayout>
   );

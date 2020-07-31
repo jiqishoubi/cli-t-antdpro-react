@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { connect } from 'dva';
+import { connect } from 'dva';
 import { router } from 'umi';
 import { Tabs } from 'antd';
 import defaultTheme from '../../config/theme/defaultTheme';
@@ -16,7 +16,7 @@ const tabBarListStyle = {
   userSelect: 'none',
   boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
   padding: '0 4px',
-  transition: 'all 0.3s',
+  // transition: 'all 0.3s',
 
   position: 'fixed',
   top: defaultTheme['layout-header-height'],
@@ -34,7 +34,21 @@ class index extends Component {
   }
 
   componentDidMount() {
-    this.props.onRef(this);
+    //多tab 增减tab
+    if (defaultSettings.isTabs) {
+      if (!window.UNLISTEN_TAB) {
+        window.UNLISTEN_TAB = this.props.history.listen(location => {
+          this.addCutTab(location.pathname);
+        });
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (window.UNLISTEN_TAB) {
+      window.UNLISTEN_TAB();
+      window.UNLISTEN_TAB = null;
+    }
   }
 
   addCutTab = url => {
@@ -110,7 +124,7 @@ class index extends Component {
    */
   render() {
     const { panes, activeKey } = this.state;
-    const { collapsed } = this.props;
+    const { collapsed, login } = this.props;
 
     //关闭按钮
     // const operations = null;
@@ -120,7 +134,12 @@ class index extends Component {
     if (defaultSettings.layout == 'topmenu') {
       left = 0;
     } else {
-      left = collapsed ? defaultTheme['menu-collapsed-width'] : defaultTheme['t-siderMenu-width'];
+      const { menuTree, mixMenuActiveIndex } = login;
+      if (!menuTree[mixMenuActiveIndex] || !menuTree[mixMenuActiveIndex].children) {
+        left = 0;
+      } else {
+        left = collapsed ? defaultTheme['menu-collapsed-width'] : defaultTheme['t-siderMenu-width'];
+      }
     }
     let tabBarListStyle2 = {
       ...tabBarListStyle,
@@ -161,4 +180,6 @@ class index extends Component {
   }
 }
 
-export default index;
+export default connect(({ login }) => ({
+  login,
+}))(index);

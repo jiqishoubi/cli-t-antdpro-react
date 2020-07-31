@@ -11,32 +11,33 @@ const routes = [
       },
     ],
   },
-  //无侧边栏的layout
-  {
-    path: '/nside',
-    component: '../layouts/NoSideLayout',
-    routes: [
-      // //创建商品页面
-      // {
-      //   path: '/nside/addgoods',
-      //   name: '商品',
-      //   component: './goods/goodsDetail/goods',
-      // },
-    ],
-  },
   {
     path: '/',
     component: '../layouts/SecurityLayout',
     routes: [
       { path: '/', redirect: '/user/login' },
+      //NoSideLayout 无侧边栏的layout
+      {
+        path: '/app',
+        component: '../layouts/NoSideLayout',
+        routes: [
+          {
+            name: '首页',
+            path: '/app/home_yuzhi',
+            component: './index/index',
+          },
+          { component: './404' },
+        ],
+      },
+      //BasicLayout
       {
         path: '/',
         component: '../layouts/BasicLayout',
         routes: [
           {
-            name: '商品',
-            path: '/app/home_yuzhi',
-            component: './index/index',
+            name: '订单管理',
+            path: '/order/installorderlist2',
+            component: './order/index',
           },
           { component: './404' },
         ],
