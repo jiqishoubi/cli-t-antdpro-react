@@ -1,17 +1,16 @@
-import { stringify } from 'querystring';
 import { router } from 'umi';
 import { localDB } from '@/utils/utils';
 import { loginStateKey } from '@/utils/consts';
-import { loginAjax } from '@/services/login';
-import { dealMenu2, findFirstMenuUrl2 } from '@/utils/login';
-import { CodeSandboxCircleFilled } from '@ant-design/icons';
+import { loginAjax, getMenuRights } from '@/services/login';
+import { dealMenu, findFirstMenuUrl } from '@/utils/login';
+import { handleRes } from '@/utils/requestw'
 
 const defaultState = {
   loginInfo: null,
   allMenu: [],
   menuTree: [],
-  mixMenuActiveIndex: '0',
   rightsArr: [],
+  mixMenuActiveIndex: '0', //mix模式
 };
 
 const Model = {
@@ -20,28 +19,56 @@ const Model = {
   state: defaultState,
 
   effects: {
+    //登录
     *login({ payload }, { call, put }) {
       const res = yield call(loginAjax, payload);
-      if (res.status !== 0) {
-        return;
+      console.log(res)
+      if (!handleRes(res)) {
+        return false
       }
 
-      let menuTree = res.data.menuPermissions;
-      let dealMenuRes = dealMenu2(menuTree);
+      let loginInfo = {
+        ...res.data.staffInfo,
+        token: res.data.loginSessionId,
+      }
 
       yield put({
         type: 'saveDB',
         payload: {
-          loginInfo: res.data,
+          loginInfo
+        },
+      });
+
+      //这里是异步的 没阻塞
+      yield put({
+        type: 'getMenuRightsFunc',
+      });
+
+      return res
+    },
+
+    //获取菜单权限，列表
+    *getMenuRightsFunc({ payload, success }, { call, put, select }) {
+      //获取菜单权限
+      const res = yield call(getMenuRights);
+      if (!handleRes(res)) {
+        return res
+      }
+
+      let allMenu = res.data
+      let dealMenuRes = dealMenu(allMenu);
+
+      yield put({
+        type: 'saveDB',
+        payload: {
+          allMenu,
           menuTree: dealMenuRes.menuTree,
           rightsArr: dealMenuRes.rightsArr,
         },
       });
 
-      localDB.setItem('teamId', res.data.currentTeamId);
-
       // 四、跳转主页  找到树形菜单结构的 第一菜单路径，进行跳转
-      const firstUrl = findFirstMenuUrl2({
+      const firstUrl = findFirstMenuUrl({
         arr: dealMenuRes.menuTree,
         urlKey: 'menuUrl',
       });
@@ -59,6 +86,7 @@ const Model = {
       }
     },
 
+    //注销
     *logout({ payload, success, error }, { call, put }) {
       if (window.location.pathname !== '/user/login') {
         yield put({

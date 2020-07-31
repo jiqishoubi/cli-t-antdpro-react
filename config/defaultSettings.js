@@ -2,7 +2,7 @@ import defaultTheme from './theme/defaultTheme';
 
 export default {
   navTheme: 'dark', //'light' | 'dark';
-  layout: 'sidemenu', //'sidemenu' | 'topmenu' | 'mixmenu';
+  layout: 'mixmenu', //'sidemenu' | 'topmenu' | 'mixmenu';
   contentWidth: 'Fluid', //'Fluid' | 'Fixed';
   fixedHeader: true,
   autoHideHeader: false,
@@ -20,6 +20,6 @@ export default {
   /**
    * 自定义
    */
-  isTabs: false, //是否多tab
+  isTabs: true, //是否多tab
   mixNeedJump: true, //如果是mix模式，点击mixMenu需要跳转吗？
 };

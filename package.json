@@ -14,9 +14,9 @@
     "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "prettier": "prettier -c --write \"**/*\"",
     "dev": "npm run start:dev",
-    "start": "cross-env REACT_APP_ENV=dev MOCK=none UMI_UI=none umi dev --port 8020",
-    "start:mock": "cross-env REACT_APP_ENV=mock UMI_UI=none umi dev --port 8020",
-    "start:pre": "cross-env REACT_APP_ENV=pre MOCK=none UMI_UI=none umi dev --port 8020",
+    "start": "cross-env REACT_APP_ENV=dev MOCK=none UMI_UI=none umi dev --port 6601",
+    "start:mock": "cross-env REACT_APP_ENV=mock UMI_UI=none umi dev --port 6601",
+    "start:pre": "cross-env REACT_APP_ENV=pre MOCK=none UMI_UI=none umi dev --port 6601",
     "tsc": "tsc",
     "ui": "umi ui",
     "postinstall": "patch-package"
@@ -56,14 +56,9 @@
     "prop-types": "^15.7.2",
     "qs": "^6.9.4",
     "react": "^16.8.6",
-    "react-color": "^2.18.1",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-dnd": "^7.4.5",
-    "react-dnd-html5-backend": "^7.4.4",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
-    "react-sortable-hoc": "^1.11.0",
-    "react-sublime-video": "^0.2.5",
     "redux": "^4.0.1",
     "umi": "^2.13.0",
     "umi-plugin-antd-icon-config": "^1.0.2",
@@ -123,10 +118,7 @@
     ],
     "ignore": [
       ".git",
-      "lambda",
       "README.*.md",
-      "azure-pipelines.yml",
-      "CNAME",
       "create-umi"
     ]
   }

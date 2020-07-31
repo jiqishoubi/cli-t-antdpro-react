@@ -11,24 +11,17 @@ const routes = [
       },
     ],
   },
-  //编辑器
-  {
-    path: '/diy/editor',
-    name: '编辑器',
-    icon: 'smile',
-    component: './miniapp/Editor',
-  },
   //无侧边栏的layout
   {
     path: '/nside',
     component: '../layouts/NoSideLayout',
     routes: [
-      //创建商品页面
-      {
-        path: '/nside/addgoods',
-        name: '商品',
-        component: './goods/goodsDetail/goods',
-      },
+      // //创建商品页面
+      // {
+      //   path: '/nside/addgoods',
+      //   name: '商品',
+      //   component: './goods/goodsDetail/goods',
+      // },
     ],
   },
   {
@@ -41,76 +34,9 @@ const routes = [
         component: '../layouts/BasicLayout',
         routes: [
           {
-            path: '/miniapp/auth',
-            name: '授权',
-            icon: 'smile',
-            component: './miniapp/Auth',
-          },
-          {
-            path: '/miniapp/templatelist',
-            name: '模板列表',
-            icon: 'smile',
-            component: './miniapp/TemplateList',
-          },
-          ////自营商品  zysp
-          {
-            path: '/productManager',
-            name: '自营商品管理',
-            icon: 'smile',
-            component: './goods/productManager',
-          },
-
-          {
-            path: '/typeManager',
-            name: '一级分类',
-            icon: 'smile',
-            component: './goods/typeManager',
-          },
-          {
-            path: '/twoTypeManager',
-            name: '一级分类',
-            icon: 'smile',
-            component: './goods/twoTypeManager',
-          },
-
-          //////供货商品      ghsp
-          {
-            path: '/Supplygoods',
-            name: '供货商品管理',
-            icon: 'smile',
-            component: './Supplygoods/Supplygoods',
-          },
-          {
-            path: '/SupplygoodsDetail',
-            name: '供货商品管理',
-            icon: 'smile',
-            component: './Supplygoods/SupplygoodsDetail',
-          },
-          {
-            path: '/DistributionGoods',
-            name: '分销商品管理',
-            icon: 'smile',
-            component: './DistributionGoods/DistriGoods',
-          },
-          {
-            path: '/DistriGoodsDetail',
-            name: '分销商品管理详情',
-            icon: 'smile',
-            component: './DistributionGoods/DistriGoodsDetail',
-          },
-          //
-          /////////分销市场 fxsc
-          {
-            path: '/DistributionMarket',
-            name: '分销市场',
-            icon: 'smile',
-            component: './goods/DistributionMarket',
-          },
-          {
-            path: '/DistributionDetail',
-            name: '分销市场',
-            icon: 'smile',
-            component: './goods/DistributionMarket/Detail',
+            name: '商品',
+            path: '/app/home_yuzhi',
+            component: './index/index',
           },
           { component: './404' },
         ],

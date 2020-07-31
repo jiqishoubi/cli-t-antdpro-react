@@ -1,36 +1,54 @@
 import request from './request';
 import { globalHost, localDB } from './utils';
 import { allHostObj, loginStateKey } from './consts';
+import { message } from 'antd'
 
-const requestw = ({ type = 'post', url, data, headers, requestType, timeout = 1000 * 120 }) => {
-  let postData = {};
-  if (type == 'formdata') {
-    postData = data;
-  } else {
-    //过滤一下data
-    for (let key in data) {
-      if (data[key] == undefined || data[key] == null || data[key] == NaN) {
-        delete data[key];
+//错误处理
+export const handleRes = (res) => {
+  if (res.code + '' !== '0') {
+    message.warning(res.message || '网络异常')
+    return false
+  }
+  return true
+}
+
+const requestw = ({
+  type = 'post',
+  url,
+  data,
+  headers,
+  requestType = 'form', //json form
+  timeout = 1000 * 120
+}) => {
+  let loginObj = localDB.getItem(loginStateKey)
+  const token =
+    loginObj && loginObj.loginInfo && loginObj.loginInfo.token
+      ? loginObj.loginInfo.token
+      : null;
+
+  let postType = type == 'formdata' ? 'post' : type
+
+  let postData = {
+    token,
+    ...data
+  }
+  if (postType !== 'formdata') {
+    for (let key in postData) {
+      if (postData.hasOwnProperty(key)) {
+        if (postData[key] == undefined || postData[key] == null) {
+          delete postData[key];
+        }
       }
     }
-    postData = {
-      ...data,
-    };
   }
 
-  const token =
-    localDB.getItem(loginStateKey) && localDB.getItem(loginStateKey).loginInfo.userOpenId
-      ? localDB.getItem(loginStateKey).loginInfo.userOpenId
-      : null;
-  // const token = '02aa48ad-132f-4f3c-9c70-1a9cf9721f67' //测试
-
   let postHeaders = {
+    // 'Content-Type':'application/json',
+    // 'Content-Type':'application/x-www-form-urlencoded',
     ...headers,
-    token: token,
   };
 
   let postUrl = '';
-  // console.log(REACT_APP_ENV);
   switch (REACT_APP_ENV) {
     case 'dev':
       postUrl = allHostObj.devHost.host + url;
@@ -45,19 +63,23 @@ const requestw = ({ type = 'post', url, data, headers, requestType, timeout = 10
       postUrl = allHostObj.devHost.host + url;
       break;
   }
+  if (token) {
+    postUrl = postUrl + '?sessionId=' + token
+  }
 
+  //请求
   return request(postUrl, {
-    method: type == 'formdata' ? 'post' : type,
-    params: type == 'get' ? postData : null,
-    data: type == 'post' || type == 'formdata' ? postData : null,
+    method: postType,
+    params: postType == 'get' ? postData : null,
+    data: postType == 'post' ? postData : null,
     headers: postHeaders,
     timeout,
     requestType,
   })
-    .then(function(response) {
+    .then(function (response) {
       return response;
     })
-    .catch(function(error) {
+    .catch(function (error) {
       return error;
     });
 };

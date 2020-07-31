@@ -38,44 +38,6 @@ export const dealMenu = allMenu => {
   };
 };
 
-export const dealMenu2 = menuTree => {
-  let tree = menuTree;
-  let rightsArr = [];
-
-  const dealArr = arr => {
-    for (let i = 0; i < arr.length; i++) {
-      let item = arr[i];
-      if (item.menuUrl && item.menuUrl.indexOf('_') > -1) {
-        //权限
-        if (item.menuLevel == 3) {
-          return;
-        }
-        rightsArr.push(item);
-      } else {
-        //菜单
-        item.path = '/' + item.menuUrl;
-        item.name = item.menuName;
-        if (item.menuLevel !== 1) {
-          item.icon = '';
-        } else {
-          item.icon = ''; //加icon
-        }
-        if (item.sons) {
-          item.children = item.sons;
-          dealArr(item.children);
-        }
-      }
-    }
-  };
-
-  dealArr(tree);
-
-  return {
-    menuTree: tree,
-    rightsArr,
-  };
-};
-
 /**
  * 获取第一个菜单
  */
@@ -94,27 +56,3 @@ export const findFirstMenuUrl = ({ arr, childrenkey = 'children', urlKey = 'url'
   return url;
 };
 
-export const findFirstMenuUrl2 = ({ arr, childrenkey = 'children', urlKey = 'url' }) => {
-  let url = '';
-  const getFirst = arr => {
-    let item = arr[0];
-    if (arr && item && item[urlKey] && item[urlKey].indexOf('_') == -1) {
-      //是菜单
-      if (
-        (item[childrenkey][0] &&
-          item[childrenkey][0][urlKey] &&
-          item[childrenkey][0][urlKey].indexOf('_') > -1) ||
-        !item[childrenkey][0]
-      ) {
-        //children[0]是权限
-        //或者 没有children了
-        url = item[urlKey];
-      } else if (item[childrenkey]) {
-        //继续
-        getFirst(item[childrenkey]);
-      }
-    }
-  };
-  getFirst(arr);
-  return '/' + url;
-};

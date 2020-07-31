@@ -1,6 +1,6 @@
 const theme = {
   'font-size-base': '13px',
-  'primary-color': '#3ca1be',
+  'primary-color': '#000', //主题色
   'layout-header-background': '#0a4a5d',
   'menu-dark-submenu-bg': '#063c4c',
   'layout-header-height': '45px',

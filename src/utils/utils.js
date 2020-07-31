@@ -1,6 +1,6 @@
+import React from 'react'
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
-// 加密解密
 import md5 from 'md5';
 import { Base64 } from 'js-base64';
 import { allHostObj, loginStateKey } from './consts';
@@ -9,8 +9,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
-export const pathimgHeader = 'https://greecardcrmt.bld365.com/static/img/';
-export const pathVideoHeader = 'https://greecardcrmt.bld365.com/static/mp4/';
 export const isUrl = path => reg.test(path);
 
 export const isAntDesignPro = () => {
@@ -302,7 +300,7 @@ export const downloadFilePostStream = (apiStr, option) => {
 };
 
 /**
- * 取得url参数2
+ * 取得url参数
  */
 export const getUrlParam = key => {
   const url = window.location.href;
@@ -356,45 +354,21 @@ export const isArrayFn = o => {
 };
 
 /**
- * 让元素（主要是input）不自动填充，使用网易大神的方法！autocomplete='new-password'
- * 这个方法 要在mounted之后执行吧~
- * 参数o有两种，
- * 1，直接传一个元素ele进来，这个元素里面的所有都取消autocomplete
- * 2，传idStr的数组，根据id，让元素取消autocomplete
+ * 控制'元素'权限
+ * 是否有这个rightsCode 元素权限！
  */
-export const cancelAutoComplete = o => {
-  if (isArrayFn(o)) {
-    // idStrArr
-    const idStrArr = o;
-    for (let i = 0; i < idStrArr.length; i++) {
-      const idStr = idStrArr[i];
-      const ele = document.getElementById(idStr);
-      ele.setAttribute('autocomplete', 'new-password');
-    }
-  } else {
-    // wrapEle
-    // eslint-disable-next-line no-lonely-if
-    if (o) {
-      const wrapEle = o;
-      const inputs = wrapEle.getElementsByTagName('input');
-      for (let i = 0; i < inputs.length; i++) {
-        const input = inputs[i];
-        input.setAttribute('autocomplete', 'new-password');
+export const haveCtrlElementRight = rightsCode => {
+  if (localDB.getItem(loginStateKey)) {
+    const loginObj = localDB.getItem(loginStateKey);
+    const { rightsArr } = loginObj;
+    let flag = false
+    for (let i = 0; i < rightsArr.length; i++) {
+      if (rightsArr[i].menuUrl == rightsCode) {
+        flag = true
+        break
       }
     }
-  }
-};
-
-/**
- * 控制'元素'权限
- * 是否有这个classStr 元素权限！
- */
-export const haveCtrlElementRight = classStr => {
-  if (localDB.getItem('gree-loginState')) {
-    const loginObj = localDB.getItem('gree-loginState');
-    const { menu3 } = loginObj;
-    const menu3ClassArr = menu3.map(obj => obj.menuUrl);
-    return menu3ClassArr.indexOf(classStr) > -1;
+    return flag
   }
   return false;
 };
@@ -438,6 +412,6 @@ export const mConfirm = (str, callback) => {
         return callback();
       }
     },
-    onCancel() {},
+    onCancel() { },
   });
 };
