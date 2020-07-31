@@ -70,7 +70,12 @@ export const mixMenuRenderFunc = (dispatch, login) => {
   };
 
   return (
-    <Menu onClick={handleClick} selectedKeys={[mixMenuActiveIndex + '']} mode="horizontal">
+    <Menu
+      onClick={handleClick}
+      selectedKeys={[mixMenuActiveIndex + '']}
+      mode="horizontal"
+      theme={defaultSettings.navTheme_header}
+    >
       {menuTree.map((obj, index) => {
         return <Menu.Item key={index + ''}>{obj.menuName}</Menu.Item>;
       })}

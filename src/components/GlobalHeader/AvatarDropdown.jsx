@@ -1,8 +1,7 @@
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import { Avatar, Menu } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
-import { router } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import defaultTheme from '../../../config/theme/defaultTheme';
@@ -20,6 +19,8 @@ class AvatarDropdown extends React.Component {
             type: 'login/logout',
           });
         });
+        break;
+      default:
         break;
     }
   };
@@ -59,11 +60,16 @@ class AvatarDropdown extends React.Component {
           <Avatar
             className={styles.avatar}
             size="small"
-            src={''}
+            src=""
             alt="avatar"
             style={{ backgroundColor: defaultTheme['primary-color'] }}
           />
-          <span className={styles.name}>{'test'}</span>
+          <span
+            className={styles.name}
+            style={{ color: defaultTheme['t-globalHeader-loginName-textColor'] || null }}
+          >
+            {(login && login.loginInfo && login.loginInfo.loginName) || ''}
+          </span>
         </span>
       </HeaderDropdown>
     );

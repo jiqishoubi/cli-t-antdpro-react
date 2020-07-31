@@ -1,4 +1,5 @@
 // 修正 样式 less
+@import '../../config/theme/defaultTheme.less';
 
 //多tab
 #istabs_tabs_wrap {
@@ -35,5 +36,14 @@ aside {
         user-select: none;
       }
     }
+  }
+}
+
+//上面GlobalHeader的样式
+.ant-pro-global-header {
+  background-color: @t-globalHeader-backgourndColor !important;
+
+  ul.ant-menu.ant-menu-root {
+    background-color: @t-globalHeader-backgourndColor !important;
   }
 }
