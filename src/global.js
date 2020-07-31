@@ -1,5 +1,5 @@
 import React from 'react';
-import { prodHostArr } from '@/utils/consts';
+// import { prodHostArr } from '@/utils/consts';
 
 window.React = React;
 
@@ -27,13 +27,14 @@ if ('serviceWorker' in navigator) {
   }
 }
 
-//判断是否是生产
-let url = window.location.href;
-let isProd = false;
-for (let i = 0; i < prodHostArr.length; i++) {
-  if (url.indexOf(prodHostArr[i]) > -1) {
-    isProd = true;
-    break;
-  }
-}
-window.isProd = isProd;
+// 使用 REACT_APP_ENV isProd应该是没用了
+// //判断是否是生产
+// let url = window.location.href;
+// let isProd = false;
+// for (let i = 0; i < prodHostArr.length; i++) {
+//   if (url.indexOf(prodHostArr[i]) > -1) {
+//     isProd = true;
+//     break;
+//   }
+// }
+// window.isProd = isProd;

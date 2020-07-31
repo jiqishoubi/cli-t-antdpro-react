@@ -118,6 +118,7 @@ const Model = {
       localDB.setItem(loginStateKey, newState);
       return newState;
     },
+    //mix模式下 上面菜单 index
     saveMixMenuActiveIndex(state, { payload }) {
       if (payload == -1 || payload == '-1') {
         return state;
