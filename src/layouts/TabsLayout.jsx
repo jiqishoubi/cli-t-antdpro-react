@@ -16,7 +16,6 @@ const tabBarListStyle = {
   userSelect: 'none',
   boxShadow: '0 1px 4px rgba(0, 21, 41, 0.08)',
   padding: '0 4px',
-  // transition: 'all 0.3s',
 
   position: 'fixed',
   top: defaultTheme['layout-header-height'],
@@ -119,6 +118,16 @@ class index extends Component {
     router.replace(activeKey);
   };
 
+  closeOtherTabs = () => {
+    let { panes, activeKey } = this.state;
+    const panesTemp = panes.filter(pane => pane['path'] == activeKey);
+
+    this.setState({
+      panes: panesTemp,
+    });
+    router.replace(activeKey);
+  };
+
   /**
    * 渲染
    */
@@ -127,13 +136,20 @@ class index extends Component {
     const { collapsed, login } = this.props;
 
     //关闭按钮
-    // const operations = null;
+    const operations =
+      panes && panes.length > 1 ? (
+        <span className={styles.operations_btn} onClick={this.closeOtherTabs}>
+          关闭其它页面
+        </span>
+      ) : null;
 
     //tabBar 样式
     let left;
     if (defaultSettings.layout == 'topmenu') {
       left = 0;
-    } else {
+    } else if (defaultSettings.layout == 'sidemenu') {
+      left = collapsed ? defaultTheme['menu-collapsed-width'] : defaultTheme['t-siderMenu-width'];
+    } else if (defaultSettings.layout == 'mixmenu') {
       const { menuTree, mixMenuActiveIndex } = login;
       if (!menuTree[mixMenuActiveIndex] || !menuTree[mixMenuActiveIndex].children) {
         left = 0;
@@ -145,6 +161,7 @@ class index extends Component {
       ...tabBarListStyle,
       left,
       display: panes.length == 0 ? 'none' : null,
+      transition: defaultSettings.layout == 'mixmenu' ? 'none' : 'all 0.2s',
     };
 
     return (
@@ -155,8 +172,7 @@ class index extends Component {
         type="editable-card"
         size="small"
         tabBarStyle={tabBarListStyle2}
-        // tabBarExtraContent={operations}
-
+        tabBarExtraContent={operations}
         activeKey={activeKey}
         onChange={this.onChangeTab}
         onEdit={this.onEdit}

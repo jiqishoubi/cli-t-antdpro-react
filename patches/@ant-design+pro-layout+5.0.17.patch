@@ -139,7 +139,7 @@ index e938dae..001569f 100644
    }]);
  
 diff --git a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
-index f493e3f..1e4788a 100644
+index f493e3f..24bb6a5 100644
 --- a/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
 +++ b/node_modules/@ant-design/pro-layout/es/GlobalHeader/index.less
 @@ -13,6 +13,8 @@
@@ -151,7 +151,7 @@ index f493e3f..1e4788a 100644
  
    &-logo {
      display: inline-flex;
-@@ -41,7 +43,8 @@
+@@ -41,13 +43,15 @@
  
    &-trigger {
      height: @layout-header-height;
@@ -161,6 +161,16 @@ index f493e3f..1e4788a 100644
      font-size: 20px;
      cursor: pointer;
      transition: all 0.3s, padding 0s;
+-    &:hover {
+-      background: @pro-layout-header-hover-bg;
+-    }
++    // 2020.07.31 trigger hover不变色
++    // &:hover {
++    //   background: @pro-layout-header-hover-bg;
++    // }
+   }
+ 
+   .dark {
 diff --git a/node_modules/@ant-design/pro-layout/es/Header.js b/node_modules/@ant-design/pro-layout/es/Header.js
 index 9b0720c..a59b5d3 100644
 --- a/node_modules/@ant-design/pro-layout/es/Header.js

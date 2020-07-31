@@ -66,13 +66,14 @@ const Model = {
         },
       });
 
+      //跳转主页  找到树形菜单结构的 第一菜单路径，进行跳转
       setTimeout(() => {
-        // 四、跳转主页  找到树形菜单结构的 第一菜单路径，进行跳转
         const firstUrl = findFirstMenuUrl({
           arr: dealMenuRes.menuTree,
           urlKey: 'menuUrl',
         });
         router.replace(firstUrl);
+        // router.replace('/order/installorderlist2');
       }, 5);
     },
 

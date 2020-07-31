@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
 import md5 from 'md5';
@@ -361,14 +361,14 @@ export const haveCtrlElementRight = rightsCode => {
   if (localDB.getItem(loginStateKey)) {
     const loginObj = localDB.getItem(loginStateKey);
     const { rightsArr } = loginObj;
-    let flag = false
+    let flag = false;
     for (let i = 0; i < rightsArr.length; i++) {
       if (rightsArr[i].menuUrl == rightsCode) {
-        flag = true
-        break
+        flag = true;
+        break;
       }
     }
-    return flag
+    return flag;
   }
   return false;
 };
@@ -412,6 +412,22 @@ export const mConfirm = (str, callback) => {
         return callback();
       }
     },
-    onCancel() { },
+    onCancel() {},
+  });
+};
+
+//input 绑定 state (必须是input)
+export const bindInputChange = (e, self, key) => {
+  //key : state的属性，input的onChange里是e
+  self.setState({
+    [key]: e.target.value,
+  });
+};
+
+//select 绑定 state
+export const bindSelectChange = (val, self, key) => {
+  //key : state的属性，select的onChange里是val
+  self.setState({
+    [key]: val,
   });
 };

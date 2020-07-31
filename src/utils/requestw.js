@@ -1,16 +1,18 @@
 import request from './request';
-import { globalHost, localDB } from './utils';
+import { localDB } from './utils';
 import { allHostObj, loginStateKey } from './consts';
-import { message } from 'antd'
+import { message } from 'antd';
 
-//错误处理
-export const handleRes = (res) => {
+/**
+ * 错误处理
+ */
+export const handleRes = res => {
   if (res.code + '' !== '0') {
-    message.warning(res.message || '网络异常')
-    return false
+    message.warning(res.message || '网络异常');
+    return false;
   }
-  return true
-}
+  return true;
+};
 
 const requestw = ({
   type = 'post',
@@ -18,20 +20,18 @@ const requestw = ({
   data,
   headers,
   requestType = 'form', //json form
-  timeout = 1000 * 120
+  timeout = 1000 * 120,
 }) => {
-  let loginObj = localDB.getItem(loginStateKey)
+  let loginObj = localDB.getItem(loginStateKey);
   const token =
-    loginObj && loginObj.loginInfo && loginObj.loginInfo.token
-      ? loginObj.loginInfo.token
-      : null;
+    loginObj && loginObj.loginInfo && loginObj.loginInfo.token ? loginObj.loginInfo.token : null;
 
-  let postType = type == 'formdata' ? 'post' : type
+  let postType = type == 'formdata' ? 'post' : type;
 
   let postData = {
     token,
-    ...data
-  }
+    ...data,
+  };
   if (postType !== 'formdata') {
     for (let key in postData) {
       if (postData.hasOwnProperty(key)) {
@@ -64,7 +64,7 @@ const requestw = ({
       break;
   }
   if (token) {
-    postUrl = postUrl + '?sessionId=' + token
+    postUrl = postUrl + '?sessionId=' + token;
   }
 
   //请求
@@ -76,10 +76,10 @@ const requestw = ({
     timeout,
     requestType,
   })
-    .then(function (response) {
+    .then(function(response) {
       return response;
     })
-    .catch(function (error) {
+    .catch(function(error) {
       return error;
     });
 };

@@ -3,7 +3,7 @@ import defaultTheme from './theme/defaultTheme';
 export default {
   navTheme: 'dark', //'light' | 'dark'; //整体 侧边栏
   navTheme_header: 'dark', //'light' | 'dark'; //Global Header
-  layout: 'mixmenu', //'sidemenu' | 'topmenu' | 'mixmenu';
+  layout: 'topmenu', //'sidemenu' | 'topmenu' | 'mixmenu';
   contentWidth: 'Fluid', //'Fluid' | 'Fixed';
   fixedHeader: true,
   autoHideHeader: false,

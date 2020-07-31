@@ -122,7 +122,7 @@ const BasicLayout = props => {
           /**
            * 加icon的判断条件 写在这里
            */
-          if (obj.menuLevel == 1) {
+          if (obj.menuLevel == (defaultSettings.layout == 'mixmenu' ? 1 : 0)) {
             obj.icon = <GithubOutlined />; //这里可以改成一个icon的映射函数
           }
           loopDealMenuItemIcon(obj.children);

@@ -39,6 +39,11 @@ const routes = [
             path: '/order/installorderlist2',
             component: './order/index',
           },
+          {
+            name: '订单分润',
+            path: '/order/profitrecord',
+            component: './order/fenrun',
+          },
           { component: './404' },
         ],
       },
