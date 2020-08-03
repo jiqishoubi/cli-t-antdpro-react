@@ -2,6 +2,7 @@ import React from 'react';
 import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
 import logo from '../assets/logo.png';
+import defaultSettings from '../../config/defaultSettings'
 import styles from './UserLayout.less';
 
 export const defaultFooterDom = <DefaultFooter copyright="2020 便利电科技出品" links={[]} />;
@@ -21,9 +22,10 @@ const UserLayout = props => {
   } = props;
   const { breadcrumb } = getMenuData(routes);
   const title = getPageTitle({
-    pathname: location.pathname,
+    // pathname: location.pathname,
     breadcrumb,
     ...props,
+    title: defaultSettings.title
   });
   return (
     <>
