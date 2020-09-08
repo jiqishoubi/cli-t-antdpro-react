@@ -1,41 +1,72 @@
 /**
  * 处理菜单
  */
-export const dealMenu = allMenu => {
-  let rightsArr = [];
-  let levelArr = [];
-  allMenu.forEach(obj => {
-    if (obj.menuUrl && obj.menuUrl.indexOf('_') > -1 && obj.menuUrl.indexOf('/') == -1) {
+
+function dealMenuFunc({
+  array = [],
+  key,                //必填
+  parentKey, //所属     //必填
+  childrenKey = 'children',
+  dealNode = (n) => n, //处理node
+}) {
+  const findChildrenByParentId = (parentId, array) => {
+    let children = []
+    let len = array.length
+    let nextArray = []
+    for (let i = 0; i < len; i++) {
+      let node = array[i]
+      if (node.haveSet) {
+        continue
+      }
+      if (node[parentKey] === parentId) {
+        node.haveSet = true //已经放置
+        let node2 = dealNode(node)
+        children.push({
+          ...node2,
+          [childrenKey]: findChildrenByParentId(node[key], array)
+        })
+      }
+    }
+    return children
+  }
+
+  let menuArr = []
+  let rightsArr = []
+  array.forEach((item) => {
+    //判断 菜单/权限 类型
+    if (item.menuUrl && item.menuUrl.indexOf('_') > -1 && item.menuUrl.indexOf('/') == -1) {
       //权限
-      rightsArr.push(obj);
+      rightsArr.push(item);
     } else {
       //菜单
-      if (!levelArr[obj.menuLevel]) levelArr[obj.menuLevel] = [];
-      obj.path = obj.menuUrl || '';
-      obj.name = obj.menuName || '';
-      obj.icon = obj.menuLevel != 2 ? (obj.menuIcon ? obj.menuIcon : 'line') : ''; // 菜单图标
-      levelArr[obj.menuLevel].push(obj);
+      menuArr.push(item)
     }
-  });
-  for (let i = levelArr.length - 1; i >= 0; i--) {
-    let index = i;
-    let preIndex = i - 1;
-    let arr = levelArr[index];
-    let preArr = levelArr[preIndex];
-    if (!preArr) continue;
-    arr.forEach(obj => {
-      preArr.forEach(preObj => {
-        if (preObj.menuCode == obj.parentCode) {
-          if (!preObj.children) preObj.children = [];
-          preObj.children.push(obj);
-        }
-      });
-    });
-  }
+  })
+
   return {
-    menuTree: levelArr[0] ? levelArr[0] : [],
+    menuTree: findChildrenByParentId(null, menuArr),
     rightsArr,
   };
+}
+
+export const dealMenu = allMenu => {
+  let res = dealMenuFunc({
+    array: allMenu,
+    key: 'menuCode',                //必填
+    parentKey: 'parentCode', //所属     //必填
+    childrenKey: 'children',
+    dealNode: (node) => {
+      return {
+        ...node,
+        path: node.menuUrl || '',
+        name: node.menuName || '',
+        //图标
+        icon: node.menuLevel != 2 ? (node.menuIcon ? node.menuIcon : 'line') : ''
+      }
+    }
+  })
+  console.log(res)
+  return res
 };
 
 /**
@@ -45,7 +76,7 @@ export const findFirstMenuUrl = ({ arr, childrenkey = 'children', urlKey = 'url'
   let url = '';
   const getFirst = arr => {
     if (arr && arr[0]) {
-      if (arr[0][childrenkey]) {
+      if (arr[0][childrenkey] && arr[0][childrenkey].length > 0) {
         getFirst(arr[0][childrenkey]);
       } else {
         url = arr[0][urlKey];

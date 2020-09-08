@@ -2,7 +2,7 @@ import { router } from 'umi';
 import { localDB } from '@/utils/utils';
 import { loginStateKey } from '@/utils/consts';
 import { loginAjax, getMenuRights } from '@/services/login';
-import { dealMenu, findFirstMenuUrl } from '@/utils/login';
+import { dealMenu, findFirstMenuUrl } from '@/utils/login_old';
 import { handleRes } from '@/utils/requestw';
 
 const defaultState = {
@@ -47,7 +47,7 @@ const Model = {
     },
 
     //获取菜单权限，列表
-    *getMenuRightsFunc({}, { call, put }) {
+    *getMenuRightsFunc({ }, { call, put }) {
       //获取菜单权限
       const res = yield call(getMenuRights);
       if (!handleRes(res)) {
@@ -55,7 +55,9 @@ const Model = {
       }
 
       let allMenu = res.data;
+      console.time('菜单')
       let dealMenuRes = dealMenu(allMenu);
+      console.timeEnd('菜单')
 
       yield put({
         type: 'saveDB',
@@ -78,7 +80,7 @@ const Model = {
     },
 
     // 重新登录
-    *loginAgain({}, { put }) {
+    *loginAgain({ }, { put }) {
       if (localDB.getItem(loginStateKey)) {
         const loginState = localDB.getItem(loginStateKey);
         yield put({
@@ -89,7 +91,7 @@ const Model = {
     },
 
     //注销
-    *logout({}, { put }) {
+    *logout({ }, { put }) {
       if (window.location.pathname !== '/user/login') {
         yield put({
           type: 'save',

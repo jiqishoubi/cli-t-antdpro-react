@@ -12,7 +12,7 @@ import logo from '../assets/logo.png';
 import defaultSettings from '../../config/defaultSettings';
 import defaultTheme from '../../config/theme/defaultTheme';
 import { defaultFooterDom } from './UserLayout';
-import { findFirstMenuUrl } from '@/utils/login';
+import { findFirstMenuUrl } from '@/utils/login_old';
 import './BasicLayout_localName.less';
 
 export const siderWidth = defaultTheme['t-siderMenu-width']
